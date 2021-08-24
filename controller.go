@@ -1,10 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
 type Controller struct {
@@ -22,6 +24,12 @@ func NewController() *Controller {
 // @Success 200 {object} map[string]interface{}
 // @Router /healthz [get]
 func (*Controller) HealthCheck(c *gin.Context) {
+	err := boil.GetDB().(*sql.DB).PingContext(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"status": "ok"})
 }
 

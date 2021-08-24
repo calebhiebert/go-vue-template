@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
+	"time"
 
 	"github.com/calebhiebert/go-vue-template/db"
 	_ "github.com/calebhiebert/go-vue-template/docs"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/opentracing-contrib/go-gin/ginhttp"
@@ -46,18 +47,17 @@ func main() {
 
 	ginEngine.Use(ginhttp.Middleware(tracer))
 
+	// TODO update with proper cors config
+	ginEngine.Use(cors.New(cors.Config{
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
 	c := NewController()
 
-	ginEngine.GET("/healthz", func(c *gin.Context) {
-		err := dbConn.PingContext(c.Request.Context())
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
-
+	ginEngine.GET("/healthz", c.HealthCheck)
 	ginEngine.GET("/test", c.Test)
 
 	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("http://localhost:8080/swagger/doc.json")))
