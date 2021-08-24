@@ -6,11 +6,19 @@ import (
 	"os"
 
 	"github.com/calebhiebert/go-vue-template/db"
-	"github.com/calebhiebert/go-vue-template/models"
+	_ "github.com/calebhiebert/go-vue-template/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/opentracing-contrib/go-gin/ginhttp"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 )
+
+// @title Go Vue Template
+// @version 0.1
+
+// @license.name Unknown
 
 func main() {
 	err := godotenv.Load()
@@ -32,29 +40,27 @@ func main() {
 		panic(err)
 	}
 
+	boil.SetDB(dbConn)
+
 	ginEngine := gin.Default()
 
 	ginEngine.Use(ginhttp.Middleware(tracer))
 
+	c := NewController()
+
 	ginEngine.GET("/healthz", func(c *gin.Context) {
+		err := dbConn.PingContext(c.Request.Context())
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
-	ginEngine.GET("/test", func(c *gin.Context) {
-		test, err := models.Users().All(c.Request.Context(), dbConn)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
+	ginEngine.GET("/test", c.Test)
 
-		test2, err := models.TestTables().One(c.Request.Context(), dbConn)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"test": test, "test2": test2})
-	})
+	ginEngine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, ginSwagger.URL("http://localhost:8080/swagger/doc.json")))
 
 	port := "8080"
 

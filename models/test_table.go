@@ -317,6 +317,11 @@ func AddTestTableHook(hookPoint boil.HookPoint, testTableHook TestTableHook) {
 	}
 }
 
+// OneG returns a single testTable record from the query using the global executor.
+func (q testTableQuery) OneG(ctx context.Context) (*TestTable, error) {
+	return q.One(ctx, boil.GetContextDB())
+}
+
 // One returns a single testTable record from the query.
 func (q testTableQuery) One(ctx context.Context, exec boil.ContextExecutor) (*TestTable, error) {
 	o := &TestTable{}
@@ -336,6 +341,11 @@ func (q testTableQuery) One(ctx context.Context, exec boil.ContextExecutor) (*Te
 	}
 
 	return o, nil
+}
+
+// AllG returns all TestTable records from the query using the global executor.
+func (q testTableQuery) AllG(ctx context.Context) (TestTableSlice, error) {
+	return q.All(ctx, boil.GetContextDB())
 }
 
 // All returns all TestTable records from the query.
@@ -358,6 +368,11 @@ func (q testTableQuery) All(ctx context.Context, exec boil.ContextExecutor) (Tes
 	return o, nil
 }
 
+// CountG returns the count of all TestTable records in the query, and panics on error.
+func (q testTableQuery) CountG(ctx context.Context) (int64, error) {
+	return q.Count(ctx, boil.GetContextDB())
+}
+
 // Count returns the count of all TestTable records in the query.
 func (q testTableQuery) Count(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	var count int64
@@ -371,6 +386,11 @@ func (q testTableQuery) Count(ctx context.Context, exec boil.ContextExecutor) (i
 	}
 
 	return count, nil
+}
+
+// ExistsG checks if the row exists in the table, and panics on error.
+func (q testTableQuery) ExistsG(ctx context.Context) (bool, error) {
+	return q.Exists(ctx, boil.GetContextDB())
 }
 
 // Exists checks if the row exists in the table.
@@ -508,6 +528,15 @@ func (testTableL) LoadTestRelations(ctx context.Context, e boil.ContextExecutor,
 	return nil
 }
 
+// AddTestRelationsG adds the given related objects to the existing relationships
+// of the test_table, optionally inserting them as new records.
+// Appends related to o.R.TestRelations.
+// Sets related.R.TestTable appropriately.
+// Uses the global database handle.
+func (o *TestTable) AddTestRelationsG(ctx context.Context, insert bool, related ...*TestRelation) error {
+	return o.AddTestRelations(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // AddTestRelations adds the given related objects to the existing relationships
 // of the test_table, optionally inserting them as new records.
 // Appends related to o.R.TestRelations.
@@ -561,6 +590,17 @@ func (o *TestTable) AddTestRelations(ctx context.Context, exec boil.ContextExecu
 	return nil
 }
 
+// SetTestRelationsG removes all previously related items of the
+// test_table replacing them completely with the passed
+// in related items, optionally inserting them as new records.
+// Sets o.R.TestTable's TestRelations accordingly.
+// Replaces o.R.TestRelations with related.
+// Sets related.R.TestTable's TestRelations accordingly.
+// Uses the global database handle.
+func (o *TestTable) SetTestRelationsG(ctx context.Context, insert bool, related ...*TestRelation) error {
+	return o.SetTestRelations(ctx, boil.GetContextDB(), insert, related...)
+}
+
 // SetTestRelations removes all previously related items of the
 // test_table replacing them completely with the passed
 // in related items, optionally inserting them as new records.
@@ -593,6 +633,14 @@ func (o *TestTable) SetTestRelations(ctx context.Context, exec boil.ContextExecu
 		o.R.TestRelations = nil
 	}
 	return o.AddTestRelations(ctx, exec, insert, related...)
+}
+
+// RemoveTestRelationsG relationships from objects passed in.
+// Removes related items from R.TestRelations (uses pointer comparison, removal does not keep order)
+// Sets related.R.TestTable.
+// Uses the global database handle.
+func (o *TestTable) RemoveTestRelationsG(ctx context.Context, related ...*TestRelation) error {
+	return o.RemoveTestRelations(ctx, boil.GetContextDB(), related...)
 }
 
 // RemoveTestRelations relationships from objects passed in.
@@ -641,6 +689,11 @@ func TestTables(mods ...qm.QueryMod) testTableQuery {
 	return testTableQuery{NewQuery(mods...)}
 }
 
+// FindTestTableG retrieves a single record by ID.
+func FindTestTableG(ctx context.Context, iD string, selectCols ...string) (*TestTable, error) {
+	return FindTestTable(ctx, boil.GetContextDB(), iD, selectCols...)
+}
+
 // FindTestTable retrieves a single record by ID with an executor.
 // If selectCols is empty Find will return all columns.
 func FindTestTable(ctx context.Context, exec boil.ContextExecutor, iD string, selectCols ...string) (*TestTable, error) {
@@ -669,6 +722,11 @@ func FindTestTable(ctx context.Context, exec boil.ContextExecutor, iD string, se
 	}
 
 	return testTableObj, nil
+}
+
+// InsertG a single record. See Insert for whitelist behavior description.
+func (o *TestTable) InsertG(ctx context.Context, columns boil.Columns) error {
+	return o.Insert(ctx, boil.GetContextDB(), columns)
 }
 
 // Insert a single record using an executor.
@@ -750,6 +808,12 @@ func (o *TestTable) Insert(ctx context.Context, exec boil.ContextExecutor, colum
 	return o.doAfterInsertHooks(ctx, exec)
 }
 
+// UpdateG a single TestTable record using the global executor.
+// See Update for more documentation.
+func (o *TestTable) UpdateG(ctx context.Context, columns boil.Columns) (int64, error) {
+	return o.Update(ctx, boil.GetContextDB(), columns)
+}
+
 // Update uses an executor to update the TestTable.
 // See boil.Columns.UpdateColumnSet documentation to understand column list inference for updates.
 // Update does not automatically update the record in case of default values. Use .Reload() to refresh the records.
@@ -813,6 +877,11 @@ func (o *TestTable) Update(ctx context.Context, exec boil.ContextExecutor, colum
 	return rowsAff, o.doAfterUpdateHooks(ctx, exec)
 }
 
+// UpdateAllG updates all rows with the specified column values.
+func (q testTableQuery) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return q.UpdateAll(ctx, boil.GetContextDB(), cols)
+}
+
 // UpdateAll updates all rows with the specified column values.
 func (q testTableQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor, cols M) (int64, error) {
 	queries.SetUpdate(q.Query, cols)
@@ -828,6 +897,11 @@ func (q testTableQuery) UpdateAll(ctx context.Context, exec boil.ContextExecutor
 	}
 
 	return rowsAff, nil
+}
+
+// UpdateAllG updates all rows with the specified column values.
+func (o TestTableSlice) UpdateAllG(ctx context.Context, cols M) (int64, error) {
+	return o.UpdateAll(ctx, boil.GetContextDB(), cols)
 }
 
 // UpdateAll updates all rows with the specified column values, using an executor.
@@ -876,6 +950,11 @@ func (o TestTableSlice) UpdateAll(ctx context.Context, exec boil.ContextExecutor
 		return 0, errors.Wrap(err, "models: unable to retrieve rows affected all in update all testTable")
 	}
 	return rowsAff, nil
+}
+
+// UpsertG attempts an insert, and does an update or ignore on conflict.
+func (o *TestTable) UpsertG(ctx context.Context, updateOnConflict bool, conflictColumns []string, updateColumns, insertColumns boil.Columns) error {
+	return o.Upsert(ctx, boil.GetContextDB(), updateOnConflict, conflictColumns, updateColumns, insertColumns)
 }
 
 // Upsert attempts an insert using an executor, and does an update or ignore on conflict.
@@ -993,6 +1072,12 @@ func (o *TestTable) Upsert(ctx context.Context, exec boil.ContextExecutor, updat
 	return o.doAfterUpsertHooks(ctx, exec)
 }
 
+// DeleteG deletes a single TestTable record.
+// DeleteG will match against the primary key column to find the record to delete.
+func (o *TestTable) DeleteG(ctx context.Context) (int64, error) {
+	return o.Delete(ctx, boil.GetContextDB())
+}
+
 // Delete deletes a single TestTable record with an executor.
 // Delete will match against the primary key column to find the record to delete.
 func (o *TestTable) Delete(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
@@ -1029,6 +1114,10 @@ func (o *TestTable) Delete(ctx context.Context, exec boil.ContextExecutor) (int6
 	return rowsAff, nil
 }
 
+func (q testTableQuery) DeleteAllG(ctx context.Context) (int64, error) {
+	return q.DeleteAll(ctx, boil.GetContextDB())
+}
+
 // DeleteAll deletes all matching rows.
 func (q testTableQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor) (int64, error) {
 	if q.Query == nil {
@@ -1048,6 +1137,11 @@ func (q testTableQuery) DeleteAll(ctx context.Context, exec boil.ContextExecutor
 	}
 
 	return rowsAff, nil
+}
+
+// DeleteAllG deletes all rows in the slice.
+func (o TestTableSlice) DeleteAllG(ctx context.Context) (int64, error) {
+	return o.DeleteAll(ctx, boil.GetContextDB())
 }
 
 // DeleteAll deletes all rows in the slice, using an executor.
@@ -1099,6 +1193,15 @@ func (o TestTableSlice) DeleteAll(ctx context.Context, exec boil.ContextExecutor
 	return rowsAff, nil
 }
 
+// ReloadG refetches the object from the database using the primary keys.
+func (o *TestTable) ReloadG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: no TestTable provided for reload")
+	}
+
+	return o.Reload(ctx, boil.GetContextDB())
+}
+
 // Reload refetches the object from the database
 // using the primary keys with an executor.
 func (o *TestTable) Reload(ctx context.Context, exec boil.ContextExecutor) error {
@@ -1109,6 +1212,16 @@ func (o *TestTable) Reload(ctx context.Context, exec boil.ContextExecutor) error
 
 	*o = *ret
 	return nil
+}
+
+// ReloadAllG refetches every row with matching primary key column values
+// and overwrites the original object slice with the newly updated slice.
+func (o *TestTableSlice) ReloadAllG(ctx context.Context) error {
+	if o == nil {
+		return errors.New("models: empty TestTableSlice provided for reload all")
+	}
+
+	return o.ReloadAll(ctx, boil.GetContextDB())
 }
 
 // ReloadAll refetches every row with matching primary key column values
@@ -1138,6 +1251,11 @@ func (o *TestTableSlice) ReloadAll(ctx context.Context, exec boil.ContextExecuto
 	*o = slice
 
 	return nil
+}
+
+// TestTableExistsG checks if the TestTable row exists.
+func TestTableExistsG(ctx context.Context, iD string) (bool, error) {
+	return TestTableExists(ctx, boil.GetContextDB(), iD)
 }
 
 // TestTableExists checks if the TestTable row exists.

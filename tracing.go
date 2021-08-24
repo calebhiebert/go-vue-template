@@ -19,7 +19,7 @@ func SetupTracing() (tracer opentracing.Tracer, closer io.Closer, err error) {
 		},
 
 		Reporter: &config.ReporterConfig{
-			LogSpans:            true,
+			LogSpans:            false,
 			BufferFlushInterval: 15 * time.Second,
 		},
 	}

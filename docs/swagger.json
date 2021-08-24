@@ -1,0 +1,51 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Go Vue Template",
+        "contact": {},
+        "license": {
+            "name": "Unknown"
+        },
+        "version": "0.1"
+    },
+    "paths": {
+        "/healthz": {
+            "get": {
+                "description": "returns 200 when service is running",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Health check handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/test": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Run a test handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

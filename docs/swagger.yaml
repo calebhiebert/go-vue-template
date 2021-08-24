@@ -1,0 +1,33 @@
+info:
+  contact: {}
+  license:
+    name: Unknown
+  title: Go Vue Template
+  version: "0.1"
+paths:
+  /healthz:
+    get:
+      description: returns 200 when service is running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Health check handler
+  /test:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Run a test handler
+swagger: "2.0"
