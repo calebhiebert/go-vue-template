@@ -66,7 +66,6 @@ func main() {
 	c := NewController()
 
 	router.GET("/healthz", c.HealthCheck)
-	router.GET("/test", c.Test)
 
 	auth := router.Group("/auth")
 

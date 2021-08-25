@@ -233,7 +233,7 @@ func verifyTokenMiddleware(c *gin.Context) {
 		return
 	}
 
-	if !claims.ExpiresAt.Time().Before(time.Now()) {
+	if !time.Now().UTC().Before(claims.ExpiresAt.Time()) {
 		NewAPIError("token-expired", http.StatusUnauthorized, "The token provided has expired").Abort(c)
 		return
 	}

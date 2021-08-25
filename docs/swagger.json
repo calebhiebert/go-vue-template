@@ -9,6 +9,82 @@
         "version": "0.1"
     },
     "paths": {
+        "/auth/loginjwt": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exchanges a JWT from a configurable source for a signed JWT",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.AuthenticationResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/loginup": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Exchanges a username and password for a signed JWT",
+                "parameters": [
+                    {
+                        "description": "Login parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.AuthenticationResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Registers a new account using username and password as the authentication scheme",
+                "parameters": [
+                    {
+                        "description": "Register parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.AuthenticationResult"
+                        }
+                    }
+                }
+            }
+        },
         "/healthz": {
             "get": {
                 "description": "returns 200 when service is running",
@@ -27,23 +103,107 @@
                 }
             }
         },
-        "/test": {
+        "/users/me": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Run a test handler",
+                "summary": "Gets information on the current user",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/models.User"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.AuthenticationResult": {
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "main.LoginRequest": {
+            "type": "object",
+            "required": [
+                "login",
+                "password"
+            ],
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.RegisterRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "login",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "login": {
+                    "$ref": "#/definitions/null.String"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sub": {
+                    "$ref": "#/definitions/null.String"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "null.String": {
+            "type": "object",
+            "properties": {
+                "string": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
                 }
             }
         }
