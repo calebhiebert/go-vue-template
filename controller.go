@@ -37,7 +37,7 @@ func (*Controller) HealthCheck(c *gin.Context) {
 // @Summary Run a test handler
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} map[string]interface{}
+// @Success 200 {object} models.UserSlice
 // @Router /test [get]
 func (*Controller) Test(c *gin.Context) {
 	test, err := models.Users().AllG(c.Request.Context())
@@ -46,13 +46,7 @@ func (*Controller) Test(c *gin.Context) {
 		return
 	}
 
-	test2, err := models.TestTables().OneG(c.Request.Context())
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"test": test, "test2": test2})
+	c.JSON(http.StatusOK, test)
 }
 
 

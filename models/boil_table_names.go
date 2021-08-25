@@ -4,11 +4,7 @@
 package models
 
 var TableNames = struct {
-	TestRelation string
-	TestTable    string
-	Users        string
+	Users string
 }{
-	TestRelation: "test_relation",
-	TestTable:    "test_table",
-	Users:        "users",
+	Users: "users",
 }

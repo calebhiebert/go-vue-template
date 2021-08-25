@@ -2,3 +2,5 @@ JAEGER_AGENT_HOST=localhost
 JAEGER_AGENT_PORT=6831
 
 DATABASE_URL=postgres://go-vue-template:go-vue-template@localhost:5432/go-vue-template?sslmode=disable
+
+HOSTED_URL=http://localhost:8080

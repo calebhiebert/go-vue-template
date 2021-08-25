@@ -1,6 +1,10 @@
+output = "models"
+wipe = true
+
 [psql]
 dbname = "go-vue-template"
 host = "localhost"
 user = "go-vue-template"
 pass = "go-vue-template"
 sslmode = "disable"
+blacklist = ["schema_migrations"]
