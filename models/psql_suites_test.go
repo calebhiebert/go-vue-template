@@ -6,6 +6,8 @@ package models
 import "testing"
 
 func TestUpsert(t *testing.T) {
+	t.Run("AccessLogs", testAccessLogsUpsert)
+
 	t.Run("TokenIssuances", testTokenIssuancesUpsert)
 
 	t.Run("Users", testUsersUpsert)

@@ -20,6 +20,9 @@
                                     <b-notification :closable="false" type="is-danger" v-if="error">
                                         {{ error }}
                                     </b-notification>
+
+                                    <p class="mb-4"><router-link to="/register">Register instead</router-link></p>
+
                                     <b-button native-type="submit" :loading="loading">
                                         Login
                                     </b-button>

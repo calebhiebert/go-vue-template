@@ -27,6 +27,9 @@
                                     <b-notification :closable="false" type="is-danger" v-if="error">
                                         {{ error }}
                                     </b-notification>
+
+                                    <p class="mb-4"><router-link to="/login">Log in instead</router-link></p>
+
                                     <b-button native-type="submit" :loading="loading">
                                         Register
                                     </b-button>
@@ -50,6 +53,7 @@ export default {
     data() {
         return {
             email: "",
+            name: "",
             password: "",
             confirmPassword: "",
             loading: false,
