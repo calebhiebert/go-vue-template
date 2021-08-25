@@ -56,6 +56,8 @@ func main() {
 	// Setup CORS
 	// TODO update with proper cors config
 	router.Use(cors.New(cors.Config{
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"Content-Type", "Authorization"},
 		AllowOriginFunc: func(origin string) bool {
 			return true
 		},
