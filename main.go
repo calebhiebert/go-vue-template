@@ -68,6 +68,17 @@ func main() {
 	router.GET("/healthz", c.HealthCheck)
 	router.GET("/test", c.Test)
 
+	auth := router.Group("/auth")
+
+	auth.POST("/register", c.RegisterUsernamePassword)
+	auth.POST("/loginup", c.AuthenticateUsernamePassword)
+	auth.POST("/loginjwt", verifyTokenMiddleware, c.AuthenticateJWT)
+
+	protected := router.Group("")
+	protected.Use(verifyTokenMiddleware, mustBeAuthenticatedMiddleware)
+
+	protected.GET("/users/me", c.GetMe)
+
 	swaggerURL := ginSwagger.URL(fmt.Sprintf("%s/swagger/doc.json", os.Getenv("HOSTED_URL")))
 
 	// Setup the route for swagger ui serving

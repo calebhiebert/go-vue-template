@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/friendsofgo/errors"
+	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -23,10 +24,14 @@ import (
 
 // User is an object representing the database table.
 type User struct {
-	ID        string    `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Name      string    `boil:"name" json:"name" toml:"name" yaml:"name"`
-	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	ID        string      `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Name      string      `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Login     null.String `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email     string      `boil:"email" json:"email" toml:"email" yaml:"email"`
+	PWHash    null.String `boil:"pw_hash" json:"-" toml:"-" yaml:"-"`
+	Sub       null.String `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+	CreatedAt time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 
 	R *userR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L userL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -35,11 +40,19 @@ type User struct {
 var UserColumns = struct {
 	ID        string
 	Name      string
+	Login     string
+	Email     string
+	PWHash    string
+	Sub       string
 	CreatedAt string
 	UpdatedAt string
 }{
 	ID:        "id",
 	Name:      "name",
+	Login:     "login",
+	Email:     "email",
+	PWHash:    "pw_hash",
+	Sub:       "sub",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
 }
@@ -47,11 +60,19 @@ var UserColumns = struct {
 var UserTableColumns = struct {
 	ID        string
 	Name      string
+	Login     string
+	Email     string
+	PWHash    string
+	Sub       string
 	CreatedAt string
 	UpdatedAt string
 }{
 	ID:        "users.id",
 	Name:      "users.name",
+	Login:     "users.login",
+	Email:     "users.email",
+	PWHash:    "users.pw_hash",
+	Sub:       "users.sub",
 	CreatedAt: "users.created_at",
 	UpdatedAt: "users.updated_at",
 }
@@ -81,6 +102,29 @@ func (w whereHelperstring) NIN(slice []string) qm.QueryMod {
 	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
 }
 
+type whereHelpernull_String struct{ field string }
+
+func (w whereHelpernull_String) EQ(x null.String) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpernull_String) NEQ(x null.String) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpernull_String) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_String) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelpernull_String) LT(x null.String) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpernull_String) LTE(x null.String) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpernull_String) GT(x null.String) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpernull_String) GTE(x null.String) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -105,11 +149,19 @@ func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
 var UserWhere = struct {
 	ID        whereHelperstring
 	Name      whereHelperstring
+	Login     whereHelpernull_String
+	Email     whereHelperstring
+	PWHash    whereHelpernull_String
+	Sub       whereHelpernull_String
 	CreatedAt whereHelpertime_Time
 	UpdatedAt whereHelpertime_Time
 }{
 	ID:        whereHelperstring{field: "\"users\".\"id\""},
 	Name:      whereHelperstring{field: "\"users\".\"name\""},
+	Login:     whereHelpernull_String{field: "\"users\".\"login\""},
+	Email:     whereHelperstring{field: "\"users\".\"email\""},
+	PWHash:    whereHelpernull_String{field: "\"users\".\"pw_hash\""},
+	Sub:       whereHelpernull_String{field: "\"users\".\"sub\""},
 	CreatedAt: whereHelpertime_Time{field: "\"users\".\"created_at\""},
 	UpdatedAt: whereHelpertime_Time{field: "\"users\".\"updated_at\""},
 }
@@ -131,8 +183,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "name", "created_at", "updated_at"}
-	userColumnsWithoutDefault = []string{"id", "name"}
+	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "created_at", "updated_at"}
+	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub"}
 	userColumnsWithDefault    = []string{"created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 )

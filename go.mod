@@ -3,9 +3,11 @@ module github.com/calebhiebert/go-vue-template
 go 1.17
 
 require (
+	github.com/cristalhq/jwt v1.2.0
 	github.com/friendsofgo/errors v0.9.2
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/joho/godotenv v1.3.0
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/lib/pq v1.10.2
@@ -22,6 +24,7 @@ require (
 	github.com/volatiletech/randomize v0.0.1
 	github.com/volatiletech/sqlboiler/v4 v4.6.0
 	github.com/volatiletech/strmangle v0.0.1
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 )
 
 require (
@@ -38,7 +41,6 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
-	github.com/gofrs/uuid v4.0.0+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -62,7 +64,6 @@ require (
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
 	golang.org/x/text v0.3.6 // indirect
