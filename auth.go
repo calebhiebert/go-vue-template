@@ -96,7 +96,19 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 		return
 	}
 
-	generatedToken, err := createJWTForUser(&newUser)
+	generatedToken, claims, err := createJWTForUser(&newUser)
+	if err != nil {
+		APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	tokenIssuance := models.TokenIssuance{
+		ID:        claims.ID,
+		IPAddress: c.ClientIP(),
+		UserID:    claims.User.ID,
+	}
+
+	err = tokenIssuance.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {
 		APIErrorFromErr(err).Respond(c)
 		return
@@ -156,7 +168,19 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 		return
 	}
 
-	generatedToken, err := createJWTForUser(user)
+	generatedToken, claims, err := createJWTForUser(user)
+	if err != nil {
+		APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	tokenIssuance := models.TokenIssuance{
+		ID:        claims.ID,
+		IPAddress: c.ClientIP(),
+		UserID:    claims.User.ID,
+	}
+
+	err = tokenIssuance.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {
 		APIErrorFromErr(err).Respond(c)
 		return
@@ -186,7 +210,7 @@ func getJWTSigner() jwt.Signer {
 	return signer
 }
 
-func createJWTForUser(user *models.User) (*jwt.Token, error) {
+func createJWTForUser(user *models.User) (*jwt.Token, *JWTClaims, error) {
 	builder := jwt.NewTokenBuilder(getJWTSigner())
 
 	claims := JWTClaims{
@@ -203,10 +227,10 @@ func createJWTForUser(user *models.User) (*jwt.Token, error) {
 
 	token, err := builder.Build(&claims)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return token, nil
+	return token, &claims, nil
 }
 
 func verifyTokenMiddleware(c *gin.Context) {

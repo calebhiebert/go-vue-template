@@ -12,6 +12,7 @@ import "testing"
 // It does NOT run each operation group in parallel.
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuances)
 	t.Run("Users", testUsers)
 }
 
@@ -28,53 +29,67 @@ func TestSliceSoftDeleteAll(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesDelete)
 	t.Run("Users", testUsersDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesExists)
 	t.Run("Users", testUsersExists)
 }
 
 func TestFind(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesFind)
 	t.Run("Users", testUsersFind)
 }
 
 func TestBind(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesBind)
 	t.Run("Users", testUsersBind)
 }
 
 func TestOne(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesOne)
 	t.Run("Users", testUsersOne)
 }
 
 func TestAll(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesAll)
 	t.Run("Users", testUsersAll)
 }
 
 func TestCount(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesCount)
 	t.Run("Users", testUsersCount)
 }
 
 func TestHooks(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesHooks)
 	t.Run("Users", testUsersHooks)
 }
 
 func TestInsert(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesInsert)
+	t.Run("TokenIssuances", testTokenIssuancesInsertWhitelist)
 	t.Run("Users", testUsersInsert)
 	t.Run("Users", testUsersInsertWhitelist)
 }
 
 // TestToOne tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOne(t *testing.T) {}
+func TestToOne(t *testing.T) {
+	t.Run("TokenIssuanceToUserUsingUser", testTokenIssuanceToOneUserUsingUser)
+}
 
 // TestOneToOne tests cannot be run in parallel
 // or deadlocks can occur.
@@ -82,11 +97,15 @@ func TestOneToOne(t *testing.T) {}
 
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToMany(t *testing.T) {}
+func TestToMany(t *testing.T) {
+	t.Run("UserToTokenIssuances", testUserToManyTokenIssuances)
+}
 
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToOneSet(t *testing.T) {}
+func TestToOneSet(t *testing.T) {
+	t.Run("TokenIssuanceToUserUsingTokenIssuances", testTokenIssuanceToOneSetOpUserUsingUser)
+}
 
 // TestToOneRemove tests cannot be run in parallel
 // or deadlocks can occur.
@@ -102,7 +121,9 @@ func TestOneToOneRemove(t *testing.T) {}
 
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
-func TestToManyAdd(t *testing.T) {}
+func TestToManyAdd(t *testing.T) {
+	t.Run("UserToTokenIssuances", testUserToManyAddOpTokenIssuances)
+}
 
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
@@ -113,21 +134,26 @@ func TestToManySet(t *testing.T) {}
 func TestToManyRemove(t *testing.T) {}
 
 func TestReload(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesReload)
 	t.Run("Users", testUsersReload)
 }
 
 func TestReloadAll(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
 func TestSelect(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesSelect)
 	t.Run("Users", testUsersSelect)
 }
 
 func TestUpdate(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
+	t.Run("TokenIssuances", testTokenIssuancesSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }
