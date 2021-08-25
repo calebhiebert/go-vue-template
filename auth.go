@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -131,6 +132,12 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	// Load user from the database
 	user, err := models.Users(qm.Where("login = ?", req.Login)).OneG(c.Request.Context())
 	if err != nil {
+		if err == sql.ErrNoRows {
+			NewAPIError("username-or-password-incorrect", http.StatusUnauthorized, "The username or password you entered is incorrect").
+				Respond(c)
+			return
+		}
+
 		APIErrorFromErr(err).Respond(c)
 		return
 	}

@@ -5,23 +5,30 @@
                 <div class="container">
                     <div class="columns is-centered">
                         <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-                            <form @submit.prevent="doLogin" class="box">
-                                <div class="title is-4 has-text-dark">Login</div>
+                            <form @submit.prevent="doRegister" class="box">
+                                <div class="title is-4 has-text-dark">Register</div>
 
                                 <fieldset :disabled="loading">
-                                    <b-field label="Username or Email" label-position="inside">
-                                        <b-input icon="envelope" v-model="username" required
-                                                 placeholder="Username or Email"></b-input>
+                                    <b-field label="Name" label-position="inside">
+                                        <b-input v-model="name" required placeholder="Name"></b-input>
+                                    </b-field>
+                                    <b-field label="Email" label-position="inside">
+                                        <b-input icon="envelope" v-model="email" required type="email"
+                                                 placeholder="Email"></b-input>
                                     </b-field>
                                     <b-field label="Password" label-position="inside">
                                         <b-input icon="lock" type="password" v-model="password"
                                                  placeholder="********" required></b-input>
                                     </b-field>
+                                    <b-field label="Confirm Password" label-position="inside">
+                                        <b-input icon="lock" type="password" v-model="confirmPassword"
+                                                 placeholder="Confirm Password" required></b-input>
+                                    </b-field>
                                     <b-notification :closable="false" type="is-danger" v-if="error">
                                         {{ error }}
                                     </b-notification>
                                     <b-button native-type="submit" :loading="loading">
-                                        Login
+                                        Register
                                     </b-button>
                                 </fieldset>
                             </form>
@@ -35,27 +42,34 @@
 </template>
 
 <script>
-import {extractError, loginUsernamePassword} from "../api";
+import {extractError, register} from "../api";
 
 export default {
-    name: "Login",
+    name: "Register",
 
     data() {
         return {
-            username: "",
+            email: "",
             password: "",
+            confirmPassword: "",
             loading: false,
             error: null,
         };
     },
 
     methods: {
-        async doLogin() {
+        async doRegister() {
             this.loading = true;
             this.error = null;
 
             try {
-                await loginUsernamePassword(this.username, this.password);
+                await register({
+                    name: this.name,
+                    email: this.email,
+                    login: this.email,
+                    password: this.password,
+                });
+
                 this.$router.push({name: "Home"});
             } catch (e) {
                 this.error = extractError(e).message;

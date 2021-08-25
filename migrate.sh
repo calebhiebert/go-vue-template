@@ -7,4 +7,4 @@ export $(egrep -v '^#' .env | xargs)
 # Migrate the database to the latest version
 migrate -database ${DATABASE_URL} -path ./db/migrations $1
 
-sqlboiler --add-global-variants --tag-ignore pw_hash psql
+sqlboiler --add-global-variants --tag-ignore pw_hash --add-soft-deletes psql

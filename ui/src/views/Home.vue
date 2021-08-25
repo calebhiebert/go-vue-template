@@ -1,17 +1,25 @@
 <template>
     <div class="container mt-4">
         <div class="card">
+            <!-- Content -->
             <div class="card-content" v-if="user">
                 Welcome, {{ user.name }}
+
+                <p class="mt-4">
+                    <b-button @click="logout">Logout</b-button>
+                </p>
             </div>
 
-            <b-loading v-model="loading"></b-loading>
+            <!-- Skeleton Loader -->
+            <div class="card-content" v-else>
+                <b-skeleton width="20%"></b-skeleton>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import {usersMe} from "../api";
+import {extractError, logout, usersMe} from "../api";
 
 export default {
     name: "Home",
@@ -19,6 +27,7 @@ export default {
     data() {
         return {
             user: null,
+            error: null,
             loading: false,
         }
     },
@@ -36,10 +45,16 @@ export default {
 
                 this.user = result.data;
             } catch (e) {
-                console.log(e);
+                this.error = extractError(e);
             }
 
             this.loading = false;
+        },
+
+        logout() {
+            logout();
+
+            this.$router.push({name: "Login"});
         }
     }
 };

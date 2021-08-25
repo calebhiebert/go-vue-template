@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     sub        VARCHAR,
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
+    deleted_at TIMESTAMP WITHOUT TIME ZONE,
 
     CHECK (
             (login IS NOT NULL AND pw_hash IS NOT NULL) OR

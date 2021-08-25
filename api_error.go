@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -23,6 +24,14 @@ func NewAPIError(id string, code int, message string) *APIError {
 }
 
 func APIErrorFromErr(err error) *APIError {
+	if err == sql.ErrNoRows {
+		return &APIError{
+			ID:      "not-found",
+			Code:    http.StatusNotFound,
+			Message: "The requested resource could not be found",
+		}
+	}
+
 	return &APIError{
 		ID:      "unknown_error",
 		Code:    http.StatusInternalServerError,

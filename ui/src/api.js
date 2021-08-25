@@ -15,8 +15,38 @@ export function isAuthenticated() {
 	return getToken() !== null;
 }
 
-export function register(user) {
-	return axios.post(`${API_BASE_URL}/auth/register`, user);
+export function extractError(e) {
+	if (e && e.response && e.response.data && e.response.data.code && e.response.data.message) {
+		return e.response.data;
+	} else if (e && e.name && e.message) {
+		return {
+			id: e.name,
+			message: e.message,
+			code: 0,
+		};
+	} else {
+		return {
+			id: 'unknown-error',
+			message: 'An unknown error has occured',
+			details: e,
+		}
+	}
+}
+
+export async function register(user) {
+	const result = await axios.post(`${API_BASE_URL}/auth/register`, user);
+
+	if (result.status === 200) {
+		storeToken(result.data.jwt, result.data.user);
+		return result;
+	} else {
+		return result;
+	}
+}
+
+export function logout() {
+	localStorage.removeItem("token");
+	localStorage.removeItem("userData");
 }
 
 export async function loginUsernamePassword(login, password) {
