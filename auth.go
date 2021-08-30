@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"net/http"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/cristalhq/jwt"
 	"github.com/gin-gonic/gin"
@@ -284,6 +286,30 @@ func mustBeAuthenticatedMiddleware(c *gin.Context) {
 	}
 
 	c.Next()
+}
+
+func userHasRoleMiddleware(role string) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		user := extractVerifiedUser(c)
+
+		if user == nil {
+			NewAPIError("missing-user", http.StatusUnauthorized, "Must be logged in").Abort(c)
+			return
+		}
+
+		for _, r := range user.Roles {
+			if role == r {
+				c.Next()
+				return
+			}
+		}
+
+		NewAPIError("missing-user-role", http.StatusForbidden, "User is missing required role " + role).Abort(c)
+	}
+}
+
+func userHasRoleDirective(ctx context.Context, obj interface{}, next graphql.Resolver, role string) (res interface{}, err error) {
+
 }
 
 func extractVerifiedUser(c *gin.Context) *models.User {

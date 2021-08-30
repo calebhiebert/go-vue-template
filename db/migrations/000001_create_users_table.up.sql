@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS users
     email      VARCHAR UNIQUE                                                 NOT NULL,
     pw_hash    VARCHAR,
     sub        VARCHAR,
+    roles      VARCHAR[]                                                      NOT NULL DEFAULT (ARRAY ['user']),
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     deleted_at TIMESTAMP WITHOUT TIME ZONE,

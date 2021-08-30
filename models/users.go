@@ -19,20 +19,22 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 	"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"
+	"github.com/volatiletech/sqlboiler/v4/types"
 	"github.com/volatiletech/strmangle"
 )
 
 // User is an object representing the database table.
 type User struct {
-	ID        string      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Name      string      `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Login     null.String `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-	Email     string      `boil:"email" json:"email" toml:"email" yaml:"email"`
-	PWHash    null.String `boil:"pw_hash" json:"-" toml:"-" yaml:"-"`
-	Sub       null.String `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
-	CreatedAt time.Time   `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt time.Time   `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt null.Time   `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID        string            `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Name      string            `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Login     null.String       `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email     string            `boil:"email" json:"email" toml:"email" yaml:"email"`
+	PWHash    null.String       `boil:"pw_hash" json:"-" toml:"-" yaml:"-"`
+	Sub       null.String       `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+	Roles     types.StringArray `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+	CreatedAt time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *userR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L userL  `boil:"-" json:"-" toml:"-" yaml:"-"`
@@ -45,6 +47,7 @@ var UserColumns = struct {
 	Email     string
 	PWHash    string
 	Sub       string
+	Roles     string
 	CreatedAt string
 	UpdatedAt string
 	DeletedAt string
@@ -55,6 +58,7 @@ var UserColumns = struct {
 	Email:     "email",
 	PWHash:    "pw_hash",
 	Sub:       "sub",
+	Roles:     "roles",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
 	DeletedAt: "deleted_at",
@@ -67,6 +71,7 @@ var UserTableColumns = struct {
 	Email     string
 	PWHash    string
 	Sub       string
+	Roles     string
 	CreatedAt string
 	UpdatedAt string
 	DeletedAt string
@@ -77,12 +82,34 @@ var UserTableColumns = struct {
 	Email:     "users.email",
 	PWHash:    "users.pw_hash",
 	Sub:       "users.sub",
+	Roles:     "users.roles",
 	CreatedAt: "users.created_at",
 	UpdatedAt: "users.updated_at",
 	DeletedAt: "users.deleted_at",
 }
 
 // Generated where
+
+type whereHelpertypes_StringArray struct{ field string }
+
+func (w whereHelpertypes_StringArray) EQ(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.EQ, x)
+}
+func (w whereHelpertypes_StringArray) NEQ(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.NEQ, x)
+}
+func (w whereHelpertypes_StringArray) LT(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpertypes_StringArray) LTE(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpertypes_StringArray) GT(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
 
 type whereHelpertime_Time struct{ field string }
 
@@ -112,6 +139,7 @@ var UserWhere = struct {
 	Email     whereHelperstring
 	PWHash    whereHelpernull_String
 	Sub       whereHelpernull_String
+	Roles     whereHelpertypes_StringArray
 	CreatedAt whereHelpertime_Time
 	UpdatedAt whereHelpertime_Time
 	DeletedAt whereHelpernull_Time
@@ -122,6 +150,7 @@ var UserWhere = struct {
 	Email:     whereHelperstring{field: "\"users\".\"email\""},
 	PWHash:    whereHelpernull_String{field: "\"users\".\"pw_hash\""},
 	Sub:       whereHelpernull_String{field: "\"users\".\"sub\""},
+	Roles:     whereHelpertypes_StringArray{field: "\"users\".\"roles\""},
 	CreatedAt: whereHelpertime_Time{field: "\"users\".\"created_at\""},
 	UpdatedAt: whereHelpertime_Time{field: "\"users\".\"updated_at\""},
 	DeletedAt: whereHelpernull_Time{field: "\"users\".\"deleted_at\""},
@@ -151,9 +180,9 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "created_at", "updated_at", "deleted_at"}
+	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "created_at", "updated_at", "deleted_at"}
 	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "deleted_at"}
-	userColumnsWithDefault    = []string{"created_at", "updated_at"}
+	userColumnsWithDefault    = []string{"roles", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 )
 

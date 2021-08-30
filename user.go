@@ -3,7 +3,9 @@ package main
 import (
 	"net/http"
 
+	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
+	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 // GetMe godoc
@@ -15,4 +17,21 @@ func (*Controller) GetMe(c *gin.Context) {
 	user := extractVerifiedUser(c)
 
 	c.JSON(http.StatusOK, user)
+}
+
+// ListUsers godoc
+// @Summary Gets a list of all users
+// @Produce json
+// @Success 200 {object} models.UserSlice
+// @Router /admin/users [get]
+func (*Controller) ListUsers(c *gin.Context) {
+	limit, offset := extractLimitOffset(c)
+
+	users, err := models.Users(qm.Limit(limit), qm.Offset(offset)).AllG(c.Request.Context())
+	if err != nil {
+		APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
 }

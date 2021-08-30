@@ -1,0 +1,40 @@
+directive @hasRole(role: String!) on FIELD_DEFINITION
+
+type Query {
+    users(limit: Int!, offset: Int!): [User!]! @hasRole(role: "admin")
+}
+
+type User {
+    id: ID!
+    name: String!
+    login: String
+    email: String!
+    sub: String
+    roles: [String!]!
+    avatar_url: String!
+    created_at: Int!
+    updated_at: Int!
+    deleted_at: Int
+}
+
+type TokenIssuance {
+    id: ID!
+    user_id: ID!
+    user: User!
+    ip_address: String!
+    created_at: Int!
+}
+
+type AccessLog {
+    id: ID!
+    path: String!
+    request_body: String
+    response_body: String
+    response_code: Int!
+    processing_duration: Int!
+    request_method: String
+    user_id: ID!
+    user: User
+    ip_address: String!
+    created_at: Int!
+}
