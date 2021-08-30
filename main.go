@@ -68,6 +68,9 @@ func main() {
 	c := NewController()
 
 	router.GET("/healthz", c.HealthCheck)
+	router.GET("/avatar/:id", c.GenerateAvatar)
+
+	router.Use(accessLogMiddleware)
 
 	auth := router.Group("/auth")
 

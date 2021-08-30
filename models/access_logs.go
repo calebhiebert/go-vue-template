@@ -33,6 +33,7 @@ type AccessLog struct {
 	ResponseHeaders    types.JSON  `boil:"response_headers" json:"response_headers" toml:"response_headers" yaml:"response_headers"`
 	ResponseCode       int         `boil:"response_code" json:"response_code" toml:"response_code" yaml:"response_code"`
 	ProcessingDuration int         `boil:"processing_duration" json:"processing_duration" toml:"processing_duration" yaml:"processing_duration"`
+	RequestMethod      string      `boil:"request_method" json:"request_method" toml:"request_method" yaml:"request_method"`
 	UserID             null.String `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
 	IPAddress          string      `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
 	CreatedAt          null.Time   `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
@@ -50,6 +51,7 @@ var AccessLogColumns = struct {
 	ResponseHeaders    string
 	ResponseCode       string
 	ProcessingDuration string
+	RequestMethod      string
 	UserID             string
 	IPAddress          string
 	CreatedAt          string
@@ -62,6 +64,7 @@ var AccessLogColumns = struct {
 	ResponseHeaders:    "response_headers",
 	ResponseCode:       "response_code",
 	ProcessingDuration: "processing_duration",
+	RequestMethod:      "request_method",
 	UserID:             "user_id",
 	IPAddress:          "ip_address",
 	CreatedAt:          "created_at",
@@ -76,6 +79,7 @@ var AccessLogTableColumns = struct {
 	ResponseHeaders    string
 	ResponseCode       string
 	ProcessingDuration string
+	RequestMethod      string
 	UserID             string
 	IPAddress          string
 	CreatedAt          string
@@ -88,6 +92,7 @@ var AccessLogTableColumns = struct {
 	ResponseHeaders:    "access_logs.response_headers",
 	ResponseCode:       "access_logs.response_code",
 	ProcessingDuration: "access_logs.processing_duration",
+	RequestMethod:      "access_logs.request_method",
 	UserID:             "access_logs.user_id",
 	IPAddress:          "access_logs.ip_address",
 	CreatedAt:          "access_logs.created_at",
@@ -240,6 +245,7 @@ var AccessLogWhere = struct {
 	ResponseHeaders    whereHelpertypes_JSON
 	ResponseCode       whereHelperint
 	ProcessingDuration whereHelperint
+	RequestMethod      whereHelperstring
 	UserID             whereHelpernull_String
 	IPAddress          whereHelperstring
 	CreatedAt          whereHelpernull_Time
@@ -252,6 +258,7 @@ var AccessLogWhere = struct {
 	ResponseHeaders:    whereHelpertypes_JSON{field: "\"access_logs\".\"response_headers\""},
 	ResponseCode:       whereHelperint{field: "\"access_logs\".\"response_code\""},
 	ProcessingDuration: whereHelperint{field: "\"access_logs\".\"processing_duration\""},
+	RequestMethod:      whereHelperstring{field: "\"access_logs\".\"request_method\""},
 	UserID:             whereHelpernull_String{field: "\"access_logs\".\"user_id\""},
 	IPAddress:          whereHelperstring{field: "\"access_logs\".\"ip_address\""},
 	CreatedAt:          whereHelpernull_Time{field: "\"access_logs\".\"created_at\""},
@@ -278,8 +285,8 @@ func (*accessLogR) NewStruct() *accessLogR {
 type accessLogL struct{}
 
 var (
-	accessLogAllColumns            = []string{"id", "path", "request_body", "request_headers", "response_body", "response_headers", "response_code", "processing_duration", "user_id", "ip_address", "created_at"}
-	accessLogColumnsWithoutDefault = []string{"id", "path", "request_body", "request_headers", "response_body", "response_headers", "response_code", "processing_duration", "user_id", "ip_address"}
+	accessLogAllColumns            = []string{"id", "path", "request_body", "request_headers", "response_body", "response_headers", "response_code", "processing_duration", "request_method", "user_id", "ip_address", "created_at"}
+	accessLogColumnsWithoutDefault = []string{"id", "path", "request_body", "request_headers", "response_body", "response_headers", "response_code", "processing_duration", "request_method", "user_id", "ip_address"}
 	accessLogColumnsWithDefault    = []string{"created_at"}
 	accessLogPrimaryKeyColumns     = []string{"id"}
 )

@@ -728,7 +728,7 @@ func testAccessLogsSelect(t *testing.T) {
 }
 
 var (
-	accessLogDBTypes = map[string]string{`ID`: `uuid`, `Path`: `character varying`, `RequestBody`: `text`, `RequestHeaders`: `jsonb`, `ResponseBody`: `jsonb`, `ResponseHeaders`: `jsonb`, `ResponseCode`: `integer`, `ProcessingDuration`: `integer`, `UserID`: `uuid`, `IPAddress`: `character varying`, `CreatedAt`: `timestamp without time zone`}
+	accessLogDBTypes = map[string]string{`ID`: `uuid`, `Path`: `character varying`, `RequestBody`: `text`, `RequestHeaders`: `jsonb`, `ResponseBody`: `jsonb`, `ResponseHeaders`: `jsonb`, `ResponseCode`: `integer`, `ProcessingDuration`: `integer`, `RequestMethod`: `character varying`, `UserID`: `uuid`, `IPAddress`: `character varying`, `CreatedAt`: `timestamp without time zone`}
 	_                = bytes.MinRead
 )
 

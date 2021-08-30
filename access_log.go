@@ -15,13 +15,24 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
+type responseBodyWrapper struct {
+	gin.ResponseWriter
+	body       *bytes.Buffer
+}
+
+func (r responseBodyWrapper) Write(b []byte) (int, error) {
+	r.body.Write(b)
+	return r.ResponseWriter.Write(b)
+}
+
 func accessLogMiddleware(c *gin.Context) {
 	preProcessingSpan, _ := opentracing.StartSpanFromContext(c.Request.Context(), "Access Log Preprocesing")
 
 	accessLog := models.AccessLog{
-		ID:        uuid.Must(uuid.NewV4()).String(),
-		Path:      c.Request.URL.String(),
-		IPAddress: c.ClientIP(),
+		ID:            uuid.Must(uuid.NewV4()).String(),
+		Path:          c.Request.URL.String(),
+		RequestMethod: c.Request.Method,
+		IPAddress:     c.ClientIP(),
 	}
 
 	// Read the incoming request body
@@ -47,14 +58,10 @@ func accessLogMiddleware(c *gin.Context) {
 
 	preProcessingSpan.Finish()
 
+	w := &responseBodyWrapper{body: &bytes.Buffer{}, ResponseWriter: c.Writer}
+	c.Writer = w
+
 	startTime := time.Now().UTC()
-
-	// Create a buffer to store the response body
-	var responseBuf bytes.Buffer
-
-	writer := io.MultiWriter(c.Writer, &responseBuf)
-
-	c.Writer = writer
 
 	c.Next()
 
@@ -63,8 +70,29 @@ func accessLogMiddleware(c *gin.Context) {
 	accessLog.ProcessingDuration = int(durationMS)
 
 	postProcessingAccessLogSpan, postCtx := opentracing.StartSpanFromContext(c.Request.Context(), "Access Log Postprocessing")
+	defer postProcessingAccessLogSpan.Finish()
 
-	c.JSON()
+	err = accessLog.ResponseBody.UnmarshalJSON(w.body.Bytes())
+	if err != nil {
+		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to unmarshal response body for access log")
+
+		accessLog.ResponseBody.Marshal(map[string]interface{}{
+			"error": "response body not json",
+		})
+	}
+
+	err = accessLog.ResponseHeaders.Marshal(w.ResponseWriter.Header())
+	if err != nil {
+		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to marshal response headersfor access log")
+	}
+
+	user := extractVerifiedUser(c)
+
+	if user != nil {
+		accessLog.UserID = null.StringFrom(user.ID)
+	}
+
+	accessLog.ResponseCode = w.ResponseWriter.Status()
 
 	err = accessLog.InsertG(postCtx, boil.Infer())
 	if err != nil {

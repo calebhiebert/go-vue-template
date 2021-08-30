@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS access_logs
     response_headers    JSONB   NOT NULL,
     response_code       INTEGER NOT NULL,
     processing_duration INTEGER NOT NULL,
+    request_method      VARCHAR NOT NULL,
     user_id             UUID REFERENCES users (id),
     ip_address          VARCHAR NOT NULL,
     created_at          TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc')
