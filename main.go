@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/GoAdminGroup/go-admin/engine"
 	"github.com/calebhiebert/go-vue-template/db"
 	_ "github.com/calebhiebert/go-vue-template/docs"
 	"github.com/calebhiebert/go-vue-template/graph"
@@ -76,20 +79,26 @@ func main() {
 	// Create a new controller (this is where the api handlers live)
 	c := NewController()
 
-	// UNPROTECTED routes
+	// *******************************
+	// * Unprotected Routes          *
+	// *******************************
 	router.GET("/healthz", c.HealthCheck)
 	router.GET("/avatar/:id", c.GenerateAvatar)
 
 	router.Use(accessLogMiddleware)
 
-	// AUTH routes
+	// *******************************
+	// * Authenticated Routes        *
+	// *******************************
 	auth := router.Group("/auth")
 
 	auth.POST("/register", c.RegisterUsernamePassword)
 	auth.POST("/loginup", c.AuthenticateUsernamePassword)
 	auth.POST("/loginjwt", verifyTokenMiddleware, c.AuthenticateJWT)
 
-	// PROTECTED routes
+	// *******************************
+	// * Protected Routes            *
+	// *******************************
 	protected := router.Group("")
 	protected.Use(verifyTokenMiddleware, mustBeAuthenticatedMiddleware)
 
@@ -101,9 +110,10 @@ func main() {
 
 	admin.GET("/users", c.ListUsers)
 
-	// GRAPHQL
+	// *******************************
+	// * Graphql Setup               *
+	// *******************************
 	config := generated.Config{Resolvers: &graph.Resolver{}}
-
 	config.Directives.HasRole = userHasRoleDirective
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(config))
@@ -119,9 +129,55 @@ func main() {
 
 	http.Handle("/query", srv)
 
-	// Setup the route for swagger ui serving
+	// *******************************
+	// * Swagger Setup               *
+	// *******************************
 	swaggerURL := ginSwagger.URL(fmt.Sprintf("%s/swagger/doc.json", os.Getenv("HOSTED_URL")))
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
+
+	// *******************************
+	// * Go Admin Setup              *
+	// *******************************
+
+	dbURL, err := url.Parse(os.Getenv("DATABASE_URL"))
+	if err != nil {
+		panic(err)
+	}
+
+	pwd, _ := dbURL.User.Password()
+
+	eng := engine.Default()
+
+	cfg := admcfg.Config{
+		Databases: admcfg.DatabaseList{
+			"default": {
+				Host:       dbURL.Hostname(),
+				Port:       dbURL.Port(),
+				User:       dbURL.User.Username(),
+				Pwd:        pwd,
+				MaxOpenCon: 5,
+				MaxIdleCon: 5,
+				Name: strings.TrimPrefix(dbURL.Path, "/"),
+				Driver: "postgresql",
+				// Dsn:    os.Getenv("DATABASE_URL"),
+			},
+		},
+
+		UrlPrefix: "admin",
+		IndexUrl: "/",
+		Store: admcfg.Store{
+			Path:   "./uploads",
+			Prefix: "uploads",
+		},
+		Language: language.EN,
+	}
+
+	err = eng.AddConfig(&cfg).Use(router)
+	if err != nil {
+		panic(err)
+	}
+
+	router.Static("/uploads", "./uploads")
 
 	// Default port 8080, but check if an env port should override it
 	port := "8080"

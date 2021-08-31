@@ -15,6 +15,8 @@ This is a little template project to create apps using
 
 2. Make sure [Migrate](https://github.com/golang-migrate/migrate) is installed
 3. Make sure [SQLBoiler](https://github.com/volatiletech/sqlboiler) is installed
+   1. `go install github.com/volatiletech/sqlboiler/v4@latest`
+   2. `go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@latest`
 4. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
 5. Start up the go service
 6. Start up the frontend

@@ -12,6 +12,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/cristalhq/jwt"
+	"github.com/friendsofgo/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
 	"github.com/volatiletech/null/v8"
@@ -273,6 +274,10 @@ func verifyTokenMiddleware(c *gin.Context) {
 
 	c.Set("verified_user", &claims.User)
 
+	ctxWithUser := context.WithValue(c.Request.Context(), "user", &claims.User)
+
+	c.Request = c.Request.WithContext(ctxWithUser)
+
 	c.Next()
 }
 
@@ -309,7 +314,11 @@ func userHasRoleMiddleware(role string) func(c *gin.Context) {
 }
 
 func userHasRoleDirective(ctx context.Context, obj interface{}, next graphql.Resolver, role string) (res interface{}, err error) {
+	if user := extractUser(ctx); user == nil || !stringSliceContains(user.Roles, role) {
+		return nil, errors.New("User was missing required role")
+	}
 
+	return next(ctx)
 }
 
 func extractVerifiedUser(c *gin.Context) *models.User {
@@ -319,4 +328,13 @@ func extractVerifiedUser(c *gin.Context) *models.User {
 	}
 
 	return user.(*models.User)
+}
+
+func extractUser(ctx context.Context) *models.User {
+	raw, ok := ctx.Value("user").(*models.User)
+	if !ok {
+		return nil
+	}
+
+	return raw
 }
