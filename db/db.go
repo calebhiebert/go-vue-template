@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"os"
 
 	"github.com/lib/pq"
@@ -14,7 +13,7 @@ import (
 
 func SetupDatabase() (*sql.DB, error) {
 	logger := instrumentedsql.LoggerFunc(func(ctx context.Context, msg string, keyvals ...interface{}) {
-		fmt.Printf("%s %v\n", msg, keyvals)
+		// fmt.Printf("%s %v\n", msg, keyvals)
 	})
 
 	sql.Register("instrumented-pgsql", instrumentedsql.WrapDriver(pq.Driver{}, instrumentedsql.WithTracer(isqlot.NewTracer(true)), instrumentedsql.WithLogger(logger)))

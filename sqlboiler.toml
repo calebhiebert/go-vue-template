@@ -1,6 +1,30 @@
 output = "models"
 wipe = true
 
+[imports.all]
+third_party = [
+    '"github.com/calebhiebert/go-vue-template/api"',
+    '"github.com/calebhiebert/go-vue-template/models"',
+    '"github.com/gin-gonic/gin"',
+    '"github.com/volatiletech/sqlboiler/v4/queries/qm"',
+    '"github.com/friendsofgo/errors"',
+    '"github.com/volatiletech/sqlboiler/v4/boil"',
+    '"github.com/volatiletech/sqlboiler/v4/queries"',
+    '"github.com/volatiletech/sqlboiler/v4/queries/qm"',
+    '"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"',
+    '"github.com/volatiletech/strmangle"',
+]
+
+standard = [
+    '"net/http"',
+    '"database/sql"',
+    '"fmt"',
+    '"reflect"',
+    '"strings"',
+    '"sync"',
+    '"time"',
+]
+
 [psql]
 dbname = "go-vue-template"
 host = "localhost"

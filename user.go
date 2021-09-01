@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -25,11 +26,11 @@ func (*Controller) GetMe(c *gin.Context) {
 // @Success 200 {object} models.UserSlice
 // @Router /admin/users [get]
 func (*Controller) ListUsers(c *gin.Context) {
-	limit, offset := extractLimitOffset(c)
+	limit, offset := api.ExtractLimitOffset(c)
 
 	users, err := models.Users(qm.Limit(limit), qm.Offset(offset)).AllG(c.Request.Context())
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 

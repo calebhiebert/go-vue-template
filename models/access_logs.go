@@ -1414,3 +1414,93 @@ func AccessLogExists(ctx context.Context, exec boil.ContextExecutor, iD string) 
 
 	return exists, nil
 }
+
+type AccessLogColumnData struct {
+	ID                 TableField `json:"id"`
+	Path               TableField `json:"path"`
+	RequestBody        TableField `json:"request_body"`
+	RequestHeaders     TableField `json:"request_headers"`
+	ResponseBody       TableField `json:"response_body"`
+	ResponseHeaders    TableField `json:"response_headers"`
+	ResponseCode       TableField `json:"response_code"`
+	ProcessingDuration TableField `json:"processing_duration"`
+	RequestMethod      TableField `json:"request_method"`
+	UserID             TableField `json:"user_id"`
+	IPAddress          TableField `json:"ip_address"`
+	CreatedAt          TableField `json:"created_at"`
+}
+
+var AccessLogColumnsData AccessLogColumnData = AccessLogColumnData{
+	ID: TableField{
+		Name:       "id",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	Path: TableField{
+		Name:       "path",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	RequestBody: TableField{
+		Name:       "request_body",
+		Type:       "null.String",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	RequestHeaders: TableField{
+		Name:       "request_headers",
+		Type:       "null.JSON",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	ResponseBody: TableField{
+		Name:       "response_body",
+		Type:       "types.JSON",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	ResponseHeaders: TableField{
+		Name:       "response_headers",
+		Type:       "types.JSON",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	ResponseCode: TableField{
+		Name:       "response_code",
+		Type:       "int",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	ProcessingDuration: TableField{
+		Name:       "processing_duration",
+		Type:       "int",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	RequestMethod: TableField{
+		Name:       "request_method",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	UserID: TableField{
+		Name:       "user_id",
+		Type:       "null.String",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	IPAddress: TableField{
+		Name:       "ip_address",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	CreatedAt: TableField{
+		Name:       "created_at",
+		Type:       "null.Time",
+		HasDefault: true,
+		Nullable:   true,
+	},
+}

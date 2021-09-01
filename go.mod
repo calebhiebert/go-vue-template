@@ -73,11 +73,11 @@ require (
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/mod v0.3.0 // indirect
+	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
 	golang.org/x/text v0.3.6 // indirect
-	golang.org/x/tools v0.1.0 // indirect
+	golang.org/x/tools v0.1.5 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/ini.v1 v1.51.0 // indirect

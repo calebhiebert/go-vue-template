@@ -12,6 +12,7 @@ import (
 	_ "github.com/calebhiebert/go-vue-template/docs"
 	"github.com/calebhiebert/go-vue-template/graph"
 	"github.com/calebhiebert/go-vue-template/graph/generated"
+	"github.com/calebhiebert/go-vue-template/models/modelcrud"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -82,8 +83,6 @@ func main() {
 	router.GET("/healthz", c.HealthCheck)
 	router.GET("/avatar/:id", c.GenerateAvatar)
 
-	router.Use(accessLogMiddleware)
-
 	// *******************************
 	// * Authenticated Routes        *
 	// *******************************
@@ -97,30 +96,41 @@ func main() {
 	// * Protected Routes            *
 	// *******************************
 	protected := router.Group("")
-	protected.Use(verifyTokenMiddleware, mustBeAuthenticatedMiddleware)
+	protected.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware)
 
 	protected.GET("/users/me", c.GetMe)
 
-	// ADMIN Routes
+	// *******************************
+	// * Admin Routes                *
+	// *******************************
 	admin := router.Group("/admin")
-	admin.Use(verifyTokenMiddleware, mustBeAuthenticatedMiddleware, userHasRoleMiddleware("admin"))
+	admin.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware, userHasRoleMiddleware("admin"))
 
 	admin.GET("/users", c.ListUsers)
+
+	crud := router.Group("/crud")
+
+	crud.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware, userHasRoleMiddleware("admin"))
+	modelcrud.RegisterGeneratedCrud(crud)
 
 	// *******************************
 	// * Graphql Setup               *
 	// *******************************
+	gql := router.Group("")
+
+	gql.Use(accessLogMiddleware)
+
 	config := generated.Config{Resolvers: &graph.Resolver{}}
 	config.Directives.HasRole = userHasRoleDirective
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(config))
 	plgrnd := playground.Handler("GraphQL playground", "/query")
 
-	router.GET("/graphql", func(c *gin.Context) {
+	gql.GET("/graphql", func(c *gin.Context) {
 		plgrnd.ServeHTTP(c.Writer, c.Request)
 	})
 
-	router.POST("/query", func(c *gin.Context) {
+	gql.POST("/query", verifyTokenMiddleware, func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
 	})
 

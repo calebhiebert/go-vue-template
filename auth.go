@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/cristalhq/jwt"
 	"github.com/friendsofgo/errors"
@@ -59,7 +60,7 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -67,12 +68,12 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	loginOrEmailExists, err := models.Users(qm.Where("login = ?", req.Login), qm.Or("email = ?", req.Email)).
 		ExistsG(c.Request.Context())
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
 	if loginOrEmailExists {
-		NewAPIError("email-or-login-exists", http.StatusBadRequest, "A user with that email or login already exists").
+		api.NewAPIError("email-or-login-exists", http.StatusBadRequest, "A user with that email or login already exists").
 			Respond(c)
 		return
 	}
@@ -80,7 +81,7 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	// Hash user's desired password
 	pwHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), BcryptCost)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -95,13 +96,13 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	// Insert the user into the database
 	err = newUser.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
 	generatedToken, claims, err := createJWTForUser(&newUser)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -113,7 +114,7 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 
 	err = tokenIssuance.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -140,7 +141,7 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -148,17 +149,17 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	user, err := models.Users(qm.Where("login = ?", req.Login)).OneG(c.Request.Context())
 	if err != nil {
 		if err == sql.ErrNoRows {
-			NewAPIError("username-or-password-incorrect", http.StatusUnauthorized, "The username or password you entered is incorrect").
+			api.NewAPIError("username-or-password-incorrect", http.StatusUnauthorized, "The username or password you entered is incorrect").
 				Respond(c)
 			return
 		}
 
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
 	if user.PWHash.IsZero() {
-		NewAPIError("invalid-login-type", http.StatusBadRequest, "This user does not support username and password login").
+		api.NewAPIError("invalid-login-type", http.StatusBadRequest, "This user does not support username and password login").
 			Respond(c)
 		return
 	}
@@ -166,14 +167,14 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	// Compare passwords
 	err = bcrypt.CompareHashAndPassword([]byte(user.PWHash.String), []byte(req.Password))
 	if err != nil {
-		NewAPIError("username-or-password-incorrect", http.StatusUnauthorized, "The username or password you entered is incorrect").
+		api.NewAPIError("username-or-password-incorrect", http.StatusUnauthorized, "The username or password you entered is incorrect").
 			Respond(c)
 		return
 	}
 
 	generatedToken, claims, err := createJWTForUser(user)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -185,7 +186,7 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 
 	err = tokenIssuance.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
@@ -247,14 +248,14 @@ func verifyTokenMiddleware(c *gin.Context) {
 	token = strings.TrimPrefix(token, "Bearer ")
 
 	if token == "" {
-		NewAPIError("invalid-token", http.StatusUnauthorized, "An invalid bearer token was submitted").
+		api.NewAPIError("invalid-token", http.StatusUnauthorized, "An invalid bearer token was submitted").
 			Abort(c)
 		return
 	}
 
 	parsedToken, err := jwt.ParseAndVerifyString(token, getJWTSigner())
 	if err != nil {
-		NewAPIError("invalid-token", http.StatusUnauthorized, "Failed to verify token").
+		api.NewAPIError("invalid-token", http.StatusUnauthorized, "Failed to verify token").
 			Abort(c)
 		return
 	}
@@ -263,12 +264,12 @@ func verifyTokenMiddleware(c *gin.Context) {
 
 	err = json.Unmarshal(parsedToken.RawClaims(), &claims)
 	if err != nil {
-		APIErrorFromErr(err).Abort(c)
+		api.APIErrorFromErr(err).Abort(c)
 		return
 	}
 
 	if !time.Now().UTC().Before(claims.ExpiresAt.Time()) {
-		NewAPIError("token-expired", http.StatusUnauthorized, "The token provided has expired").Abort(c)
+		api.NewAPIError("token-expired", http.StatusUnauthorized, "The token provided has expired").Abort(c)
 		return
 	}
 
@@ -285,7 +286,7 @@ func mustBeAuthenticatedMiddleware(c *gin.Context) {
 	user := extractVerifiedUser(c)
 
 	if user == nil {
-		NewAPIError("must-be-authenticated", http.StatusUnauthorized, "You must be authenticated to access this resource").
+		api.NewAPIError("must-be-authenticated", http.StatusUnauthorized, "You must be authenticated to access this resource").
 			Abort(c)
 		return
 	}
@@ -298,7 +299,7 @@ func userHasRoleMiddleware(role string) func(c *gin.Context) {
 		user := extractVerifiedUser(c)
 
 		if user == nil {
-			NewAPIError("missing-user", http.StatusUnauthorized, "Must be logged in").Abort(c)
+			api.NewAPIError("missing-user", http.StatusUnauthorized, "Must be logged in").Abort(c)
 			return
 		}
 
@@ -309,7 +310,7 @@ func userHasRoleMiddleware(role string) func(c *gin.Context) {
 			}
 		}
 
-		NewAPIError("missing-user-role", http.StatusForbidden, "User is missing required role " + role).Abort(c)
+		api.NewAPIError("missing-user-role", http.StatusForbidden, "User is missing required role " + role).Abort(c)
 	}
 }
 

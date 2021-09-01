@@ -5,6 +5,7 @@ import (
 	"image/jpeg"
 	"net/http"
 
+	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/gin-gonic/gin"
 	"github.com/o1egl/govatar"
 )
@@ -14,7 +15,7 @@ func (*Controller) GenerateAvatar(c *gin.Context) {
 
 	img, err := govatar.GenerateForUsername(govatar.MALE, id)
 	if err != nil {
-		APIErrorFromErr(err).Respond(c)
+		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 

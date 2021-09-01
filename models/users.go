@@ -1595,3 +1595,79 @@ func UserExists(ctx context.Context, exec boil.ContextExecutor, iD string) (bool
 
 	return exists, nil
 }
+
+type UserColumnData struct {
+	ID        TableField `json:"id"`
+	Name      TableField `json:"name"`
+	Login     TableField `json:"login"`
+	Email     TableField `json:"email"`
+	PWHash    TableField `json:"pw_hash"`
+	Sub       TableField `json:"sub"`
+	Roles     TableField `json:"roles"`
+	CreatedAt TableField `json:"created_at"`
+	UpdatedAt TableField `json:"updated_at"`
+	DeletedAt TableField `json:"deleted_at"`
+}
+
+var UserColumnsData UserColumnData = UserColumnData{
+	ID: TableField{
+		Name:       "id",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	Name: TableField{
+		Name:       "name",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	Login: TableField{
+		Name:       "login",
+		Type:       "null.String",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	Email: TableField{
+		Name:       "email",
+		Type:       "string",
+		HasDefault: false,
+		Nullable:   false,
+	},
+	PWHash: TableField{
+		Name:       "pw_hash",
+		Type:       "null.String",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	Sub: TableField{
+		Name:       "sub",
+		Type:       "null.String",
+		HasDefault: false,
+		Nullable:   true,
+	},
+	Roles: TableField{
+		Name:       "roles",
+		Type:       "types.StringArray",
+		HasDefault: true,
+		Nullable:   false,
+	},
+	CreatedAt: TableField{
+		Name:       "created_at",
+		Type:       "time.Time",
+		HasDefault: true,
+		Nullable:   false,
+	},
+	UpdatedAt: TableField{
+		Name:       "updated_at",
+		Type:       "time.Time",
+		HasDefault: true,
+		Nullable:   false,
+	},
+	DeletedAt: TableField{
+		Name:       "deleted_at",
+		Type:       "null.Time",
+		HasDefault: false,
+		Nullable:   true,
+	},
+}
