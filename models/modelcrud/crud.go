@@ -3,7 +3,11 @@
 
 package modelcrud
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 type GeneratedCrudController struct{}
 
@@ -13,4 +17,8 @@ func RegisterGeneratedCrud(rg *gin.RouterGroup) {
 	gcc.RegisterAccessLogs(rg)
 	gcc.RegisterTokenIssuances(rg)
 	gcc.RegisterUsers(rg)
+
+	rg.GET("/_schema", func(c *gin.Context) {
+		c.JSON(http.StatusOK, AdminInfo)
+	})
 }

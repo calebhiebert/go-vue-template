@@ -253,3 +253,130 @@ func (gcc *GeneratedCrudController) RegisterAccessLogs(rg *gin.RouterGroup) {
 	rg.PUT("/accessLogs/:id", gcc.UpdateAccessLogByID)
 	rg.DELETE("/accessLogs/:id", gcc.DeleteAccessLogByID)
 }
+
+var AccessLogsAdmin = api.AdminModel{
+	Name:          "AccessLogs",
+	CanSoftDelete: false,
+	Fields: []api.AdminModelField{{
+		ID:       "id",
+		Name:     "ID",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "path",
+		Name:     "Path",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "request_body",
+		Name:     "RequestBody",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "request_headers",
+		Name:     "RequestHeaders",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "json",
+	}, {
+		ID:       "response_body",
+		Name:     "ResponseBody",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "json",
+	}, {
+		ID:       "response_headers",
+		Name:     "ResponseHeaders",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "json",
+	}, {
+		ID:       "response_code",
+		Name:     "ResponseCode",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "int",
+	}, {
+		ID:       "processing_duration",
+		Name:     "ProcessingDuration",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "int",
+	}, {
+		ID:       "request_method",
+		Name:     "RequestMethod",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "user_id",
+		Name:     "UserID",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "ip_address",
+		Name:     "IPAddress",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "created_at",
+		Name:     "CreatedAt",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "time",
+	},
+	},
+}
+
+func SetAdminModelFieldConfigAccessLogsID(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[0].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsPath(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[1].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsRequestBody(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[2].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsRequestHeaders(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[3].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsResponseBody(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[4].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsResponseHeaders(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[5].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsResponseCode(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[6].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsProcessingDuration(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[7].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsRequestMethod(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[8].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsUserID(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[9].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsIPAddress(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[10].Config = cfg
+}
+
+func SetAdminModelFieldConfigAccessLogsCreatedAt(cfg api.AdminModelFieldConfig) {
+	AccessLogsAdmin.Fields[11].Config = cfg
+}

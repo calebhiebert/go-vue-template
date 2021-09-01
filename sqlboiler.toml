@@ -1,6 +1,30 @@
 output = "models"
 wipe = true
 
+[imports.singleton.schema]
+third_party = [
+    '"github.com/calebhiebert/go-vue-template/api"'
+]
+
+[imports.singleton.boil_queries]
+third_party = [
+    '"github.com/volatiletech/sqlboiler/v4/drivers"',
+    '"github.com/volatiletech/sqlboiler/v4/queries"',
+    '"github.com/volatiletech/sqlboiler/v4/queries/qm"',
+]
+
+[imports.singleton.boil_types]
+standard = [
+    '"strconv"'
+]
+
+third_party = [
+    '"github.com/friendsofgo/errors"',
+    '"github.com/volatiletech/sqlboiler/v4/boil"',
+    '"github.com/volatiletech/strmangle"',
+]
+
+
 [imports.all]
 third_party = [
     '"github.com/calebhiebert/go-vue-template/api"',

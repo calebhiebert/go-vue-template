@@ -226,3 +226,110 @@ func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 	rg.PUT("/users/:id", gcc.UpdateUserByID)
 	rg.DELETE("/users/:id", gcc.DeleteUserByID)
 }
+
+var UsersAdmin = api.AdminModel{
+	Name:          "Users",
+	CanSoftDelete: true,
+	Fields: []api.AdminModelField{{
+		ID:       "id",
+		Name:     "ID",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "name",
+		Name:     "Name",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "login",
+		Name:     "Login",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "email",
+		Name:     "Email",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "pw_hash",
+		Name:     "PWHash",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "sub",
+		Name:     "Sub",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "roles",
+		Name:     "Roles",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "array",
+	}, {
+		ID:       "created_at",
+		Name:     "CreatedAt",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "time",
+	}, {
+		ID:       "updated_at",
+		Name:     "UpdatedAt",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "time",
+	}, {
+		ID:       "deleted_at",
+		Name:     "DeletedAt",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "time",
+	},
+	},
+}
+
+func SetAdminModelFieldConfigUsersID(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[0].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersName(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[1].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersLogin(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[2].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersEmail(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[3].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersPWHash(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[4].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersSub(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[5].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersRoles(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[6].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersCreatedAt(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[7].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersUpdatedAt(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[8].Config = cfg
+}
+
+func SetAdminModelFieldConfigUsersDeletedAt(cfg api.AdminModelFieldConfig) {
+	UsersAdmin.Fields[9].Config = cfg
+}

@@ -185,3 +185,50 @@ func (gcc *GeneratedCrudController) RegisterTokenIssuances(rg *gin.RouterGroup) 
 	rg.PUT("/tokenIssuances/:id", gcc.UpdateTokenIssuanceByID)
 	rg.DELETE("/tokenIssuances/:id", gcc.DeleteTokenIssuanceByID)
 }
+
+var TokenIssuancesAdmin = api.AdminModel{
+	Name:          "TokenIssuances",
+	CanSoftDelete: false,
+	Fields: []api.AdminModelField{{
+		ID:       "id",
+		Name:     "ID",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "user_id",
+		Name:     "UserID",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "ip_address",
+		Name:     "IPAddress",
+		Nullable: false,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "string",
+	}, {
+		ID:       "created_at",
+		Name:     "CreatedAt",
+		Nullable: true,
+		Config:   api.NewDefaultAdminModelFieldConfig(),
+		Type:     "time",
+	},
+	},
+}
+
+func SetAdminModelFieldConfigTokenIssuancesID(cfg api.AdminModelFieldConfig) {
+	TokenIssuancesAdmin.Fields[0].Config = cfg
+}
+
+func SetAdminModelFieldConfigTokenIssuancesUserID(cfg api.AdminModelFieldConfig) {
+	TokenIssuancesAdmin.Fields[1].Config = cfg
+}
+
+func SetAdminModelFieldConfigTokenIssuancesIPAddress(cfg api.AdminModelFieldConfig) {
+	TokenIssuancesAdmin.Fields[2].Config = cfg
+}
+
+func SetAdminModelFieldConfigTokenIssuancesCreatedAt(cfg api.AdminModelFieldConfig) {
+	TokenIssuancesAdmin.Fields[3].Config = cfg
+}
