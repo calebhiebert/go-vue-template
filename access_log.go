@@ -47,7 +47,12 @@ func accessLogMiddleware(c *gin.Context) {
 		accessLog.RequestBody = null.StringFrom(string(body))
 	}
 
-	headerJson, err := json.Marshal(c.Request.Header)
+	clonedRequestHeaders := c.Request.Header.Clone()
+
+	// Remove the authorization header from logging
+	clonedRequestHeaders.Del("Authorization")
+
+	headerJson, err := json.Marshal(clonedRequestHeaders)
 	if err != nil {
 		preProcessingSpan.LogKV("event", "error", "message", "failed to marshal incoming headers for access log")
 	} else {

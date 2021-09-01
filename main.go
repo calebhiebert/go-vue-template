@@ -22,9 +22,13 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
-//go:generate sqlboiler --add-global-variants --tag-ignore pw_hash --add-soft-deletes psql
+//go:generate sh ./boil.sh
+//go:generate echo "Boil Complete"
 //go:generate gqlgen generate
+//go:generate echo "Graphql complete"
 //go:generate go run github.com/jmattheis/goverter/cmd/goverter github.com/calebhiebert/go-vue-template/convert
+//go:generate echo "GoVert complete"
+//go:generate swag init --exclude ui
 
 // @title Go Vue Template
 // @version 0.1

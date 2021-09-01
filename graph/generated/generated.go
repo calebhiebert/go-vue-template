@@ -62,7 +62,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Users func(childComplexity int, limit int, offset int) int
+		Users func(childComplexity int, limit *int, offset *int) int
 	}
 
 	TokenIssuance struct {
@@ -91,7 +91,7 @@ type AccessLogResolver interface {
 	User(ctx context.Context, obj *model.AccessLog) (*model.User, error)
 }
 type QueryResolver interface {
-	Users(ctx context.Context, limit int, offset int) ([]*model.User, error)
+	Users(ctx context.Context, limit *int, offset *int) ([]*model.User, error)
 }
 type TokenIssuanceResolver interface {
 	User(ctx context.Context, obj *model.TokenIssuance) (*model.User, error)
@@ -202,7 +202,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Users(childComplexity, args["limit"].(int), args["offset"].(int)), true
+		return e.complexity.Query.Users(childComplexity, args["limit"].(*int), args["offset"].(*int)), true
 
 	case "TokenIssuance.created_at":
 		if e.complexity.TokenIssuance.CreatedAt == nil {
@@ -362,7 +362,7 @@ var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `directive @hasRole(role: String!) on FIELD_DEFINITION
 
 type Query {
-    users(limit: Int!, offset: Int!): [User!]! @hasRole(role: "admin")
+    users(limit: Int, offset: Int): [User!]! @hasRole(role: "admin")
 }
 
 type User {
@@ -439,19 +439,19 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 int
+	var arg0 *int
 	if tmp, ok := rawArgs["limit"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("limit"))
-		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["limit"] = arg0
-	var arg1 int
+	var arg1 *int
 	if tmp, ok := rawArgs["offset"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("offset"))
-		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -897,7 +897,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().Users(rctx, args["limit"].(int), args["offset"].(int))
+			return ec.resolvers.Query().Users(rctx, args["limit"].(*int), args["offset"].(*int))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNString2string(ctx, "admin")

@@ -53,7 +53,7 @@ type RegisterRequest struct {
 // @Produce json
 // @Accept json
 // @Param req body RegisterRequest true "Register parameters"
-// @Success 200 {object} AuthenticationResult
+// @Success 200 {object} object
 // @Router /auth/register [post]
 func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	var req RegisterRequest
@@ -134,7 +134,7 @@ type LoginRequest struct {
 // @Produce json
 // @Accept json
 // @Param req body LoginRequest true "Login parameters"
-// @Success 200 {object} AuthenticationResult
+// @Success 200 {object} object
 // @Router /auth/loginup [post]
 func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	var req LoginRequest
@@ -199,7 +199,7 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 // AuthenticateJWT godoc
 // @Summary Exchanges a JWT from a configurable source for a signed JWT
 // @Produce json
-// @Success 200 {object} AuthenticationResult
+// @Success 200 {object} object
 // @Router /auth/loginjwt [post]
 func (*Controller) AuthenticateJWT(c *gin.Context) {
 

@@ -5,17 +5,50 @@ package modelcrud
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
+	"github.com/volatiletech/null/v8"
+	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+	"github.com/volatiletech/sqlboiler/v4/types"
 )
+
+type APIUser struct {
+	ID   string `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Name string `boil:"name" json:"name" toml:"name" yaml:"name"`
+
+	Login *string `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email string  `boil:"email" json:"email" toml:"email" yaml:"email"`
+
+	Sub *string `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+
+	Roles     []string  `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+
+	DeletedAt *time.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+}
+
+type GetUsersResponse struct {
+	Users      models.UserSlice `json:"users"`
+	Total      int64            `json:"total"`
+	NextOffset int64            `json:"next_offset"`
+}
+
+type APIGetUsersResponse struct {
+	Users      []APIUser `json:"users"`
+	Total      int64     `json:"total"`
+	NextOffset int64     `json:"next_offset"`
+}
 
 // GetUserByID godoc
 // @Summary Gets a single User entity by their id
 // @Produce json
-// @Success 200 {object} User
+// @Success 200 {object} APIGetUsersResponse
+// @Param id path string true "User id"
 // @Router /crud/users/:id [get]
 func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
@@ -37,21 +70,159 @@ func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
 // GetUsers godoc
 // @Summary Gets a list for all entities of the User type
 // @Produce json
-// @Success 200 {object} UserSlice
+// @Success 200 {object} APIUser
+// @Param withDeleted query string false "Include deleted users in the results"
 // @Router /crud/users [get]
 func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 	limit, offset := api.ExtractLimitOffset(c)
 
-	users, err := models.Users(qm.Limit(limit), qm.Offset(offset)).AllG(c.Request.Context())
+	count, err := models.Users().CountG(c.Request.Context())
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
-	c.JSON(http.StatusOK, users)
+	queryMods := []qm.QueryMod{
+		qm.Limit(limit),
+		qm.Offset(offset),
+	}
+
+	withDeleted := c.Query("withDeleted") == "true"
+
+	if withDeleted {
+		queryMods = append(queryMods, qm.WithDeleted())
+	}
+
+	users, err := models.Users(queryMods...).AllG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	if users == nil {
+		users = models.UserSlice{}
+	}
+
+	c.JSON(http.StatusOK, GetUsersResponse{
+		Users:      users,
+		Total:      count,
+		NextOffset: int64(offset + limit),
+	})
+}
+
+type APIUpdateUserRequest struct {
+	Name *string `boil:"name" json:"name" toml:"name" yaml:"name"`
+
+	Login *string `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email *string `boil:"email" json:"email" toml:"email" yaml:"email"`
+
+	Sub *string `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+
+	Roles []string `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+}
+
+type UpdateUserRequest struct {
+	Name  *string            `boil:"name" json:"name,omitempty" toml:"name" yaml:"name"`
+	Login *null.String       `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email *string            `boil:"email" json:"email,omitempty" toml:"email" yaml:"email"`
+	Sub   *null.String       `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+	Roles *types.StringArray `boil:"roles" json:"roles,omitempty" toml:"roles" yaml:"roles"`
+}
+
+// UpdateUserByID godoc
+// @Summary Updates a single User entity based on their id
+// @Produce json
+// @Accept json
+// @Param req body APIUpdateUserRequest true "Update parameters"
+// @Param id path string true "User id"
+// @Success 200 {object} APIUser
+// @Router /crud/users/:id [put]
+func (*GeneratedCrudController) UpdateUserByID(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
+		return
+	}
+
+	var updateReq UpdateUserRequest
+
+	err := c.BindJSON(&updateReq)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	existingUser, err := models.Users(qm.Where("id = ?", id), qm.For("UPDATE")).OneG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	if updateReq.Name != nil {
+		existingUser.Name = *updateReq.Name
+	}
+
+	if updateReq.Login != nil {
+		existingUser.Login = *updateReq.Login
+	}
+
+	if updateReq.Email != nil {
+		existingUser.Email = *updateReq.Email
+	}
+
+	if updateReq.Sub != nil {
+		existingUser.Sub = *updateReq.Sub
+	}
+
+	if updateReq.Roles != nil {
+		existingUser.Roles = *updateReq.Roles
+	}
+
+	_, err = existingUser.UpdateG(c.Request.Context(), boil.Infer())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, existingUser)
+}
+
+// DeleteUserByID godoc
+// @Summary Soft deletes a single User entity based on their id
+// @Produce json
+// @Success 200 {object} APIUser
+// @Param id path string true "User id"
+// @Param hardDelete query string false "Hard delete user"
+// @Router /crud/users/:id [delete]
+func (*GeneratedCrudController) DeleteUserByID(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
+		return
+	}
+
+	hardDelete := c.Query("hardDelete") == "true"
+
+	existingUser, err := models.Users(qm.Where("id = ?", id)).OneG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	_, err = existingUser.DeleteG(c.Request.Context(), hardDelete)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, existingUser)
 }
 
 func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 	rg.GET("/users/:id", gcc.GetUserByID)
 	rg.GET("/users", gcc.GetUsers)
+	rg.PUT("/users/:id", gcc.UpdateUserByID)
+	rg.DELETE("/users/:id", gcc.DeleteUserByID)
 }

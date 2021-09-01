@@ -18,8 +18,10 @@ func (r *accessLogResolver) User(ctx context.Context, obj *model.AccessLog) (*mo
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Users(ctx context.Context, limit int, offset int) ([]*model.User, error) {
-	users, err := models.Users(qm.Limit(limit), qm.Offset(offset)).AllG(ctx)
+func (r *queryResolver) Users(ctx context.Context, limit *int, offset *int) ([]*model.User, error) {
+	sLim, sOff := sanitizeLimitOffset(limit, offset)
+
+	users, err := models.Users(qm.Limit(sLim), qm.Offset(sOff)).AllG(ctx)
 	if err != nil {
 		return nil, err
 	}

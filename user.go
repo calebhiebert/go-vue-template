@@ -12,7 +12,7 @@ import (
 // GetMe godoc
 // @Summary Gets information on the current user
 // @Produce json
-// @Success 200 {object} models.User
+// @Success 200 {object} modelcrud.APIUser
 // @Router /users/me [get]
 func (*Controller) GetMe(c *gin.Context) {
 	user := extractVerifiedUser(c)
@@ -23,7 +23,7 @@ func (*Controller) GetMe(c *gin.Context) {
 // ListUsers godoc
 // @Summary Gets a list of all users
 // @Produce json
-// @Success 200 {object} models.UserSlice
+// @Success 200 {array} modelcrud.APIUser
 // @Router /admin/users [get]
 func (*Controller) ListUsers(c *gin.Context) {
 	limit, offset := api.ExtractLimitOffset(c)

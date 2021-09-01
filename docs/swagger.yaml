@@ -1,11 +1,4 @@
 definitions:
-  main.AuthenticationResult:
-    properties:
-      jwt:
-        type: string
-      user:
-        $ref: '#/definitions/models.User'
-    type: object
   main.LoginRequest:
     properties:
       login:
@@ -32,29 +25,150 @@ definitions:
     - name
     - password
     type: object
-  models.User:
+  modelcrud.APIAccessLog:
     properties:
       created_at:
+        type: string
+      id:
+        type: string
+      ip_address:
+        type: string
+      path:
+        type: string
+      processing_duration:
+        type: integer
+      request_body:
+        type: string
+      request_headers:
+        additionalProperties: true
+        type: object
+      request_method:
+        type: string
+      response_body:
+        additionalProperties: true
+        type: object
+      response_code:
+        type: integer
+      response_headers:
+        additionalProperties: true
+        type: object
+      user_id:
+        type: string
+    type: object
+  modelcrud.APIGetAccessLogsResponse:
+    properties:
+      access_logs:
+        items:
+          $ref: '#/definitions/modelcrud.APIAccessLog'
+        type: array
+      next_offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  modelcrud.APIGetTokenIssuancesResponse:
+    properties:
+      next_offset:
+        type: integer
+      token_issuances:
+        items:
+          $ref: '#/definitions/modelcrud.APITokenIssuance'
+        type: array
+      total:
+        type: integer
+    type: object
+  modelcrud.APIGetUsersResponse:
+    properties:
+      next_offset:
+        type: integer
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/modelcrud.APIUser'
+        type: array
+    type: object
+  modelcrud.APITokenIssuance:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      ip_address:
+        type: string
+      user_id:
+        type: string
+    type: object
+  modelcrud.APIUpdateAccessLogRequest:
+    properties:
+      ip_address:
+        type: string
+      path:
+        type: string
+      processing_duration:
+        type: integer
+      request_body:
+        type: string
+      request_headers:
+        additionalProperties: true
+        type: object
+      request_method:
+        type: string
+      response_body:
+        additionalProperties: true
+        type: object
+      response_code:
+        type: integer
+      response_headers:
+        additionalProperties: true
+        type: object
+      user_id:
+        type: string
+    type: object
+  modelcrud.APIUpdateTokenIssuanceRequest:
+    properties:
+      ip_address:
+        type: string
+      user_id:
+        type: string
+    type: object
+  modelcrud.APIUpdateUserRequest:
+    properties:
+      email:
+        type: string
+      login:
+        type: string
+      name:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      sub:
+        type: string
+    type: object
+  modelcrud.APIUser:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
         type: string
       email:
         type: string
       id:
         type: string
       login:
-        $ref: '#/definitions/null.String'
+        type: string
       name:
         type: string
+      roles:
+        items:
+          type: string
+        type: array
       sub:
-        $ref: '#/definitions/null.String'
+        type: string
       updated_at:
         type: string
-    type: object
-  null.String:
-    properties:
-      string:
-        type: string
-      valid:
-        type: boolean
     type: object
 info:
   contact: {}
@@ -63,6 +177,18 @@ info:
   title: Go Vue Template
   version: "0.1"
 paths:
+  /admin/users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/modelcrud.APIUser'
+            type: array
+      summary: Gets a list of all users
   /auth/loginjwt:
     post:
       produces:
@@ -71,7 +197,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.AuthenticationResult'
+            type: object
       summary: Exchanges a JWT from a configurable source for a signed JWT
   /auth/loginup:
     post:
@@ -90,7 +216,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.AuthenticationResult'
+            type: object
       summary: Exchanges a username and password for a signed JWT
   /auth/register:
     post:
@@ -109,9 +235,210 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.AuthenticationResult'
+            type: object
       summary: Registers a new account using username and password as the authentication
         scheme
+  /crud/accessLogs:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIAccessLog'
+      summary: Gets a list for all entities of the AccessLog type
+  /crud/accessLogs/:id:
+    delete:
+      parameters:
+      - description: AccessLog id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIAccessLog'
+      summary: Soft deletes a single AccessLog entity based on their id
+    get:
+      parameters:
+      - description: AccessLog id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIGetAccessLogsResponse'
+      summary: Gets a single AccessLog entity by their id
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APIUpdateAccessLogRequest'
+      - description: AccessLog id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIAccessLog'
+      summary: Updates a single AccessLog entity based on their id
+  /crud/tokenIssuances:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APITokenIssuance'
+      summary: Gets a list for all entities of the TokenIssuance type
+  /crud/tokenIssuances/:id:
+    delete:
+      parameters:
+      - description: TokenIssuance id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APITokenIssuance'
+      summary: Soft deletes a single TokenIssuance entity based on their id
+    get:
+      parameters:
+      - description: TokenIssuance id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIGetTokenIssuancesResponse'
+      summary: Gets a single TokenIssuance entity by their id
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APIUpdateTokenIssuanceRequest'
+      - description: TokenIssuance id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APITokenIssuance'
+      summary: Updates a single TokenIssuance entity based on their id
+  /crud/users:
+    get:
+      parameters:
+      - description: Include deleted users in the results
+        in: query
+        name: withDeleted
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Gets a list for all entities of the User type
+  /crud/users/:id:
+    delete:
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Hard delete user
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Soft deletes a single User entity based on their id
+    get:
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIGetUsersResponse'
+      summary: Gets a single User entity by their id
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APIUpdateUserRequest'
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Updates a single User entity based on their id
   /healthz:
     get:
       description: returns 200 when service is running
@@ -132,6 +459,6 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/modelcrud.APIUser'
       summary: Gets information on the current user
 swagger: "2.0"

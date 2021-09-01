@@ -15,9 +15,13 @@ This is a little template project to create apps using
 3. Make sure [SQLBoiler](https://github.com/volatiletech/sqlboiler) is installed
    1. `go install github.com/volatiletech/sqlboiler/v4@latest`
    2. `go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@latest`
-4. Copy `./env` to a new file `./.env` and make any neccecary changes
-5. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
-6. Start up the go service
-7. Start up the frontend
-8. ???
-9. Profit
+4. Make sure [GQLGen](https://github.com/99designs/gqlgen) is installed
+   1. `go get github.com/99designs/gqlgen`
+5. Make sure [Swag](https://github.com/swaggo/swag) is installed
+   1. `go install github.com/swaggo/swag/cmd/swag`
+6. Copy `./env` to a new file `./.env` and make any neccecary changes
+7. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
+8. Start up the go service
+9. Start up the frontend
+10. ???
+11. Profit
