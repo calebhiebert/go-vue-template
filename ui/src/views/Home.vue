@@ -7,6 +7,7 @@
 
                 <p class="mt-4">
                     <b-button @click="logout">Logout</b-button>
+                    <b-button @click="admin"></b-button>
                 </p>
             </div>
 
@@ -55,6 +56,10 @@ export default {
             logout();
 
             this.$router.push({name: "Login"});
+        },
+
+        admin() {
+            this.$router.push({name: "Admin"});
         }
     }
 };

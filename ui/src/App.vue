@@ -13,7 +13,7 @@
         components: {NavBar},
         computed: {
             showNavbar() {
-                return !['Login', 'Register'].includes(this.$route.name);
+                return !['Login', 'Register', 'Admin', 'AdminDashboard'].includes(this.$route.name);
             }
         },
 
@@ -32,6 +32,10 @@
             revalidateAuthenticationStatus() {
                 this.authenticated = isAuthenticated();
 
+                if (!this.authenticated && this.$route.name !== "Login") {
+                    this.$router.push({name: "Login"});
+                }
+
                 if (this.authenticated && this.currentUser === null) {
                     this.fetchCurrentUser();
                 }
@@ -43,6 +47,10 @@
 
                     this.currentUser = result.data;
                 } catch (e) {
+                    if (e.response.statusCode === 401) {
+                        this.$router.push({name: "Login"});
+                    }
+
                     this.error = extractError(e);
                 }
             }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {Base64} from 'js-base64';
 
 export const API_BASE_URL = "http://localhost:8080";
 
@@ -12,7 +13,22 @@ function getToken() {
 }
 
 export function isAuthenticated() {
-	return getToken() !== null;
+	const token = getToken();
+
+	if (token === null) {
+		return false;
+	}
+
+	const tokenData = JSON.parse(Base64.decode(token.split('.')[1]));
+
+	const isExpired = Math.round(Date.now() / 1000) > tokenData.exp;
+
+	if (isExpired) {
+		localStorage.removeItem("token");
+		return false;
+	}
+
+	return true;
 }
 
 export function extractError(e) {

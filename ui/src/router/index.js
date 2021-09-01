@@ -32,6 +32,19 @@ const routes = [
 		name: "Register",
 		component: Register,
 	},
+	{
+		path: "/admin",
+		name: "Admin",
+		component: () => import('../views/admin/Parent.vue'),
+		beforeEnter: authGuard,
+		children: [
+			{
+				path: 'dashboard',
+				name: 'AdminDashboard',
+				component: () => import("../views/admin/Dashboard.vue"),
+			}
+		]
+	},
 ];
 
 const router = new VueRouter({
