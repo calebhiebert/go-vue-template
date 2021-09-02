@@ -33,6 +33,7 @@ import axios from "axios";
 import {API_BASE_URL, extractError, getToken} from "../../api";
 import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 import ColumnViewHTTPResponseCode from "../../components/admin/ColumnViewHTTPResponseCode";
+import ColumnViewDateTime from "../../components/admin/ColumnViewDateTime";
 
 export default {
     name: "ModelView",
@@ -52,6 +53,8 @@ export default {
     created() {
         this.registerCustomColumnComponent("*", ColumnViewDefault);
         this.registerCustomColumnComponent("access_logs.response_code", ColumnViewHTTPResponseCode);
+        this.registerCustomColumnComponent("*.created_at", ColumnViewDateTime);
+        this.registerCustomColumnComponent("*.updated_at", ColumnViewDateTime);
     },
 
     mounted() {
@@ -117,6 +120,10 @@ export default {
 
         getCustomColumnComponent(fieldName) {
             for (const selector in this.customColumnComponents) {
+                if (selector.startsWith("*.") && `*.${fieldName}` === selector) {
+                    return this.customColumnComponents[selector];
+                }
+
                 if (selector === `${this.modelId}.${fieldName}`) {
                     return this.customColumnComponents[selector];
                 }
