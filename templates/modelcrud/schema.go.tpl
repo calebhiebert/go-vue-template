@@ -61,9 +61,9 @@ var {{ titleCase $.Table.Name }}ModelConfig = {{ titleCase $.Table.Name }}ModelC
     {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
     {{- else }}
         {{ $colAlias }}: api.AdminModelFieldConfig{
-        ShowOnGraph: true,
+        ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
         },
-    {{- end }}
+    {{- end -}}
 {{ end }}
 }
 

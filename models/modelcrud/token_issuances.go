@@ -76,6 +76,8 @@ func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 		qm.Offset(offset),
 	}
 
+	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+
 	tokenIssuances, err := models.TokenIssuances(queryMods...).AllG(c.Request.Context())
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
@@ -238,15 +240,12 @@ var TokenIssuancesModelConfig = TokenIssuancesModelConfigType{
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	UserID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	IPAddress: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},

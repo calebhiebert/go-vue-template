@@ -98,7 +98,7 @@ qm.Offset(offset),
 
 {{- $colNames := .Table.Columns | columnNames -}}
 {{ if containsAny $colNames "created_at" }}
-    queryMods = append(queryMods, qm.OrderBy("created_at"))
+    queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
 {{ end }}
 
 {{ $alias.DownPlural }}, err := models.{{ $alias.UpPlural }}(queryMods...).AllG(c.Request.Context())

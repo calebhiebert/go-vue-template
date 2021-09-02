@@ -93,6 +93,8 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 		queryMods = append(queryMods, qm.WithDeleted())
 	}
 
+	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+
 	users, err := models.Users(queryMods...).AllG(c.Request.Context())
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
@@ -324,37 +326,29 @@ var UsersModelConfig = UsersModelConfigType{
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Name: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Login: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Email: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Sub: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Roles: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	UpdatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	DeletedAt: api.AdminModelFieldConfig{
-		ShowOnGraph: true,
+		ShowOnGraph: false,
 	},
 }
 

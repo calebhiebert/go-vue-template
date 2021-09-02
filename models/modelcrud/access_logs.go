@@ -91,6 +91,8 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 		qm.Offset(offset),
 	}
 
+	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+
 	accessLogs, err := models.AccessLogs(queryMods...).AllG(c.Request.Context())
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
@@ -378,47 +380,36 @@ var AccessLogsModelConfig = AccessLogsModelConfigType{
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	Path: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	RequestBody: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	RequestHeaders: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	ResponseBody: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	ResponseHeaders: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	ResponseCode: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	ProcessingDuration: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	RequestMethod: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	UserID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	IPAddress: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},

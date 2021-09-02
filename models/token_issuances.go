@@ -1176,37 +1176,3 @@ func TokenIssuanceExists(ctx context.Context, exec boil.ContextExecutor, iD stri
 
 	return exists, nil
 }
-
-type TokenIssuanceColumnData struct {
-	ID        TableField `json:"id"`
-	UserID    TableField `json:"user_id"`
-	IPAddress TableField `json:"ip_address"`
-	CreatedAt TableField `json:"created_at"`
-}
-
-var TokenIssuanceColumnsData TokenIssuanceColumnData = TokenIssuanceColumnData{
-	ID: TableField{
-		Name:       "id",
-		Type:       "string",
-		HasDefault: false,
-		Nullable:   false,
-	},
-	UserID: TableField{
-		Name:       "user_id",
-		Type:       "string",
-		HasDefault: false,
-		Nullable:   false,
-	},
-	IPAddress: TableField{
-		Name:       "ip_address",
-		Type:       "string",
-		HasDefault: false,
-		Nullable:   false,
-	},
-	CreatedAt: TableField{
-		Name:       "created_at",
-		Type:       "null.Time",
-		HasDefault: true,
-		Nullable:   true,
-	},
-}
