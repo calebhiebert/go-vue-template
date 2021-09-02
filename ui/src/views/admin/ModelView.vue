@@ -1,6 +1,17 @@
 <template>
     <div>
-        <b-table checkable :loading="loading" v-if="tableColumns !== null" :data="tableData === null ? [] : tableData" :columns="tableColumns"></b-table>
+        <b-table checkable
+                 :loading="loading"
+                 v-if="tableColumns !== null"
+                 :data="tableData === null ? [] : tableData"
+                 :columns="tableColumns"
+
+                 :total="data !== null ? data.total : 0"
+                 :per-page="limit"
+                 paginated
+                 backend-pagination
+                 @page-change="onPageChange"
+        ></b-table>
     </div>
 </template>
 
@@ -17,7 +28,6 @@ export default {
             data: null,
             limit: 25,
             page: 0,
-
             tableData: null,
             tableColumns: null,
         }
@@ -37,20 +47,25 @@ export default {
             this.tableColumns = this.constructTableColumns(modelSchema);
 
             try {
-                const r = await axios.get(`${API_BASE_URL}/crud/${modelSchema.url_name}`, {
+                const r = await axios.get(`${API_BASE_URL}/crud/${modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * this.page}`, {
                     headers: {
                         'Authorization': `Bearer ${getToken()}`
                     }
                 });
 
                 console.log(r.data);
-
+                this.data = r.data;
                 this.tableData = this.constructTableData(modelSchema, r.data);
             } catch (e) {
                 console.log(extractError(e));
             }
 
             this.loading = false;
+        },
+
+        onPageChange(page) {
+            this.page = page;
+            this.load();
         },
 
         constructTableColumns(schema) {
