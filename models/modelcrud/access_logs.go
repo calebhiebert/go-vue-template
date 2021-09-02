@@ -259,73 +259,73 @@ var AccessLogsAdmin = api.AdminModel{
 	CanSoftDelete: false,
 	URLName:       "accessLogs",
 	DataName:      "access_logs",
-	Fields: []api.AdminModelField{{
+	Fields: []*api.AdminModelField{&api.AdminModelField{
 		ID:       "id",
 		Name:     "ID",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "path",
 		Name:     "Path",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "request_body",
 		Name:     "RequestBody",
 		Nullable: true,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "request_headers",
 		Name:     "RequestHeaders",
 		Nullable: true,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "json",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "response_body",
 		Name:     "ResponseBody",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "json",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "response_headers",
 		Name:     "ResponseHeaders",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "json",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "response_code",
 		Name:     "ResponseCode",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "int",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "processing_duration",
 		Name:     "ProcessingDuration",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "int",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "request_method",
 		Name:     "RequestMethod",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "user_id",
 		Name:     "UserID",
 		Nullable: true,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "ip_address",
 		Name:     "IPAddress",
 		Nullable: false,
 		Config:   api.NewDefaultAdminModelFieldConfig(),
 		Type:     "string",
-	}, {
+	}, &api.AdminModelField{
 		ID:       "created_at",
 		Name:     "CreatedAt",
 		Nullable: true,
@@ -335,50 +335,72 @@ var AccessLogsAdmin = api.AdminModel{
 	},
 }
 
-func SetAdminModelFieldConfigAccessLogsID(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[0].Config = cfg
+type AccessLogsModelConfigType struct {
+	ID                 api.AdminModelFieldConfig
+	Path               api.AdminModelFieldConfig
+	RequestBody        api.AdminModelFieldConfig
+	RequestHeaders     api.AdminModelFieldConfig
+	ResponseBody       api.AdminModelFieldConfig
+	ResponseHeaders    api.AdminModelFieldConfig
+	ResponseCode       api.AdminModelFieldConfig
+	ProcessingDuration api.AdminModelFieldConfig
+	RequestMethod      api.AdminModelFieldConfig
+	UserID             api.AdminModelFieldConfig
+	IPAddress          api.AdminModelFieldConfig
+	CreatedAt          api.AdminModelFieldConfig
 }
 
-func SetAdminModelFieldConfigAccessLogsPath(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[1].Config = cfg
+var AccessLogsModelConfig = AccessLogsModelConfigType{
+	ID: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	Path: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	RequestBody: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	RequestHeaders: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	ResponseBody: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	ResponseHeaders: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	ResponseCode: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	ProcessingDuration: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	RequestMethod: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	UserID: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	IPAddress: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
+	CreatedAt: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+	},
 }
 
-func SetAdminModelFieldConfigAccessLogsRequestBody(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[2].Config = cfg
-}
+func (c AccessLogsModelConfigType) Apply() {
+	AccessLogsAdmin.Fields[0].Config = c.ID
+	AccessLogsAdmin.Fields[1].Config = c.Path
+	AccessLogsAdmin.Fields[2].Config = c.RequestBody
+	AccessLogsAdmin.Fields[3].Config = c.RequestHeaders
+	AccessLogsAdmin.Fields[4].Config = c.ResponseBody
+	AccessLogsAdmin.Fields[5].Config = c.ResponseHeaders
+	AccessLogsAdmin.Fields[6].Config = c.ResponseCode
+	AccessLogsAdmin.Fields[7].Config = c.ProcessingDuration
+	AccessLogsAdmin.Fields[8].Config = c.RequestMethod
+	AccessLogsAdmin.Fields[9].Config = c.UserID
+	AccessLogsAdmin.Fields[10].Config = c.IPAddress
+	AccessLogsAdmin.Fields[11].Config = c.CreatedAt
 
-func SetAdminModelFieldConfigAccessLogsRequestHeaders(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[3].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsResponseBody(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[4].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsResponseHeaders(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[5].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsResponseCode(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[6].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsProcessingDuration(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[7].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsRequestMethod(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[8].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsUserID(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[9].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsIPAddress(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[10].Config = cfg
-}
-
-func SetAdminModelFieldConfigAccessLogsCreatedAt(cfg api.AdminModelFieldConfig) {
-	AccessLogsAdmin.Fields[11].Config = cfg
 }

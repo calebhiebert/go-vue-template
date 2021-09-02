@@ -9,7 +9,7 @@ type AdminModelConfig struct {
 
 type AdminModel struct {
 	Name          string            `json:"name"`
-	Fields        []AdminModelField `json:"fields"`
+	Fields        []*AdminModelField `json:"fields"`
 	Config        AdminModelConfig  `json:"config"`
 	CanSoftDelete bool              `json:"can_soft_delete"`
 	URLName       string            `json:"url_name"`

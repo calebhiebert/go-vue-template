@@ -81,6 +81,8 @@ func main() {
 		MaxAge: 12 * time.Hour,
 	}))
 
+	ConfigAdminCrudModels()
+
 	// Create a new controller (this is where the api handlers live)
 	c := NewController()
 

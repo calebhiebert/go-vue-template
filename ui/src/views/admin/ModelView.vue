@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-table :loading="loading" v-if="tableColumns !== null" :data="tableData === null ? [] : tableData" :columns="tableColumns"></b-table>
+        <b-table checkable :loading="loading" v-if="tableColumns !== null" :data="tableData === null ? [] : tableData" :columns="tableColumns"></b-table>
     </div>
 </template>
 
