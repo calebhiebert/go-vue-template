@@ -13,7 +13,7 @@ export default {
         },
 
         col: {
-            type: String,
+            type: Object,
             required: true,
         },
 

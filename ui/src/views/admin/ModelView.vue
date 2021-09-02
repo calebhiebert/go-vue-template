@@ -44,10 +44,12 @@ export default {
             page: 0,
             tableData: null,
             tableColumns: null,
-            customColumnComponents: {
-                '*': ColumnViewDefault,
-            }
+            customColumnComponents: {}
         }
+    },
+
+    created() {
+        this.registerCustomColumnComponent("*", ColumnViewDefault);
     },
 
     mounted() {
@@ -111,7 +113,13 @@ export default {
             this.customColumnComponents[selector] = component;
         },
 
-        getCustomColumnComponent() {
+        getCustomColumnComponent(fieldName) {
+            for (const selector in this.customColumnComponents) {
+                if (selector === `${this.modelId}.${fieldName}`) {
+                    return this.customColumnComponents[fieldName];
+                }
+            }
+
             return this.customColumnComponents["*"];
         }
     },
