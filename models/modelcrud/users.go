@@ -232,126 +232,150 @@ var UsersAdmin = api.AdminModel{
 	CanSoftDelete: true,
 	URLName:       "users",
 	DataName:      "users",
-	Fields: []*api.AdminModelField{&api.AdminModelField{
-		ID:       "id",
-		Name:     "ID",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "name",
-		Name:     "Name",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "login",
-		Name:     "Login",
-		Nullable: true,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "email",
-		Name:     "Email",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "pw_hash",
-		Name:     "PWHash",
-		Nullable: true,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "sub",
-		Name:     "Sub",
-		Nullable: true,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "roles",
-		Name:     "Roles",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "array",
-	}, &api.AdminModelField{
-		ID:       "created_at",
-		Name:     "CreatedAt",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "time",
-	}, &api.AdminModelField{
-		ID:       "updated_at",
-		Name:     "UpdatedAt",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "time",
-	}, &api.AdminModelField{
-		ID:       "deleted_at",
-		Name:     "DeletedAt",
-		Nullable: true,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "time",
-	},
+	Fields: []*api.AdminModelField{
+		&api.AdminModelField{
+			ID:       "id",
+			Name:     "ID",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "name",
+			Name:     "Name",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "login",
+			Name:     "Login",
+			Nullable: true,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "email",
+			Name:     "Email",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "sub",
+			Name:     "Sub",
+			Nullable: true,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "roles",
+			Name:     "Roles",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "array",
+		},
+		&api.AdminModelField{
+			ID:       "created_at",
+			Name:     "CreatedAt",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "time",
+		},
+		&api.AdminModelField{
+			ID:       "updated_at",
+			Name:     "UpdatedAt",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "time",
+		},
+		&api.AdminModelField{
+			ID:       "deleted_at",
+			Name:     "DeletedAt",
+			Nullable: true,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "time",
+		},
 	},
 }
 
 type UsersModelConfigType struct {
-	ID        api.AdminModelFieldConfig
-	Name      api.AdminModelFieldConfig
-	Login     api.AdminModelFieldConfig
-	Email     api.AdminModelFieldConfig
-	PWHash    api.AdminModelFieldConfig
-	Sub       api.AdminModelFieldConfig
-	Roles     api.AdminModelFieldConfig
+	ID api.AdminModelFieldConfig
+
+	Name api.AdminModelFieldConfig
+
+	Login api.AdminModelFieldConfig
+
+	Email api.AdminModelFieldConfig
+
+	Sub api.AdminModelFieldConfig
+
+	Roles api.AdminModelFieldConfig
+
 	CreatedAt api.AdminModelFieldConfig
+
 	UpdatedAt api.AdminModelFieldConfig
+
 	DeletedAt api.AdminModelFieldConfig
 }
 
 var UsersModelConfig = UsersModelConfigType{
+
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	Name: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	Login: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	Email: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
-	PWHash: api.AdminModelFieldConfig{
-		ShowOnGraph: true,
-	},
+
 	Sub: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	Roles: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	UpdatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	DeletedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
 }
 
 func (c UsersModelConfigType) Apply() {
+
 	UsersAdmin.Fields[0].Config = c.ID
+
 	UsersAdmin.Fields[1].Config = c.Name
+
 	UsersAdmin.Fields[2].Config = c.Login
+
 	UsersAdmin.Fields[3].Config = c.Email
-	UsersAdmin.Fields[4].Config = c.PWHash
+
 	UsersAdmin.Fields[5].Config = c.Sub
+
 	UsersAdmin.Fields[6].Config = c.Roles
+
 	UsersAdmin.Fields[7].Config = c.CreatedAt
+
 	UsersAdmin.Fields[8].Config = c.UpdatedAt
+
 	UsersAdmin.Fields[9].Config = c.DeletedAt
 
 }

@@ -128,6 +128,10 @@ export default {
 
     watch: {
         modelId() {
+            this.page = 0;
+            this.data = null;
+            this.tableData = null;
+            this.tableColumns = null;
             this.load();
         },
 

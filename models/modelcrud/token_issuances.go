@@ -191,60 +191,75 @@ var TokenIssuancesAdmin = api.AdminModel{
 	CanSoftDelete: false,
 	URLName:       "tokenIssuances",
 	DataName:      "token_issuances",
-	Fields: []*api.AdminModelField{&api.AdminModelField{
-		ID:       "id",
-		Name:     "ID",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "user_id",
-		Name:     "UserID",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "ip_address",
-		Name:     "IPAddress",
-		Nullable: false,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "string",
-	}, &api.AdminModelField{
-		ID:       "created_at",
-		Name:     "CreatedAt",
-		Nullable: true,
-		Config:   api.NewDefaultAdminModelFieldConfig(),
-		Type:     "time",
-	},
+	Fields: []*api.AdminModelField{
+		&api.AdminModelField{
+			ID:       "id",
+			Name:     "ID",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "user_id",
+			Name:     "UserID",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "ip_address",
+			Name:     "IPAddress",
+			Nullable: false,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "string",
+		},
+		&api.AdminModelField{
+			ID:       "created_at",
+			Name:     "CreatedAt",
+			Nullable: true,
+			Config:   api.NewDefaultAdminModelFieldConfig(),
+			Type:     "time",
+		},
 	},
 }
 
 type TokenIssuancesModelConfigType struct {
-	ID        api.AdminModelFieldConfig
-	UserID    api.AdminModelFieldConfig
+	ID api.AdminModelFieldConfig
+
+	UserID api.AdminModelFieldConfig
+
 	IPAddress api.AdminModelFieldConfig
+
 	CreatedAt api.AdminModelFieldConfig
 }
 
 var TokenIssuancesModelConfig = TokenIssuancesModelConfigType{
+
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	UserID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	IPAddress: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
+
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 	},
 }
 
 func (c TokenIssuancesModelConfigType) Apply() {
+
 	TokenIssuancesAdmin.Fields[0].Config = c.ID
+
 	TokenIssuancesAdmin.Fields[1].Config = c.UserID
+
 	TokenIssuancesAdmin.Fields[2].Config = c.IPAddress
+
 	TokenIssuancesAdmin.Fields[3].Config = c.CreatedAt
 
 }
