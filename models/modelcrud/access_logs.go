@@ -257,6 +257,8 @@ func (gcc *GeneratedCrudController) RegisterAccessLogs(rg *gin.RouterGroup) {
 var AccessLogsAdmin = api.AdminModel{
 	Name:          "AccessLogs",
 	CanSoftDelete: false,
+	URLName:       "accessLogs",
+	DataName:      "access_logs",
 	Fields: []api.AdminModelField{{
 		ID:       "id",
 		Name:     "ID",

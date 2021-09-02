@@ -27,7 +27,7 @@
                 </div>
             </b-sidebar>
             <div class="content">
-                <router-view></router-view>
+                <router-view v-if="!loadingSchema"></router-view>
             </div>
         </div>
 
@@ -36,7 +36,6 @@
 
 <script>
 import {getAdminSchema} from "../../api";
-import axios from 'axios';
 
 export default {
     name: "Parent",
@@ -47,7 +46,7 @@ export default {
 
     data() {
        return {
-           loadingSchema: false,
+           loadingSchema: true,
            schema: null,
        }
     },
@@ -88,5 +87,7 @@ export default {
 .content {
     width: 100%;
     margin-left: 1em;
+    margin-top: 1em;
+    margin-right: 1em;
 }
 </style>

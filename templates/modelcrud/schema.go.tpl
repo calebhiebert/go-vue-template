@@ -6,6 +6,8 @@
 var {{ $alias.UpPlural }}Admin = api.AdminModel{
     Name: "{{ $alias.UpPlural }}",
     CanSoftDelete: {{ if $soft }}true{{ else }}false{{end}},
+    URLName: "{{ $alias.DownPlural }}",
+    DataName: "{{ $orig_tbl_name }}",
     Fields: []api.AdminModelField{
         {{- range $field := .Table.Columns }}
         {{- $colAlias := $alias.Column $field.Name -}}

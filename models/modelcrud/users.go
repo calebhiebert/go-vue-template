@@ -230,6 +230,8 @@ func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 var UsersAdmin = api.AdminModel{
 	Name:          "Users",
 	CanSoftDelete: true,
+	URLName:       "users",
+	DataName:      "users",
 	Fields: []api.AdminModelField{{
 		ID:       "id",
 		Name:     "ID",

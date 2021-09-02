@@ -189,6 +189,8 @@ func (gcc *GeneratedCrudController) RegisterTokenIssuances(rg *gin.RouterGroup) 
 var TokenIssuancesAdmin = api.AdminModel{
 	Name:          "TokenIssuances",
 	CanSoftDelete: false,
+	URLName:       "tokenIssuances",
+	DataName:      "token_issuances",
 	Fields: []api.AdminModelField{{
 		ID:       "id",
 		Name:     "ID",

@@ -8,14 +8,14 @@ import "buefy/dist/buefy.css";
 
 // Setup fontawesome icons
 import {library} from "@fortawesome/fontawesome-svg-core";
-import {faEnvelope, faExclamationCircle, faLock} from "@fortawesome/free-solid-svg-icons";
+import {faArrowUp, faEnvelope, faExclamationCircle, faLock} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 // Setup vee validate
 import {confirmed, email, length, required} from "vee-validate/dist/rules";
 import {extend, ValidationProvider} from "vee-validate";
 
-library.add(faLock, faEnvelope, faExclamationCircle);
+library.add(faLock, faEnvelope, faExclamationCircle, faArrowUp);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("ValidationProvider", ValidationProvider);

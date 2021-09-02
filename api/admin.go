@@ -12,6 +12,8 @@ type AdminModel struct {
 	Fields        []AdminModelField `json:"fields"`
 	Config        AdminModelConfig  `json:"config"`
 	CanSoftDelete bool              `json:"can_soft_delete"`
+	URLName       string            `json:"url_name"`
+	DataName      string            `json:"data_name"`
 }
 
 type AdminModelFieldConfig struct {
