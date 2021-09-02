@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-tag>{{ row[col.field] }}</b-tag>
+        <b-tag :type="tagType"><span class="has-text-weight-bold">{{ row[col.field] }}</span></b-tag>
     </div>
 </template>
 
@@ -31,9 +31,13 @@ export default {
 
             if (data >= 200 && data < 300) {
                 return "is-success";
-            } else {
-                return "is-light"
+            } else if (data >= 400 && data < 500) {
+                return "is-warning";
+            } else if (data >= 500 && data < 600) {
+                return "is-danger";
             }
+
+            return "is-primary";
         }
     }
 }
