@@ -16,12 +16,16 @@ This is a little template project to create apps using
    1. `go install github.com/volatiletech/sqlboiler/v4@latest`
    2. `go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@latest`
 4. Make sure [GQLGen](https://github.com/99designs/gqlgen) is installed
-   1. `go get github.com/99designs/gqlgen`
+   1. `go install github.com/99designs/gqlgen`
 5. Make sure [Swag](https://github.com/swaggo/swag) is installed
    1. `go install github.com/swaggo/swag/cmd/swag`
-6. Copy `./env` to a new file `./.env` and make any neccecary changes
-7. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
-8. Start up the go service
-9. Start up the frontend
-10. ???
-11. Profit
+6. Make sure [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) is installed
+   1. `go install golang.org/x/tools/cmd/goimports`
+7. Copy `./env` to a new file `./.env` and make any neccecary changes
+8. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
+9. Migrate the database
+   1. `./migrate.sh up`
+10. Start up the go service
+11. Start up the frontend
+12. ???
+13. Profit

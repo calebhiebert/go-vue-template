@@ -22,12 +22,15 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )
 
-//go:generate sh ./boil.sh
-//go:generate echo "Boil Complete"
+//go:generate echo "Generating SQL Boilerplate with sqlboiler"
+//go:generate sqlboiler --add-global-variants --tag-ignore pw_hash --add-soft-deletes --config ./sqlboiler.toml --templates ./templates --templates $GOPATH/pkg/mod/github.com/volatiletech/sqlboiler/v4@v4.6.0/templates --templates $GOPATH/pkg/mod/github.com/volatiletech/sqlboiler/v4@v4.6.0/templates_test psql
+//go:generate echo "Cleaning up SQL models"
+//go:generate goimports -w models/
+//go:generate echo "Generating GraphQL Code"
 //go:generate gqlgen generate
-//go:generate echo "Graphql complete"
+//go:generate echo "Generating goverter code"
 //go:generate go run github.com/jmattheis/goverter/cmd/goverter github.com/calebhiebert/go-vue-template/convert
-//go:generate echo "GoVert complete"
+//go:generate echo "Generating swagger documentation"
 //go:generate swag init --exclude ui
 
 // @title Go Vue Template

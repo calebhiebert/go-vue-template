@@ -9,8 +9,8 @@
                     <b-menu>
                         <b-menu-list label="Menu">
                             <b-menu-item icon="information-outline" label="Info"></b-menu-item>
-                            <b-menu-item active expanded icon="settings" label="Data">
-                                <b-menu-item icon="account" label="Users"></b-menu-item>
+                            <b-menu-item active expanded label="Models" v-if="schema !== null">
+                                <b-menu-item :label="model.name" @click="openModel(id)" v-for="(model, id) in schema.models" :key="id"></b-menu-item>
                             </b-menu-item>
                             <b-menu-item icon="account" label="My Account">
                                 <b-menu-item icon="account-box" label="Account data"></b-menu-item>
@@ -35,12 +35,46 @@
 </template>
 
 <script>
+import {getAdminSchema} from "../../api";
+import axios from 'axios';
+
 export default {
     name: "Parent",
 
     mounted() {
-        console.log("HEIY SODKIFSe");
+        this.loadSchema();
     },
+
+    data() {
+       return {
+           loadingSchema: false,
+           schema: null,
+       }
+    },
+
+    methods: {
+        async loadSchema() {
+            this.loadingSchema = true;
+
+            try {
+                const r = await getAdminSchema();
+                this.schema = r.data;
+                window._adminSchema = this.schema;
+            } catch (e) {
+                console.log(e);
+            }
+
+            this.loadingSchema = false;
+        },
+
+        openModel(m) {
+            if (this.$route.name && this.$route.name === "AdminModelView" && this.$route.params.model === m) {
+                return
+            }
+
+            this.$router.push({name: 'AdminModelView', params: {model: m}});
+        }
+    }
 };
 </script>
 

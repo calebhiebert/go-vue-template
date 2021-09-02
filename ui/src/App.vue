@@ -11,11 +11,6 @@
     export default {
         name: "App",
         components: {NavBar},
-        computed: {
-            showNavbar() {
-                return !['Login', 'Register', 'Admin', 'AdminDashboard'].includes(this.$route.name);
-            }
-        },
 
         created() {
             this.revalidateAuthenticationStatus();
@@ -32,7 +27,7 @@
             revalidateAuthenticationStatus() {
                 this.authenticated = isAuthenticated();
 
-                if (!this.authenticated && this.$route.name !== "Login") {
+                if (!this.authenticated && !['Login', 'Register'].includes(this.$route.name)) {
                     this.$router.push({name: "Login"});
                 }
 
@@ -53,6 +48,16 @@
 
                     this.error = extractError(e);
                 }
+            }
+        },
+
+        computed: {
+            showNavbar() {
+                if (this.$route.name && this.$route.name.startsWith("Admin")) {
+                    return false;
+                }
+
+                return !['Login', 'Register', 'Admin', 'AdminDashboard'].includes(this.$route.name);
             }
         },
 
