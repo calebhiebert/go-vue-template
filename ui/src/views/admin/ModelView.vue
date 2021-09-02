@@ -4,8 +4,6 @@
                  :loading="loading"
                  v-if="tableColumns !== null"
                  :data="tableData === null ? [] : tableData"
-                 :columns="tableColumns"
-
                  :total="data !== null ? data.total : 0"
                  :per-page="limit"
                  paginated
@@ -23,6 +21,7 @@
                 :label="col.label"
                 v-slot="props">
                 {{ props.row.original_title }}
+                <component :is="getCustomColumnComponent(col.field)" :col="col" :p="props" :row="props.row"></component>
             </b-table-column>
 
         </b-table>

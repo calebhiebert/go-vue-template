@@ -1,5 +1,5 @@
 <template>
-    <div>{{ row }}</div>
+    <div>{{ row[col.field] }}</div>
 </template>
 
 <script>
@@ -9,6 +9,11 @@ export default {
     props: {
         row: {
             type: Object,
+            required: true,
+        },
+
+        col: {
+            type: String,
             required: true,
         },
 
