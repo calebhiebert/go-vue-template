@@ -11,13 +11,28 @@
                  paginated
                  backend-pagination
                  @page-change="onPageChange"
-        ></b-table>
+                 aria-next-label="Next page"
+                 aria-previous-label="Previous page"
+                 aria-page-label="Page"
+                 aria-current-label="Current page"
+        >
+            <b-table-column
+                v-for="col in this.tableColumns"
+                :key="col.field"
+                :field="col.field"
+                :label="col.label"
+                v-slot="props">
+                {{ props.row.original_title }}
+            </b-table-column>
+
+        </b-table>
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import {API_BASE_URL, extractError, getToken} from "../../api";
+import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 
 export default {
     name: "ModelView",
@@ -30,6 +45,9 @@ export default {
             page: 0,
             tableData: null,
             tableColumns: null,
+            customColumnComponents: {
+                '*': ColumnViewDefault,
+            }
         }
     },
 
@@ -88,6 +106,14 @@ export default {
 
         constructTableData(schema, d) {
             return d[schema.data_name];
+        },
+
+        registerCustomColumnComponent(selector, component) {
+            this.customColumnComponents[selector] = component;
+        },
+
+        getCustomColumnComponent() {
+            return this.customColumnComponents["*"];
         }
     },
 
