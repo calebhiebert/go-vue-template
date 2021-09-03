@@ -5,6 +5,7 @@ package modelcrud
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/calebhiebert/go-vue-template/api"
@@ -61,6 +62,10 @@ func (*GeneratedCrudController) GetTokenIssuanceByID(c *gin.Context) {
 // @Summary Gets a list for all entities of the TokenIssuance type
 // @Produce json
 // @Success 200 {object} APITokenIssuance
+// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.user_id query string false "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.ip_address query string false "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/tokenIssuances [get]
 func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 	limit, offset := api.ExtractLimitOffset(c)
@@ -76,7 +81,32 @@ func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 		qm.Offset(offset),
 	}
 
-	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	var orderBy []string
+
+	for q, v := range c.Request.URL.Query() {
+		sortDirection := "ASC"
+
+		if v[0] == "DESC" || v[0] == "desc" {
+			sortDirection = "DESC"
+		}
+
+		switch q {
+		case "sort.id":
+			orderBy = append(orderBy, "id "+sortDirection)
+		case "sort.user_id":
+			orderBy = append(orderBy, "user_id "+sortDirection)
+		case "sort.ip_address":
+			orderBy = append(orderBy, "ip_address "+sortDirection)
+		case "sort.created_at":
+			orderBy = append(orderBy, "created_at "+sortDirection)
+		}
+	}
+
+	if len(orderBy) > 0 {
+		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
+	} else {
+		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	}
 
 	tokenIssuances, err := models.TokenIssuances(queryMods...).AllG(c.Request.Context())
 	if err != nil {

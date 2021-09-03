@@ -5,6 +5,7 @@ package modelcrud
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/calebhiebert/go-vue-template/api"
@@ -76,6 +77,18 @@ func (*GeneratedCrudController) GetAccessLogByID(c *gin.Context) {
 // @Summary Gets a list for all entities of the AccessLog type
 // @Produce json
 // @Success 200 {object} APIAccessLog
+// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.path query string false "Sort by path. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.request_body query string false "Sort by request_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.request_headers query string false "Sort by request_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.response_body query string false "Sort by response_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.response_headers query string false "Sort by response_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.response_code query string false "Sort by response_code. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.processing_duration query string false "Sort by processing_duration. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.request_method query string false "Sort by request_method. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.user_id query string false "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.ip_address query string false "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/accessLogs [get]
 func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 	limit, offset := api.ExtractLimitOffset(c)
@@ -91,7 +104,48 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 		qm.Offset(offset),
 	}
 
-	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	var orderBy []string
+
+	for q, v := range c.Request.URL.Query() {
+		sortDirection := "ASC"
+
+		if v[0] == "DESC" || v[0] == "desc" {
+			sortDirection = "DESC"
+		}
+
+		switch q {
+		case "sort.id":
+			orderBy = append(orderBy, "id "+sortDirection)
+		case "sort.path":
+			orderBy = append(orderBy, "path "+sortDirection)
+		case "sort.request_body":
+			orderBy = append(orderBy, "request_body "+sortDirection)
+		case "sort.request_headers":
+			orderBy = append(orderBy, "request_headers "+sortDirection)
+		case "sort.response_body":
+			orderBy = append(orderBy, "response_body "+sortDirection)
+		case "sort.response_headers":
+			orderBy = append(orderBy, "response_headers "+sortDirection)
+		case "sort.response_code":
+			orderBy = append(orderBy, "response_code "+sortDirection)
+		case "sort.processing_duration":
+			orderBy = append(orderBy, "processing_duration "+sortDirection)
+		case "sort.request_method":
+			orderBy = append(orderBy, "request_method "+sortDirection)
+		case "sort.user_id":
+			orderBy = append(orderBy, "user_id "+sortDirection)
+		case "sort.ip_address":
+			orderBy = append(orderBy, "ip_address "+sortDirection)
+		case "sort.created_at":
+			orderBy = append(orderBy, "created_at "+sortDirection)
+		}
+	}
+
+	if len(orderBy) > 0 {
+		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
+	} else {
+		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	}
 
 	accessLogs, err := models.AccessLogs(queryMods...).AllG(c.Request.Context())
 	if err != nil {

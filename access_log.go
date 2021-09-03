@@ -88,7 +88,7 @@ func accessLogMiddleware(c *gin.Context) {
 
 	err = accessLog.ResponseHeaders.Marshal(w.ResponseWriter.Header())
 	if err != nil {
-		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to marshal response headersfor access log")
+		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to marshal response headers for access log")
 	}
 
 	user := extractVerifiedUser(c)

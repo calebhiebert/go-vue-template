@@ -73,6 +73,13 @@ c.JSON(http.StatusOK, {{ $alias.UpSingular }})
 {{- if $soft }}
     // @Param withDeleted query string false "Include deleted {{ $alias.DownPlural }} in the results"
 {{- end }}
+{{- range $column := .Table.Columns -}}
+    {{- $orig_col_name := $column.Name -}}
+    {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
+    {{- else }}
+        // @Param sort.{{ $orig_col_name }} query string false "Sort by {{ $orig_col_name }}. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+    {{- end }}
+{{- end }}
 // @Router /crud/{{ $alias.DownPlural }} [get]
 func (*GeneratedCrudController) Get{{ $alias.UpPlural }}(c *gin.Context) {
 limit, offset := api.ExtractLimitOffset(c)
@@ -96,9 +103,34 @@ qm.Offset(offset),
     }
 {{ end }}
 
-{{- $colNames := .Table.Columns | columnNames -}}
-{{ if containsAny $colNames "created_at" }}
+var orderBy []string
+
+for q, v := range c.Request.URL.Query() {
+    sortDirection := "ASC"
+
+    if v[0] == "DESC" || v[0] == "desc" {
+        sortDirection = "DESC"
+    }
+
+    switch q {
+        {{- range $column := .Table.Columns -}}
+            {{- $orig_col_name := $column.Name -}}
+            {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
+            {{- else }}
+                case "sort.{{ $orig_col_name }}":
+                    orderBy = append(orderBy, "{{$orig_col_name}} " + sortDirection)
+            {{- end }}
+        {{- end -}}
+    }
+}
+
+if len(orderBy) > 0 {
+    queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
+} {{- $colNames := .Table.Columns | columnNames -}}
+{{- if containsAny $colNames "created_at" -}}
+    else {
     queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+    }
 {{ end }}
 
 {{ $alias.DownPlural }}, err := models.{{ $alias.UpPlural }}(queryMods...).AllG(c.Request.Context())

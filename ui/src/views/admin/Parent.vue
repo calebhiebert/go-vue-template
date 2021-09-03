@@ -12,16 +12,6 @@
                             <b-menu-item active expanded label="Models" v-if="schema !== null">
                                 <b-menu-item :label="model.name" @click="openModel(id)" v-for="(model, id) in schema.models" :key="id"></b-menu-item>
                             </b-menu-item>
-                            <b-menu-item icon="account" label="My Account">
-                                <b-menu-item icon="account-box" label="Account data"></b-menu-item>
-                                <b-menu-item icon="home-account" label="Addresses"></b-menu-item>
-                            </b-menu-item>
-                        </b-menu-list>
-                        <b-menu-list>
-                            <b-menu-item label="Expo" icon="link"></b-menu-item>
-                        </b-menu-list>
-                        <b-menu-list label="Actions">
-                            <b-menu-item icon="logout" label="Logout"></b-menu-item>
                         </b-menu-list>
                     </b-menu>
                 </div>

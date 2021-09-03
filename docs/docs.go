@@ -127,6 +127,80 @@ var doc = `{
                     "application/json"
                 ],
                 "summary": "Gets a list for all entities of the AccessLog type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by path. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.path",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by request_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.request_body",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by request_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.request_headers",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by response_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.response_body",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by response_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.response_headers",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by response_code. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.response_code",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by processing_duration. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.processing_duration",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by request_method. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.request_method",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.ip_address",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -226,6 +300,32 @@ var doc = `{
                     "application/json"
                 ],
                 "summary": "Gets a list for all entities of the TokenIssuance type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.ip_address",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -330,6 +430,60 @@ var doc = `{
                         "type": "string",
                         "description": "Include deleted users in the results",
                         "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by login. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.login",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by email. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by sub. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.sub",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by roles. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.roles",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
                         "in": "query"
                     }
                 ],

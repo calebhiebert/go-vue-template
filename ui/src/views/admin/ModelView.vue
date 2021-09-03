@@ -6,6 +6,11 @@
                  :data="tableData === null ? [] : tableData"
                  :total="data !== null ? data.total : 0"
                  :per-page="limit"
+
+                 detailed
+                 detail-key="id"
+                 :show-detail-icon="true"
+
                  paginated
                  backend-pagination
                  @page-change="onPageChange"
@@ -13,17 +18,26 @@
                  aria-previous-label="Previous page"
                  aria-page-label="Page"
                  aria-current-label="Current page"
+
+                 :default-sort-direction="defaultSortOrder"
+                 :default-sort="[sortField, sortOrder]"
+                 backend-sorting
+                 @sort="onSort"
         >
             <b-table-column
                 v-for="col in this.tableColumns"
                 :key="col.field"
                 :field="col.field"
                 :label="col.label"
+                sortable
                 v-slot="props">
                 {{ props.row.original_title }}
-                <component :is="getCustomColumnComponent(col.field)" :col="col" :p="props" :row="props.row"></component>
+                <component :is="getCustomColumnComponent(col.field)" :col="col" :field="col.schemaField" :p="props" :row="props.row"></component>
             </b-table-column>
 
+            <template #detail="props">
+                <ModelvViewSingle :model="props.row" :schema="modelSchema"></ModelvViewSingle>
+            </template>
         </b-table>
     </div>
 </template>
@@ -33,28 +47,31 @@ import axios from "axios";
 import {API_BASE_URL, extractError, getToken} from "../../api";
 import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 import ColumnViewHTTPResponseCode from "../../components/admin/ColumnViewHTTPResponseCode";
-import ColumnViewDateTime from "../../components/admin/ColumnViewDateTime";
+import ModelvViewSingle from "../../components/admin/ModelViewSingle";
 
 export default {
     name: "ModelView",
-
+    components: {ModelvViewSingle},
     data() {
         return {
             loading: false,
             data: null,
             limit: 25,
             page: 0,
+            modelSchema: null,
             tableData: null,
             tableColumns: null,
-            customColumnComponents: {}
+            customColumnComponents: {},
+
+            sortField: null,
+            sortOrder: 'desc',
+            defaultSortOrder: 'desc',
         }
     },
 
     created() {
         this.registerCustomColumnComponent("*", ColumnViewDefault);
         this.registerCustomColumnComponent("access_logs.response_code", ColumnViewHTTPResponseCode);
-        this.registerCustomColumnComponent("*.created_at", ColumnViewDateTime);
-        this.registerCustomColumnComponent("*.updated_at", ColumnViewDateTime);
     },
 
     mounted() {
@@ -65,21 +82,19 @@ export default {
         async load() {
             this.loading = true;
 
-            console.log(window._adminSchema.models[this.modelId]);
-            const modelSchema = window._adminSchema.models[this.modelId];
+            this.modelSchema = window._adminSchema.models[this.modelId];
 
-            this.tableColumns = this.constructTableColumns(modelSchema);
+            this.tableColumns = this.constructTableColumns(this.modelSchema);
 
             try {
-                const r = await axios.get(`${API_BASE_URL}/crud/${modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * this.page}`, {
+                const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * this.page}&sort.${this.sortField}=${this.sortOrder}`, {
                     headers: {
                         'Authorization': `Bearer ${getToken()}`
                     }
                 });
 
-                console.log(r.data);
                 this.data = r.data;
-                this.tableData = this.constructTableData(modelSchema, r.data);
+                this.tableData = this.constructTableData(this.modelSchema, r.data);
             } catch (e) {
                 console.log(extractError(e));
             }
@@ -89,6 +104,13 @@ export default {
 
         onPageChange(page) {
             this.page = page;
+            this.load();
+        },
+
+        onSort(field, order) {
+            this.sortField = field;
+            this.sortOrder = order;
+
             this.load();
         },
 
@@ -104,6 +126,7 @@ export default {
                     field: field.id,
                     label: field.name,
                     numeric: field.type === "int",
+                    schemaField: field,
                 });
             }
 
@@ -139,6 +162,8 @@ export default {
             this.data = null;
             this.tableData = null;
             this.tableColumns = null;
+            this.sortField = null;
+            this.sortOrder = "desc";
             this.load();
         },
 

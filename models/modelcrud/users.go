@@ -5,6 +5,7 @@ package modelcrud
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/calebhiebert/go-vue-template/api"
@@ -72,6 +73,15 @@ func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} APIUser
 // @Param withDeleted query string false "Include deleted users in the results"
+// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.name query string false "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.login query string false "Sort by login. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.email query string false "Sort by email. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.sub query string false "Sort by sub. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.roles query string false "Sort by roles. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.updated_at query string false "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.deleted_at query string false "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/users [get]
 func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 	limit, offset := api.ExtractLimitOffset(c)
@@ -93,7 +103,42 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 		queryMods = append(queryMods, qm.WithDeleted())
 	}
 
-	queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	var orderBy []string
+
+	for q, v := range c.Request.URL.Query() {
+		sortDirection := "ASC"
+
+		if v[0] == "DESC" || v[0] == "desc" {
+			sortDirection = "DESC"
+		}
+
+		switch q {
+		case "sort.id":
+			orderBy = append(orderBy, "id "+sortDirection)
+		case "sort.name":
+			orderBy = append(orderBy, "name "+sortDirection)
+		case "sort.login":
+			orderBy = append(orderBy, "login "+sortDirection)
+		case "sort.email":
+			orderBy = append(orderBy, "email "+sortDirection)
+		case "sort.sub":
+			orderBy = append(orderBy, "sub "+sortDirection)
+		case "sort.roles":
+			orderBy = append(orderBy, "roles "+sortDirection)
+		case "sort.created_at":
+			orderBy = append(orderBy, "created_at "+sortDirection)
+		case "sort.updated_at":
+			orderBy = append(orderBy, "updated_at "+sortDirection)
+		case "sort.deleted_at":
+			orderBy = append(orderBy, "deleted_at "+sortDirection)
+		}
+	}
+
+	if len(orderBy) > 0 {
+		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
+	} else {
+		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
+	}
 
 	users, err := models.Users(queryMods...).AllG(c.Request.Context())
 	if err != nil {
