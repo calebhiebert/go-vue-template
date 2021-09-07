@@ -61,7 +61,7 @@ export default {
                 return
             }
 
-            this.$router.push({name: 'AdminModelView', params: {model: m}});
+            this.$router.push({name: 'AdminModelView', params: {model: m}, query: {page: 1}});
         }
     }
 };

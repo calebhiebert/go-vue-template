@@ -14,7 +14,7 @@ import {
 	faArrowUp,
 	faEnvelope,
 	faExclamationCircle,
-	faLock
+	faLock, faSyncAlt, faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
@@ -22,7 +22,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {confirmed, email, length, required} from "vee-validate/dist/rules";
 import {extend, ValidationProvider} from "vee-validate";
 
-library.add(faLock, faEnvelope, faExclamationCircle, faArrowUp, faAngleLeft, faAngleRight);
+library.add(faLock, faEnvelope, faExclamationCircle, faArrowUp, faAngleLeft, faAngleRight, faSyncAlt, faTrash);
 
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("ValidationProvider", ValidationProvider);

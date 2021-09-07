@@ -1,10 +1,20 @@
 <template>
     <div>
+        <div class="columns mb-2">
+            <!--<div class="column"></div>-->
+            <div class="column is-narrow">
+                <b-button icon-left="sync-alt" :loading="loading" @click="load">Refresh</b-button>
+                <b-button type="is-danger" icon-left="trash" class="ml-2" @click="deleteMultiple" :disabled="selected.length === 0">Delete
+                    {{ selected.length === 0 ? "" : selected.length }}
+                </b-button>
+            </div>
+        </div>
+
         <b-table checkable
                  :loading="loading"
                  v-if="tableColumns !== null"
                  :data="tableData === null ? [] : tableData"
-                 :total="data !== null ? (data.total - 1) : 0"
+                 :total="data !== null ? data.total : 0"
                  :per-page="limit"
 
                  detailed
@@ -19,6 +29,8 @@
                  aria-previous-label="Previous page"
                  aria-page-label="Page"
                  aria-current-label="Current page"
+
+                 :checked-rows.sync="selected"
 
                  :default-sort-direction="defaultSortOrder"
                  :default-sort="[sortField, sortOrder]"
@@ -61,12 +73,12 @@ export default {
             loading: false,
             data: null,
             limit: 10,
-            page: this.$route.query.page ? parseInt(this.$route.query.page) : 0,
+            page: this.$route.query.page ? parseInt(this.$route.query.page) : 1,
             modelSchema: null,
             tableData: null,
             tableColumns: null,
             customColumnComponents: {},
-            selected: null,
+            selected: [],
 
             sortField: null,
             sortOrder: "desc",
@@ -92,7 +104,13 @@ export default {
             this.tableColumns = this.constructTableColumns(this.modelSchema);
 
             try {
-                const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * this.page}&sort.${this.sortField}=${this.sortOrder}`, {
+                let sort = "";
+
+                if (this.sortField) {
+                    sort = `&sort.${this.sortField}=${this.sortOrder}`;
+                }
+
+                const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * (this.page - 1)}${sort}`, {
                     headers: {
                         "Authorization": `Bearer ${getToken()}`,
                     },
@@ -169,6 +187,30 @@ export default {
 
         editItem(item) {
             this.$router.push({name: "AdminModelEdit", params: {model: this.modelId, id: item.id}});
+        },
+
+        deleteMultiple() {
+            this.$buefy.dialog.confirm({
+                title: "Are you sure?",
+                message: `Are you sure you would like to delete ${this.selected.length} item(s)? You cannot undo this action`,
+                confirmText: `Delete ${this.selected.length}`,
+                cancelText: "Cancel",
+                type: 'is-danger',
+                onConfirm: async () => {
+                    await axios.delete(`${API_BASE_URL}/crud/${this.modelSchema.url_name}`, {
+                        data: {
+                            ids: this.selected.map(s => s.id),
+                        },
+                        headers: {
+                            'Authorization': `Bearer ${getToken()}`
+                        }
+                    });
+
+                    this.selected = [];
+
+                    this.load();
+                }
+            })
         },
 
         deleteItem(item) {
