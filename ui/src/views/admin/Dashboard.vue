@@ -7,19 +7,22 @@
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">Total Users</p>
-                        <p class="title">{{ stats.total_users }}</p>
+                        <p class="title" v-if="stats">{{ stats.total_users }}</p>
+                        <p class="title" v-else><b-skeleton position="is-centered" height="30" width="75%"></b-skeleton></p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">New Users (Week)</p>
-                        <p class="title">{{ stats.weekly_new_users }}</p>
+                        <p class="title" v-if="stats">{{ stats.weekly_new_users }}</p>
+                        <p class="title" v-else><b-skeleton position="is-centered" height="30" width="75%"></b-skeleton></p>
                     </div>
                 </div>
                 <div class="level-item has-text-centered">
                     <div>
                         <p class="heading">New Users (Month)</p>
-                        <p class="title">{{ stats.monthly_new_users }}</p>
+                        <p class="title" v-if="stats">{{ stats.monthly_new_users }}</p>
+                        <p class="title" v-else><b-skeleton position="is-centered" height="30" width="75%"></b-skeleton></p>
                     </div>
                 </div>
             </nav>
