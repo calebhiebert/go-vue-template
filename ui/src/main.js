@@ -5,6 +5,7 @@ import router from "./router";
 
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
+import './styles.css';
 
 // Setup fontawesome icons
 import {library} from "@fortawesome/fontawesome-svg-core";

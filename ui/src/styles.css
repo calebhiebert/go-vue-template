@@ -1,0 +1,8 @@
+.select select, .select select:not([multiple]) {
+	padding-right: 0 !important;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+	border: none !important;
+	right: 0;
+}

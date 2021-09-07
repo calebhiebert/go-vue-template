@@ -4,7 +4,8 @@
             <!--<div class="column"></div>-->
             <div class="column is-narrow">
                 <b-button icon-left="sync-alt" :loading="loading" @click="load">Refresh</b-button>
-                <b-button type="is-danger" icon-left="trash" class="ml-2" @click="deleteMultiple" :disabled="selected.length === 0">Delete
+                <b-button type="is-danger" icon-left="trash" class="ml-2" @click="deleteMultiple"
+                          :disabled="selected.length === 0">Delete
                     {{ selected.length === 0 ? "" : selected.length }}
                 </b-button>
             </div>
@@ -30,6 +31,10 @@
                  aria-page-label="Page"
                  aria-current-label="Current page"
 
+                 :debounce-search="1000"
+                 backend-filtering
+                 @filters-change="onSearch"
+
                  :checked-rows.sync="selected"
 
                  :default-sort-direction="defaultSortOrder"
@@ -43,10 +48,17 @@
                 :field="col.field"
                 :label="col.label"
                 sortable
-                v-slot="props">
-                {{ props.row.original_title }}
-                <component :is="getCustomColumnComponent(col.field)" :col="col" :field="col.schemaField" :p="props"
-                           :row="props.row"></component>
+                searchable>
+                <template v-slot="props">
+                    {{ props.row.original_title }}
+                    <component :is="getCustomColumnComponent(col.field)" :col="col" :field="col.schemaField" :p="props"
+                               :row="props.row"></component>
+                </template>
+
+                <template #searchable="props">
+                    <ColumnFilter v-model="props.filters[props.column.field]"></ColumnFilter>
+                </template>
+
             </b-table-column>
 
             <template #detail="props">
@@ -65,10 +77,11 @@ import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 import ColumnViewHTTPResponseCode from "../../components/admin/ColumnViewHTTPResponseCode";
 import ModelvViewSingle from "../../components/admin/ModelViewSingle";
 import ColumnViewUUID from "../../components/admin/ColumnViewUUID";
+import ColumnFilter from "../../components/admin/ColumnFilter";
 
 export default {
     name: "ModelView",
-    components: {ModelvViewSingle},
+    components: {ColumnFilter, ModelvViewSingle},
     data() {
         return {
             loading: false,
@@ -140,6 +153,10 @@ export default {
             this.load();
         },
 
+        onSearch(a, b) {
+            console.log("FILTERING", a, b);
+        },
+
         onSort(field, order) {
             this.sortField = field;
             this.sortOrder = order;
@@ -198,22 +215,22 @@ export default {
                 message: `Are you sure you would like to delete ${this.selected.length} item(s)? You cannot undo this action`,
                 confirmText: `Delete ${this.selected.length}`,
                 cancelText: "Cancel",
-                type: 'is-danger',
+                type: "is-danger",
                 onConfirm: async () => {
                     await axios.delete(`${API_BASE_URL}/crud/${this.modelSchema.url_name}`, {
                         data: {
                             ids: this.selected.map(s => s.id),
                         },
                         headers: {
-                            'Authorization': `Bearer ${getToken()}`
-                        }
+                            "Authorization": `Bearer ${getToken()}`,
+                        },
                     });
 
                     this.selected = [];
 
                     this.load();
-                }
-            })
+                },
+            });
         },
 
         deleteItem(item) {
@@ -265,6 +282,13 @@ export default {
             this.sortOrder = "desc";
             this.load();
         },
+
+        filters: {
+            deep: true,
+            handler() {
+                console.log("FILTERRRR", this.filters);
+            }
+        }
     },
 
     computed: {
