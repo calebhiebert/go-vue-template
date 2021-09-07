@@ -64,6 +64,7 @@ import {API_BASE_URL, extractError, getToken} from "../../api";
 import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 import ColumnViewHTTPResponseCode from "../../components/admin/ColumnViewHTTPResponseCode";
 import ModelvViewSingle from "../../components/admin/ModelViewSingle";
+import ColumnViewUUID from "../../components/admin/ColumnViewUUID";
 
 export default {
     name: "ModelView",
@@ -89,6 +90,8 @@ export default {
     created() {
         this.registerCustomColumnComponent("*", ColumnViewDefault);
         this.registerCustomColumnComponent("access_logs.response_code", ColumnViewHTTPResponseCode);
+        this.registerCustomColumnComponent("*.id", ColumnViewUUID);
+        this.registerCustomColumnComponent("*.user_id", ColumnViewUUID);
     },
 
     mounted() {
