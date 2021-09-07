@@ -82,6 +82,7 @@ func main() {
 	}))
 
 	ConfigAdminCrudModels()
+	addUserHooks()
 
 	// Create a new controller (this is where the api handlers live)
 	c := NewController()

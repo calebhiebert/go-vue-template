@@ -32,6 +32,10 @@ func APIErrorFromErr(err error) *APIError {
 		}
 	}
 
+	if e, ok := err.(*APIError); ok {
+		return e
+	}
+
 	return &APIError{
 		ID:      "unknown_error",
 		Code:    http.StatusInternalServerError,

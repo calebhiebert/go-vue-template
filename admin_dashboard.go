@@ -9,14 +9,6 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
-type AdminTechStats struct {
-
-}
-
-func GetAdminTechStats(c *gin.Context) {
-
-}
-
 func GetAdminDashboardStats(c *gin.Context) {
 	userCount, err := models.Users().CountG(c.Request.Context())
 	if err != nil {
