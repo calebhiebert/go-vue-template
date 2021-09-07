@@ -8,7 +8,7 @@
                 <div class="p-1">
                     <b-menu>
                         <b-menu-list label="Menu">
-                            <b-menu-item label="Home" @click="$router.push({name: 'AdminDashboard'})"></b-menu-item>
+                            <b-menu-item label="Home" :active="$route.name === 'AdminDashboard'" @click="$router.push({name: 'AdminDashboard'})"></b-menu-item>
                             <b-menu-item expanded label="Models" v-if="schema !== null">
                                 <b-menu-item :active="$route.name === 'AdminModelView' && $route.params.model === model.id" :label="model.name" @click="openModel(id)" v-for="(model, id) in schema.models" :key="id"></b-menu-item>
                             </b-menu-item>

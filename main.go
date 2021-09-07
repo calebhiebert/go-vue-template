@@ -115,7 +115,7 @@ func main() {
 	admin := router.Group("/admin")
 	admin.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware, userHasRoleMiddleware("admin"))
 
-	admin.GET("/users", c.ListUsers)
+	admin.GET("/dashStats", GetAdminDashboardStats)
 
 	crud := router.Group("/crud")
 
