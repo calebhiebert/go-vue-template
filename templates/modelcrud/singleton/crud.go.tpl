@@ -1,6 +1,14 @@
 
 type GeneratedCrudController struct {}
 
+type IDList struct {
+    IDs []string `json:"ids"`
+}
+
+type DeletedCount struct {
+    DeletedCount int `json:"deleted_count"`
+}
+
 func RegisterGeneratedCrud(rg *gin.RouterGroup) {
     gcc := GeneratedCrudController{}
 

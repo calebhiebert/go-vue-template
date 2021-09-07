@@ -170,6 +170,18 @@ definitions:
       updated_at:
         type: string
     type: object
+  modelcrud.DeletedCount:
+    properties:
+      deleted_count:
+        type: integer
+    type: object
+  modelcrud.IDList:
+    properties:
+      ids:
+        items:
+          type: string
+        type: array
+    type: object
 info:
   contact: {}
   license:
@@ -239,6 +251,26 @@ paths:
       summary: Registers a new account using username and password as the authentication
         scheme
   /crud/accessLogs:
+    delete:
+      parameters:
+      - description: List of ids to delete
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.IDList'
+      - description: Hard delete accessLog
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.DeletedCount'
+      summary: Soft deletes a range of accessLogs by their ids
     get:
       parameters:
       - description: 'Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
@@ -353,6 +385,26 @@ paths:
             $ref: '#/definitions/modelcrud.APIAccessLog'
       summary: Updates a single AccessLog entity based on their id
   /crud/tokenIssuances:
+    delete:
+      parameters:
+      - description: List of ids to delete
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.IDList'
+      - description: Hard delete tokenIssuance
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.DeletedCount'
+      summary: Soft deletes a range of tokenIssuances by their ids
     get:
       parameters:
       - description: 'Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
@@ -434,6 +486,26 @@ paths:
             $ref: '#/definitions/modelcrud.APITokenIssuance'
       summary: Updates a single TokenIssuance entity based on their id
   /crud/users:
+    delete:
+      parameters:
+      - description: List of ids to delete
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.IDList'
+      - description: Hard delete user
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.DeletedCount'
+      summary: Soft deletes a range of users by their ids
     get:
       parameters:
       - description: Include deleted users in the results
@@ -542,6 +614,22 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APIUser'
       summary: Updates a single User entity based on their id
+  /crud/users/:id/unDelete:
+    post:
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Undeletes a user by id
   /healthz:
     get:
       description: returns 200 when service is running

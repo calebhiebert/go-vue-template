@@ -209,6 +209,37 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of accessLogs by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete accessLog",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
             }
         },
         "/crud/accessLogs/:id": {
@@ -331,6 +362,37 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/modelcrud.APITokenIssuance"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of tokenIssuances by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete tokenIssuance",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
                         }
                     }
                 }
@@ -495,6 +557,37 @@ var doc = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of users by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete user",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
             }
         },
         "/crud/users/:id": {
@@ -574,6 +667,31 @@ var doc = `{
                         "description": "Hard delete user",
                         "name": "hardDelete",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/users/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a user by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -876,6 +994,25 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "modelcrud.DeletedCount": {
+            "type": "object",
+            "properties": {
+                "deleted_count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.IDList": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }

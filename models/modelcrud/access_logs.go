@@ -303,11 +303,44 @@ func (*GeneratedCrudController) DeleteAccessLogByID(c *gin.Context) {
 	c.JSON(http.StatusOK, existingAccessLog)
 }
 
+// BulkDeleteAccessLogsByIDs godoc
+// @Summary Soft deletes a range of accessLogs by their ids
+// @Produce json
+// @Success 200 {object} DeletedCount
+// @Param req body IDList true "List of ids to delete"
+// @Param hardDelete query string false "Hard delete accessLog"
+// @Router /crud/accessLogs [delete]
+func (*GeneratedCrudController) BulkDeleteAccessLogsByIDs(c *gin.Context) {
+
+	var ids IDList
+
+	err := c.BindJSON(&ids)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	var idInterface []interface{}
+
+	for _, id := range ids.IDs {
+		idInterface = append(idInterface, id)
+	}
+
+	deleted, err := models.AccessLogs(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
+}
+
 func (gcc *GeneratedCrudController) RegisterAccessLogs(rg *gin.RouterGroup) {
 	rg.GET("/accessLogs/:id", gcc.GetAccessLogByID)
 	rg.GET("/accessLogs", gcc.GetAccessLogs)
 	rg.PUT("/accessLogs/:id", gcc.UpdateAccessLogByID)
 	rg.DELETE("/accessLogs/:id", gcc.DeleteAccessLogByID)
+	rg.DELETE("/accessLogs", gcc.BulkDeleteAccessLogsByIDs)
 }
 
 var AccessLogsAdmin = api.AdminModel{
@@ -320,85 +353,145 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "path",
 			Name:     "Path",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "request_body",
 			Name:     "RequestBody",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "request_headers",
 			Name:     "RequestHeaders",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "json",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "json",
 		},
 		&api.AdminModelField{
 			ID:       "response_body",
 			Name:     "ResponseBody",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "json",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "json",
 		},
 		&api.AdminModelField{
 			ID:       "response_headers",
 			Name:     "ResponseHeaders",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "json",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "json",
 		},
 		&api.AdminModelField{
 			ID:       "response_code",
 			Name:     "ResponseCode",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "int",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "int",
 		},
 		&api.AdminModelField{
 			ID:       "processing_duration",
 			Name:     "ProcessingDuration",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "int",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "int",
 		},
 		&api.AdminModelField{
 			ID:       "request_method",
 			Name:     "RequestMethod",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "time",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
 		},
 	},
 }
@@ -433,39 +526,63 @@ var AccessLogsModelConfig = AccessLogsModelConfigType{
 
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Path: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	RequestBody: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	RequestHeaders: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	ResponseBody: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	ResponseHeaders: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	ResponseCode: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	ProcessingDuration: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	RequestMethod: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	UserID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	IPAddress: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 }
 

@@ -4,7 +4,7 @@
         <span class="has-text-grey is-italic" v-else>NULL</span>
     </p>
     <p v-else-if="field.type === 'json'">
-        <json-viewer :value="model[field.id]"></json-viewer>
+        <json-viewer v-if="model[field.id] !== null" :value="model[field.id]"></json-viewer>
     </p>
     <b-taglist v-else-if="field.type === 'array'">
         <b-tag v-for="t of model[field.id]" :key="t">{{ t }}</b-tag>

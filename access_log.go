@@ -2,9 +2,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
-	"io"
-	"io/ioutil"
+	"fmt"
 	"time"
 
 	"github.com/calebhiebert/go-vue-template/models"
@@ -36,30 +34,30 @@ func accessLogMiddleware(c *gin.Context) {
 	}
 
 	// Read the incoming request body
-	var buf bytes.Buffer
-
-	tee := io.TeeReader(c.Request.Body, &buf)
-
-	body, err := ioutil.ReadAll(tee)
-	if err != nil {
-		preProcessingSpan.LogKV("event", "error", "message", "failed to read incoming request body for access log")
-	} else {
-		accessLog.RequestBody = null.StringFrom(string(body))
-	}
-
-	clonedRequestHeaders := c.Request.Header.Clone()
-
-	// Remove the authorization header from logging
-	clonedRequestHeaders.Del("Authorization")
-
-	headerJson, err := json.Marshal(clonedRequestHeaders)
-	if err != nil {
-		preProcessingSpan.LogKV("event", "error", "message", "failed to marshal incoming headers for access log")
-	} else {
-		accessLog.RequestHeaders = null.JSONFrom(headerJson)
-	}
-
-	c.Request.Body = ioutil.NopCloser(&buf)
+	// var buf bytes.Buffer
+	//
+	// tee := io.TeeReader(c.Request.Body, &buf)
+	//
+	// body, err := ioutil.ReadAll(tee)
+	// if err != nil {
+	// 	preProcessingSpan.LogKV("event", "error", "message", "failed to read incoming request body for access log")
+	// } else {
+	// 	accessLog.RequestBody = null.StringFrom(string(body))
+	// }
+	//
+	// clonedRequestHeaders := c.Request.Header.Clone()
+	//
+	// // Remove the authorization header from logging
+	// clonedRequestHeaders.Del("Authorization")
+	//
+	// headerJson, err := json.Marshal(clonedRequestHeaders)
+	// if err != nil {
+	// 	preProcessingSpan.LogKV("event", "error", "message", "failed to marshal incoming headers for access log")
+	// } else {
+	// 	accessLog.RequestHeaders = null.JSONFrom(headerJson)
+	// }
+	//
+	// c.Request.Body = ioutil.NopCloser(&buf)
 
 	preProcessingSpan.Finish()
 
@@ -77,19 +75,22 @@ func accessLogMiddleware(c *gin.Context) {
 	postProcessingAccessLogSpan, postCtx := opentracing.StartSpanFromContext(c.Request.Context(), "Access Log Postprocessing")
 	defer postProcessingAccessLogSpan.Finish()
 
-	err = accessLog.ResponseBody.UnmarshalJSON(w.body.Bytes())
-	if err != nil {
-		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to unmarshal response body for access log")
+	// err = accessLog.ResponseBody.UnmarshalJSON(w.body.Bytes())
+	// if err != nil {
+	// 	postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to unmarshal response body for access log")
+	//
+	// 	accessLog.ResponseBody.Marshal(map[string]interface{}{
+	// 		"error": "response body not json",
+	// 	})
+	// }
+	//
+	// err = accessLog.ResponseHeaders.Marshal(w.ResponseWriter.Header())
+	// if err != nil {
+	// 	postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to marshal response headers for access log")
+	// }
 
-		accessLog.ResponseBody.Marshal(map[string]interface{}{
-			"error": "response body not json",
-		})
-	}
-
-	err = accessLog.ResponseHeaders.Marshal(w.ResponseWriter.Header())
-	if err != nil {
-		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to marshal response headers for access log")
-	}
+	accessLog.ResponseHeaders.Marshal(map[string]interface{}{})
+	accessLog.ResponseBody.Marshal(map[string]interface{}{})
 
 	user := extractVerifiedUser(c)
 
@@ -99,8 +100,9 @@ func accessLogMiddleware(c *gin.Context) {
 
 	accessLog.ResponseCode = w.ResponseWriter.Status()
 
-	err = accessLog.InsertG(postCtx, boil.Infer())
+	err := accessLog.InsertG(postCtx, boil.Infer())
 	if err != nil {
+		fmt.Println("ERROR", err.Error())
 		postProcessingAccessLogSpan.LogKV("event", "error", "message", "failed to record access log")
 	}
 }

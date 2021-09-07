@@ -4,7 +4,7 @@
                  :loading="loading"
                  v-if="tableColumns !== null"
                  :data="tableData === null ? [] : tableData"
-                 :total="data !== null ? data.total : 0"
+                 :total="data !== null ? (data.total - 1) : 0"
                  :per-page="limit"
 
                  detailed
@@ -14,6 +14,7 @@
                  paginated
                  backend-pagination
                  @page-change="onPageChange"
+                 :current-page="page"
                  aria-next-label="Next page"
                  aria-previous-label="Previous page"
                  aria-page-label="Page"
@@ -32,11 +33,14 @@
                 sortable
                 v-slot="props">
                 {{ props.row.original_title }}
-                <component :is="getCustomColumnComponent(col.field)" :col="col" :field="col.schemaField" :p="props" :row="props.row"></component>
+                <component :is="getCustomColumnComponent(col.field)" :col="col" :field="col.schemaField" :p="props"
+                           :row="props.row"></component>
             </b-table-column>
 
             <template #detail="props">
                 <ModelvViewSingle :model="props.row" :schema="modelSchema"></ModelvViewSingle>
+                <b-button class="mt-2" type="is-primary" @click="editItem(props.row)">Edit</b-button>
+                <b-button class="mt-2 ml-2" type="is-danger" @click="deleteItem(props.row)">Delete</b-button>
             </template>
         </b-table>
     </div>
@@ -56,17 +60,18 @@ export default {
         return {
             loading: false,
             data: null,
-            limit: 25,
-            page: 0,
+            limit: 10,
+            page: this.$route.query.page ? parseInt(this.$route.query.page) : 0,
             modelSchema: null,
             tableData: null,
             tableColumns: null,
             customColumnComponents: {},
+            selected: null,
 
             sortField: null,
-            sortOrder: 'desc',
-            defaultSortOrder: 'desc',
-        }
+            sortOrder: "desc",
+            defaultSortOrder: "desc",
+        };
     },
 
     created() {
@@ -89,8 +94,8 @@ export default {
             try {
                 const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * this.page}&sort.${this.sortField}=${this.sortOrder}`, {
                     headers: {
-                        'Authorization': `Bearer ${getToken()}`
-                    }
+                        "Authorization": `Bearer ${getToken()}`,
+                    },
                 });
 
                 this.data = r.data;
@@ -104,6 +109,13 @@ export default {
 
         onPageChange(page) {
             this.page = page;
+
+            this.$router.replace({
+                name: this.$route.name, params: this.$route.params, query: {
+                    page: this.page,
+                },
+            });
+
             this.load();
         },
 
@@ -153,7 +165,49 @@ export default {
             }
 
             return this.customColumnComponents["*"];
-        }
+        },
+
+        editItem(item) {
+            this.$router.push({name: "AdminModelEdit", params: {model: this.modelId, id: item.id}});
+        },
+
+        deleteItem(item) {
+            this.$buefy.dialog.confirm({
+                title: "Are you sure?",
+                message: `Are you sure you would like to delete this item?${this.modelSchema.can_soft_delete ? "" : " This action cannot be undone"}`,
+                confirmText: "Delete",
+                cancelText: "Cancel",
+                type: "is-danger",
+                onConfirm: async () => {
+                    await axios.delete(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${item.id}`, {
+                        headers: {
+                            "Authorization": `Bearer ${getToken()}`,
+                        },
+                    });
+
+                    if (this.modelSchema.can_soft_delete) {
+                        this.$buefy.snackbar.open({
+                            duration: 5000,
+                            message: `${this.modelSchema.name} deleted`,
+                            type: "is-danger",
+                            position: "is-bottom-right",
+                            actionText: "Undo",
+                            onAction: async () => {
+                                await axios.post(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${item.id}/unDelete`, null, {
+                                    headers: {
+                                        "Authorization": `Bearer ${getToken()}`,
+                                    },
+                                });
+
+                                this.load();
+                            },
+                        });
+                    }
+
+                    this.load();
+                },
+            });
+        },
     },
 
     watch: {
@@ -166,18 +220,14 @@ export default {
             this.sortOrder = "desc";
             this.load();
         },
-
-        page() {
-            this.load();
-        }
     },
 
     computed: {
         modelId() {
             return this.$route.params.model;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style scoped>

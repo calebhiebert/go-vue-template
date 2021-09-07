@@ -8,9 +8,9 @@
                 <div class="p-1">
                     <b-menu>
                         <b-menu-list label="Menu">
-                            <b-menu-item icon="information-outline" label="Info"></b-menu-item>
-                            <b-menu-item active expanded label="Models" v-if="schema !== null">
-                                <b-menu-item :label="model.name" @click="openModel(id)" v-for="(model, id) in schema.models" :key="id"></b-menu-item>
+                            <b-menu-item label="Home" @click="$router.push({name: 'AdminDashboard'})"></b-menu-item>
+                            <b-menu-item expanded label="Models" v-if="schema !== null">
+                                <b-menu-item :active="$route.name === 'AdminModelView' && $route.params.model === model.id" :label="model.name" @click="openModel(id)" v-for="(model, id) in schema.models" :key="id"></b-menu-item>
                             </b-menu-item>
                         </b-menu-list>
                     </b-menu>
@@ -79,5 +79,6 @@ export default {
     margin-left: 1em;
     margin-top: 1em;
     margin-right: 1em;
+    margin-bottom: 3em;
 }
 </style>

@@ -211,11 +211,44 @@ func (*GeneratedCrudController) DeleteTokenIssuanceByID(c *gin.Context) {
 	c.JSON(http.StatusOK, existingTokenIssuance)
 }
 
+// BulkDeleteTokenIssuancesByIDs godoc
+// @Summary Soft deletes a range of tokenIssuances by their ids
+// @Produce json
+// @Success 200 {object} DeletedCount
+// @Param req body IDList true "List of ids to delete"
+// @Param hardDelete query string false "Hard delete tokenIssuance"
+// @Router /crud/tokenIssuances [delete]
+func (*GeneratedCrudController) BulkDeleteTokenIssuancesByIDs(c *gin.Context) {
+
+	var ids IDList
+
+	err := c.BindJSON(&ids)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	var idInterface []interface{}
+
+	for _, id := range ids.IDs {
+		idInterface = append(idInterface, id)
+	}
+
+	deleted, err := models.TokenIssuances(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
+}
+
 func (gcc *GeneratedCrudController) RegisterTokenIssuances(rg *gin.RouterGroup) {
 	rg.GET("/tokenIssuances/:id", gcc.GetTokenIssuanceByID)
 	rg.GET("/tokenIssuances", gcc.GetTokenIssuances)
 	rg.PUT("/tokenIssuances/:id", gcc.UpdateTokenIssuanceByID)
 	rg.DELETE("/tokenIssuances/:id", gcc.DeleteTokenIssuanceByID)
+	rg.DELETE("/tokenIssuances", gcc.BulkDeleteTokenIssuancesByIDs)
 }
 
 var TokenIssuancesAdmin = api.AdminModel{
@@ -228,29 +261,49 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "time",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
 		},
 	},
 }
@@ -269,15 +322,23 @@ var TokenIssuancesModelConfig = TokenIssuancesModelConfigType{
 
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	UserID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	IPAddress: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 }
 

@@ -18,7 +18,23 @@ Fields: []*api.AdminModelField{
         ID: "{{ $orig_col_name }}",
         Name: "{{ $colAlias }}",
         Nullable: {{ $field.Nullable }},
-        Config: api.NewDefaultAdminModelFieldConfig(),
+        Editable:
+        {{- if eq $orig_col_name "id" -}}
+            false
+        {{- else if eq $orig_col_name "created_at" -}}
+            false
+        {{- else if eq $orig_col_name "updated_at" -}}
+            false
+        {{- else if eq $orig_col_name "deleted_at" -}}
+            false
+        {{- else -}}
+            true
+        {{- end -}},
+        Config: api.AdminModelFieldConfig{
+            ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
+            Editable: true,
+            IsEmail: {{- if eq $orig_col_name "email" -}}true{{- else -}}false{{- end -}},
+        },
         Type:
         {{- if eq $field.Type "null.String" -}}
             "string"
@@ -62,6 +78,8 @@ var {{ titleCase $.Table.Name }}ModelConfig = {{ titleCase $.Table.Name }}ModelC
     {{- else }}
         {{ $colAlias }}: api.AdminModelFieldConfig{
         ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
+        Editable: true,
+        IsEmail: {{- if eq $orig_tbl_name "email" -}}true{{- else -}}false{{- end -}},
         },
     {{- end -}}
 {{ end }}

@@ -267,11 +267,80 @@ func (*GeneratedCrudController) DeleteUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, existingUser)
 }
 
+// BulkDeleteUsersByIDs godoc
+// @Summary Soft deletes a range of users by their ids
+// @Produce json
+// @Success 200 {object} DeletedCount
+// @Param req body IDList true "List of ids to delete"
+// @Param hardDelete query string false "Hard delete user"
+// @Router /crud/users [delete]
+func (*GeneratedCrudController) BulkDeleteUsersByIDs(c *gin.Context) {
+
+	var ids IDList
+
+	err := c.BindJSON(&ids)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	hardDelete := c.Query("hardDelete") == "true"
+
+	var idInterface []interface{}
+
+	for _, id := range ids.IDs {
+		idInterface = append(idInterface, id)
+	}
+
+	deleted, err := models.Users(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context(), hardDelete)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
+}
+
+// UnDeleteUserByID godoc
+// @Summary Undeletes a user by id
+// @Produce json
+// @Success 200 {object} APIUser
+// @Param id path string true "User id"
+// @Router /crud/users/:id/unDelete [post]
+func (*GeneratedCrudController) UnDeleteUserByID(c *gin.Context) {
+	id := c.Param("id")
+
+	if id == "" {
+		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
+		return
+	}
+
+	deletedUser, err := models.Users(qm.Where("id = ?", id), qm.WithDeleted()).OneG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	deletedUser.DeletedAt = null.Time{
+		Valid: false,
+	}
+
+	_, err = deletedUser.UpdateG(c.Request.Context(), boil.Whitelist("deleted_at"))
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, deletedUser)
+}
+
 func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 	rg.GET("/users/:id", gcc.GetUserByID)
 	rg.GET("/users", gcc.GetUsers)
 	rg.PUT("/users/:id", gcc.UpdateUserByID)
 	rg.DELETE("/users/:id", gcc.DeleteUserByID)
+	rg.DELETE("/users", gcc.BulkDeleteUsersByIDs)
+	rg.POST("/users/:id/unDelete", gcc.UnDeleteUserByID)
 }
 
 var UsersAdmin = api.AdminModel{
@@ -284,64 +353,109 @@ var UsersAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "name",
 			Name:     "Name",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "login",
 			Name:     "Login",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "email",
 			Name:     "Email",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     true,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "sub",
 			Name:     "Sub",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "string",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
 		},
 		&api.AdminModelField{
 			ID:       "roles",
 			Name:     "Roles",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "array",
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "array",
 		},
 		&api.AdminModelField{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "time",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
 		},
 		&api.AdminModelField{
 			ID:       "updated_at",
 			Name:     "UpdatedAt",
 			Nullable: false,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "time",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
 		},
 		&api.AdminModelField{
 			ID:       "deleted_at",
 			Name:     "DeletedAt",
 			Nullable: true,
-			Config:   api.NewDefaultAdminModelFieldConfig(),
-			Type:     "time",
+			Editable: false,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: false,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
 		},
 	},
 }
@@ -370,30 +484,48 @@ var UsersModelConfig = UsersModelConfigType{
 
 	ID: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Name: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Login: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Email: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Sub: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	Roles: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	UpdatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
 	},
 	DeletedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: false,
+		Editable:    true,
+		IsEmail:     false,
 	},
 }
 
