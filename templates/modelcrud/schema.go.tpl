@@ -14,6 +14,8 @@
             "cont",
         {{- else if eq .Type "int" -}}
             "gt", "lt", "gte", "lte",
+        {{- else if eq .Type "null.Int" -}}
+            "gt", "lt", "gte", "lte",
         {{- else if eq .Type "time.Time" -}}
             "gt", "lt", "gte", "lte",
         {{- else if eq .Type "null.Time" -}}
@@ -70,6 +72,8 @@ Fields: []*api.AdminModelField{
             "time"
         {{- else if eq $field.Type "types.StringArray" -}}
             "array"
+        {{- else if eq $field.Type "null.Int" -}}
+            "int"
         {{- else -}}
             "{{ $field.Type }}"
         {{- end -}},

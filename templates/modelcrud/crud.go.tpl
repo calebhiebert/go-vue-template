@@ -16,6 +16,8 @@ type API{{$alias.UpSingular}} struct {
             {{$colAlias}} *string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.String" }}
             {{$colAlias}} string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
+        {{- else if eq $column.Type "null.Int" }}
+            {{$colAlias}} *int `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "null.JSON" }}
             {{$colAlias}} map[string]interface{} `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.JSON" }}
@@ -126,6 +128,8 @@ for q, v := range c.Request.URL.Query() {
                     {{ template "numeric_query_operators" $orig_col_name }}
                 {{ else if eq $column.Type "time.Time" }}
                     {{ template "numeric_query_operators" $orig_col_name }}
+                {{ else if eq $column.Type "null.Int" }}
+                    {{ template "numeric_query_operators" $orig_col_name }}
                 {{ else if eq $column.Type "null.Time" }}
                     {{ template "numeric_query_operators" $orig_col_name }}
                 {{ end }}
@@ -196,6 +200,8 @@ type APIUpdate{{ $alias.UpSingular }}Request struct {
             {{$colAlias}} *string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.String" }}
             {{$colAlias}} *string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
+        {{- else if eq $column.Type "null.Int" }}
+            {{$colAlias}} *int `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "null.JSON" }}
             {{$colAlias}} map[string]interface{} `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.JSON" }}
@@ -268,7 +274,7 @@ return
     {{ else if eq $orig_col_name "updated_at" }}
     {{ else if eq $orig_col_name "deleted_at" }}
     {{ else if eq $orig_col_name "id" }}
-    {{else -}}
+    {{ else }}
         if updateReq.{{$colAlias}} != nil {
         existing{{ $alias.UpSingular}}.{{$colAlias}} = *updateReq.{{$colAlias}}
         }
