@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"net/http"
 	"time"
@@ -65,7 +66,7 @@ func GetAdminDashboardStats(c *gin.Context) {
 func GetRequestStats(ctx context.Context, interval time.Duration, duration time.Duration, start time.Time) ([]RequestStats, error) {
 	var res []RequestStats
 
-	err := queries.Raw(`
+	err := queries.Raw(fmt.Sprintf(`
 	SELECT i.bucket_start,
        COALESCE(max(processing_duration), 0) AS max,
        COALESCE(avg(processing_duration), 0) AS avg,
@@ -76,11 +77,11 @@ func GetRequestStats(ctx context.Context, interval time.Duration, duration time.
        percentile_disc(0.99) WITHIN GROUP ( ORDER BY processing_duration ) AS percentile_99,
        count(*) AS count
     FROM access_logs a
-        RIGHT JOIN time_buckets(?, ?, to_timestamp(?)) i
+        RIGHT JOIN time_buckets(%d, %d, to_timestamp(%d)::timestamptz at time zone 'utc') i
             ON a.created_at >= i.bucket_start
             AND a.created_at < i.bucket_end
     GROUP BY i.bucket_start
-    ORDER BY i.bucket_start DESC`, int(math.Round(interval.Seconds())), int(math.Round(duration.Seconds())), start.Unix()).
+    ORDER BY i.bucket_start DESC;`, int(math.Round(interval.Seconds())), int(math.Round(duration.Seconds())), start.Unix())).
 		BindG(ctx, &res)
 	if err != nil {
 		return nil, err
