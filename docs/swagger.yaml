@@ -30,12 +30,16 @@ definitions:
       created_at:
         type: string
       id:
+        description: uuid
         type: string
       ip_address:
+        description: character varying
         type: string
       path:
+        description: character varying
         type: string
       processing_duration:
+        description: integer
         type: integer
       request_body:
         type: string
@@ -43,11 +47,13 @@ definitions:
         additionalProperties: true
         type: object
       request_method:
+        description: character varying
         type: string
       response_body:
         additionalProperties: true
         type: object
       response_code:
+        description: integer
         type: integer
       response_headers:
         additionalProperties: true
@@ -93,10 +99,13 @@ definitions:
       created_at:
         type: string
       id:
+        description: uuid
         type: string
       ip_address:
+        description: character varying
         type: string
       user_id:
+        description: uuid
         type: string
     type: object
   modelcrud.APIUpdateAccessLogRequest:
@@ -150,16 +159,20 @@ definitions:
   modelcrud.APIUser:
     properties:
       created_at:
+        description: timestamp without time zone
         type: string
       deleted_at:
         type: string
       email:
+        description: character varying
         type: string
       id:
+        description: uuid
         type: string
       login:
         type: string
       name:
+        description: character varying
         type: string
       roles:
         items:
@@ -168,6 +181,7 @@ definitions:
       sub:
         type: string
       updated_at:
+        description: timestamp without time zone
         type: string
     type: object
   modelcrud.DeletedCount:
@@ -189,18 +203,6 @@ info:
   title: Go Vue Template
   version: "0.1"
 paths:
-  /admin/users:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/modelcrud.APIUser'
-            type: array
-      summary: Gets a list of all users
   /auth/loginjwt:
     post:
       produces:

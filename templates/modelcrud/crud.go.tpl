@@ -10,8 +10,9 @@ type API{{$alias.UpSingular}} struct {
     {{- range $column.Comment | splitLines -}} // {{ . }}
     {{end -}}
     {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
-    {{- else -}}
-        {{- if eq $column.Type "null.String" }}
+    {{- else }}
+        // {{ $column.DBType }}
+        {{ if eq $column.Type "null.String" }}
             {{$colAlias}} *string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.String" }}
             {{$colAlias}} string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
@@ -66,6 +67,17 @@ return
 c.JSON(http.StatusOK, {{ $alias.UpSingular }})
 }
 
+{{ define "numeric_query_operators" }}
+    case "{{ . }}.gt":
+    queryMods = append(queryMods, qm.Where("{{ . }} > ?", v[0]))
+    case "{{ . }}.lt":
+    queryMods = append(queryMods, qm.Where("{{ . }} < ?", v[0]))
+    case "{{ . }}.gte":
+    queryMods = append(queryMods, qm.Where("{{ . }} >= ?", v[0]))
+    case "{{ . }}.lte":
+    queryMods = append(queryMods, qm.Where("{{ . }} <= ?", v[0]))
+{{ end }}
+
 // Get{{ $alias.UpPlural }} godoc
 // @Summary Gets a list for all entities of the {{ $alias.UpSingular }} type
 // @Produce json
@@ -82,18 +94,7 @@ c.JSON(http.StatusOK, {{ $alias.UpSingular }})
 {{- end }}
 // @Router /crud/{{ $alias.DownPlural }} [get]
 func (*GeneratedCrudController) Get{{ $alias.UpPlural }}(c *gin.Context) {
-limit, offset := api.ExtractLimitOffset(c)
-
-count, err := models.{{ $alias.UpPlural }}().CountG(c.Request.Context())
-if err != nil {
-api.APIErrorFromErr(err).Respond(c)
-return
-}
-
-queryMods := []qm.QueryMod{
-qm.Limit(limit),
-qm.Offset(offset),
-}
+queryMods := []qm.QueryMod{}
 
 {{ if $soft }}
     withDeleted := c.Query("withDeleted") == "true"
@@ -119,10 +120,39 @@ for q, v := range c.Request.URL.Query() {
             {{- else }}
                 case "sort.{{ $orig_col_name }}":
                     orderBy = append(orderBy, "{{$orig_col_name}} " + sortDirection)
+                case "{{ $orig_col_name }}.eq":
+                    queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} = ?", v[0]))
+                {{ if eq $column.Type "int" }}
+                    {{ template "numeric_query_operators" $orig_col_name }}
+                {{ else if eq $column.Type "time.Time" }}
+                    {{ template "numeric_query_operators" $orig_col_name }}
+                {{ else if eq $column.Type "null.Time" }}
+                    {{ template "numeric_query_operators" $orig_col_name }}
+                {{ end }}
+                {{ if eq $column.DBType "uuid" }}
+                {{ else if eq $column.Type "string" }}
+                case "{{ $orig_col_name }}.cont":
+                    {{ $orig_col_name }}SearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+                    queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} ILIKE ?", {{ $orig_col_name }}SearchString))
+                {{ else if eq $column.Type "null.String"}}
+                case "{{ $orig_col_name }}.cont":
+                    {{ $orig_col_name }}SearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+                    queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} ILIKE ?", {{ $orig_col_name }}SearchString))
+                {{ end }}
             {{- end }}
         {{- end -}}
     }
 }
+
+count, err := models.{{ $alias.UpPlural }}(queryMods...).CountG(c.Request.Context())
+if err != nil {
+api.APIErrorFromErr(err).Respond(c)
+return
+}
+
+limit, offset := api.ExtractLimitOffset(c)
+
+queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
 
 if len(orderBy) > 0 {
     queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))

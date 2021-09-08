@@ -4,6 +4,7 @@
 package modelcrud
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -18,17 +19,34 @@ import (
 )
 
 type APIUser struct {
-	ID   string `boil:"id" json:"id" toml:"id" yaml:"id"`
+	// uuid
+	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
+
+	// character varying
 	Name string `boil:"name" json:"name" toml:"name" yaml:"name"`
 
+	// character varying
+
 	Login *string `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-	Email string  `boil:"email" json:"email" toml:"email" yaml:"email"`
+
+	// character varying
+	Email string `boil:"email" json:"email" toml:"email" yaml:"email"`
+
+	// character varying
 
 	Sub *string `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
 
-	Roles     []string  `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+	// ARRAYcharacter varying
+
+	Roles []string `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+
+	// timestamp without time zone
 	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+
+	// timestamp without time zone
 	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+
+	// timestamp without time zone
 
 	DeletedAt *time.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 }
@@ -84,18 +102,7 @@ func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
 // @Param sort.deleted_at query string false "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/users [get]
 func (*GeneratedCrudController) GetUsers(c *gin.Context) {
-	limit, offset := api.ExtractLimitOffset(c)
-
-	count, err := models.Users().CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	queryMods := []qm.QueryMod{
-		qm.Limit(limit),
-		qm.Offset(offset),
-	}
+	queryMods := []qm.QueryMod{}
 
 	withDeleted := c.Query("withDeleted") == "true"
 
@@ -115,24 +122,104 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 		switch q {
 		case "sort.id":
 			orderBy = append(orderBy, "id "+sortDirection)
+		case "id.eq":
+			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+
 		case "sort.name":
 			orderBy = append(orderBy, "name "+sortDirection)
+		case "name.eq":
+			queryMods = append(queryMods, qm.Where("name = ?", v[0]))
+
+		case "name.cont":
+			nameSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("name ILIKE ?", nameSearchString))
+
 		case "sort.login":
 			orderBy = append(orderBy, "login "+sortDirection)
+		case "login.eq":
+			queryMods = append(queryMods, qm.Where("login = ?", v[0]))
+
+		case "login.cont":
+			loginSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("login ILIKE ?", loginSearchString))
+
 		case "sort.email":
 			orderBy = append(orderBy, "email "+sortDirection)
+		case "email.eq":
+			queryMods = append(queryMods, qm.Where("email = ?", v[0]))
+
+		case "email.cont":
+			emailSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("email ILIKE ?", emailSearchString))
+
 		case "sort.sub":
 			orderBy = append(orderBy, "sub "+sortDirection)
+		case "sub.eq":
+			queryMods = append(queryMods, qm.Where("sub = ?", v[0]))
+
+		case "sub.cont":
+			subSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("sub ILIKE ?", subSearchString))
+
 		case "sort.roles":
 			orderBy = append(orderBy, "roles "+sortDirection)
+		case "roles.eq":
+			queryMods = append(queryMods, qm.Where("roles = ?", v[0]))
+
 		case "sort.created_at":
 			orderBy = append(orderBy, "created_at "+sortDirection)
+		case "created_at.eq":
+			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+
+		case "created_at.gt":
+			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
+		case "created_at.lt":
+			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
+		case "created_at.gte":
+			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
+		case "created_at.lte":
+			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
+
 		case "sort.updated_at":
 			orderBy = append(orderBy, "updated_at "+sortDirection)
+		case "updated_at.eq":
+			queryMods = append(queryMods, qm.Where("updated_at = ?", v[0]))
+
+		case "updated_at.gt":
+			queryMods = append(queryMods, qm.Where("updated_at > ?", v[0]))
+		case "updated_at.lt":
+			queryMods = append(queryMods, qm.Where("updated_at < ?", v[0]))
+		case "updated_at.gte":
+			queryMods = append(queryMods, qm.Where("updated_at >= ?", v[0]))
+		case "updated_at.lte":
+			queryMods = append(queryMods, qm.Where("updated_at <= ?", v[0]))
+
 		case "sort.deleted_at":
 			orderBy = append(orderBy, "deleted_at "+sortDirection)
+		case "deleted_at.eq":
+			queryMods = append(queryMods, qm.Where("deleted_at = ?", v[0]))
+
+		case "deleted_at.gt":
+			queryMods = append(queryMods, qm.Where("deleted_at > ?", v[0]))
+		case "deleted_at.lt":
+			queryMods = append(queryMods, qm.Where("deleted_at < ?", v[0]))
+		case "deleted_at.gte":
+			queryMods = append(queryMods, qm.Where("deleted_at >= ?", v[0]))
+		case "deleted_at.lte":
+			queryMods = append(queryMods, qm.Where("deleted_at <= ?", v[0]))
+
 		}
 	}
+
+	count, err := models.Users(queryMods...).CountG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	limit, offset := api.ExtractLimitOffset(c)
+
+	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
 
 	if len(orderBy) > 0 {
 		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
@@ -353,6 +440,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -365,6 +454,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "name",
 			Name:     "Name",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -377,6 +468,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "login",
 			Name:     "Login",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -389,6 +482,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "email",
 			Name:     "Email",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -401,6 +496,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "sub",
 			Name:     "Sub",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -413,6 +510,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "roles",
 			Name:     "Roles",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -425,6 +524,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -437,6 +538,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "updated_at",
 			Name:     "UpdatedAt",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -449,6 +552,8 @@ var UsersAdmin = api.AdminModel{
 			ID:       "deleted_at",
 			Name:     "DeletedAt",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: false,

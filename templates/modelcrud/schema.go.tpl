@@ -3,6 +3,25 @@
 {{- $canSoftDelete := .Table.CanSoftDelete -}}
 {{- $soft := and .AddSoftDeletes $canSoftDelete }}
 
+{{- define "filter_operations" -}}
+    []string{
+        "eq",
+        {{- if eq .DBType "uuid" -}}
+        {{- else if eq .DBType "jsonb" -}}
+        {{- else if eq .Type "string" -}}
+            "cont",
+        {{- else if eq .Type "null.String" -}}
+            "cont",
+        {{- else if eq .Type "int" -}}
+            "gt", "lt", "gte", "lte",
+        {{- else if eq .Type "time.Time" -}}
+            "gt", "lt", "gte", "lte",
+        {{- else if eq .Type "null.Time" -}}
+            "gt", "lt", "gte", "lte",
+        {{- end -}}
+    }
+{{- end }}
+
 var {{ $alias.UpPlural }}Admin = api.AdminModel{
 Name: "{{ $alias.UpPlural }}",
 CanSoftDelete: {{ if $soft }}true{{ else }}false{{end}},
@@ -18,6 +37,7 @@ Fields: []*api.AdminModelField{
         ID: "{{ $orig_col_name }}",
         Name: "{{ $colAlias }}",
         Nullable: {{ $field.Nullable }},
+        FilterOperations: {{ template "filter_operations" $field }},
         Editable:
         {{- if eq $orig_col_name "id" -}}
             false

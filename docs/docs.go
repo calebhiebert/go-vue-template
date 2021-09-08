@@ -26,25 +26,6 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/users": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Gets a list of all users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/modelcrud.APIUser"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/auth/loginjwt": {
             "post": {
                 "produces": [
@@ -785,15 +766,19 @@ var doc = `{
                     "type": "string"
                 },
                 "id": {
+                    "description": "uuid",
                     "type": "string"
                 },
                 "ip_address": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "path": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "processing_duration": {
+                    "description": "integer",
                     "type": "integer"
                 },
                 "request_body": {
@@ -804,6 +789,7 @@ var doc = `{
                     "additionalProperties": true
                 },
                 "request_method": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "response_body": {
@@ -811,6 +797,7 @@ var doc = `{
                     "additionalProperties": true
                 },
                 "response_code": {
+                    "description": "integer",
                     "type": "integer"
                 },
                 "response_headers": {
@@ -880,12 +867,15 @@ var doc = `{
                     "type": "string"
                 },
                 "id": {
+                    "description": "uuid",
                     "type": "string"
                 },
                 "ip_address": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "user_id": {
+                    "description": "uuid",
                     "type": "string"
                 }
             }
@@ -966,21 +956,25 @@ var doc = `{
             "type": "object",
             "properties": {
                 "created_at": {
+                    "description": "timestamp without time zone",
                     "type": "string"
                 },
                 "deleted_at": {
                     "type": "string"
                 },
                 "email": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "id": {
+                    "description": "uuid",
                     "type": "string"
                 },
                 "login": {
                     "type": "string"
                 },
                 "name": {
+                    "description": "character varying",
                     "type": "string"
                 },
                 "roles": {
@@ -993,6 +987,7 @@ var doc = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "description": "timestamp without time zone",
                     "type": "string"
                 }
             }

@@ -56,7 +56,8 @@
                 </template>
 
                 <template #searchable="props">
-                    <ColumnFilter v-model="props.filters[props.column.field]"></ColumnFilter>
+                    <ColumnFilter :column-schema="col.schemaField"
+                                  v-model="props.filters[props.column.field]"></ColumnFilter>
                 </template>
 
             </b-table-column>
@@ -97,6 +98,7 @@ export default {
             sortField: null,
             sortOrder: "desc",
             defaultSortOrder: "desc",
+            filterQuery: "",
         };
     },
 
@@ -126,7 +128,7 @@ export default {
                     sort = `&sort.${this.sortField}=${this.sortOrder}`;
                 }
 
-                const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * (this.page - 1)}${sort}`, {
+                const r = await axios.get(`${API_BASE_URL}/crud/${this.modelSchema.url_name}?limit=${this.limit}&offset=${this.limit * (this.page - 1)}${sort}${this.filterQuery}`, {
                     headers: {
                         "Authorization": `Bearer ${getToken()}`,
                     },
@@ -153,8 +155,24 @@ export default {
             this.load();
         },
 
-        onSearch(a, b) {
-            console.log("FILTERING", a, b);
+        onSearch(filters) {
+            const filterClauses = [];
+
+            for (let k of Object.keys(filters)) {
+                if (Object.hasOwn(filters, k) && filters[k].query !== "" && filters[k].query) {
+                    filterClauses.push(`${k}.${filters[k].filter}=${encodeURIComponent(filters[k].query)}`);
+                }
+            }
+
+            const f = filterClauses.join("&");
+
+            if (f !== "") {
+                this.filterQuery = "&" + f;
+            } else {
+                this.filterQuery = "";
+            }
+
+            this.load();
         },
 
         onSort(field, order) {
@@ -280,15 +298,9 @@ export default {
             this.tableColumns = null;
             this.sortField = null;
             this.sortOrder = "desc";
+            this.filterQuery = null;
             this.load();
         },
-
-        filters: {
-            deep: true,
-            handler() {
-                console.log("FILTERRRR", this.filters);
-            }
-        }
     },
 
     computed: {

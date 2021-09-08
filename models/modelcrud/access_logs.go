@@ -4,6 +4,7 @@
 package modelcrud
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -18,22 +19,45 @@ import (
 )
 
 type APIAccessLog struct {
-	ID   string `boil:"id" json:"id" toml:"id" yaml:"id"`
+	// uuid
+	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
+
+	// character varying
 	Path string `boil:"path" json:"path" toml:"path" yaml:"path"`
+
+	// text
 
 	RequestBody *string `boil:"request_body" json:"request_body,omitempty" toml:"request_body" yaml:"request_body,omitempty"`
 
+	// jsonb
+
 	RequestHeaders map[string]interface{} `boil:"request_headers" json:"request_headers,omitempty" toml:"request_headers" yaml:"request_headers,omitempty"`
+
+	// jsonb
 
 	ResponseBody map[string]interface{} `boil:"response_body" json:"response_body" toml:"response_body" yaml:"response_body"`
 
-	ResponseHeaders    map[string]interface{} `boil:"response_headers" json:"response_headers" toml:"response_headers" yaml:"response_headers"`
-	ResponseCode       int                    `boil:"response_code" json:"response_code" toml:"response_code" yaml:"response_code"`
-	ProcessingDuration int                    `boil:"processing_duration" json:"processing_duration" toml:"processing_duration" yaml:"processing_duration"`
-	RequestMethod      string                 `boil:"request_method" json:"request_method" toml:"request_method" yaml:"request_method"`
+	// jsonb
 
-	UserID    *string `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
-	IPAddress string  `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
+	ResponseHeaders map[string]interface{} `boil:"response_headers" json:"response_headers" toml:"response_headers" yaml:"response_headers"`
+
+	// integer
+	ResponseCode int `boil:"response_code" json:"response_code" toml:"response_code" yaml:"response_code"`
+
+	// integer
+	ProcessingDuration int `boil:"processing_duration" json:"processing_duration" toml:"processing_duration" yaml:"processing_duration"`
+
+	// character varying
+	RequestMethod string `boil:"request_method" json:"request_method" toml:"request_method" yaml:"request_method"`
+
+	// uuid
+
+	UserID *string `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
+
+	// character varying
+	IPAddress string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
+
+	// timestamp without time zone
 
 	CreatedAt *time.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 }
@@ -91,18 +115,7 @@ func (*GeneratedCrudController) GetAccessLogByID(c *gin.Context) {
 // @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/accessLogs [get]
 func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
-	limit, offset := api.ExtractLimitOffset(c)
-
-	count, err := models.AccessLogs().CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	queryMods := []qm.QueryMod{
-		qm.Limit(limit),
-		qm.Offset(offset),
-	}
+	queryMods := []qm.QueryMod{}
 
 	var orderBy []string
 
@@ -116,30 +129,119 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 		switch q {
 		case "sort.id":
 			orderBy = append(orderBy, "id "+sortDirection)
+		case "id.eq":
+			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+
 		case "sort.path":
 			orderBy = append(orderBy, "path "+sortDirection)
+		case "path.eq":
+			queryMods = append(queryMods, qm.Where("path = ?", v[0]))
+
+		case "path.cont":
+			pathSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("path ILIKE ?", pathSearchString))
+
 		case "sort.request_body":
 			orderBy = append(orderBy, "request_body "+sortDirection)
+		case "request_body.eq":
+			queryMods = append(queryMods, qm.Where("request_body = ?", v[0]))
+
+		case "request_body.cont":
+			request_bodySearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("request_body ILIKE ?", request_bodySearchString))
+
 		case "sort.request_headers":
 			orderBy = append(orderBy, "request_headers "+sortDirection)
+		case "request_headers.eq":
+			queryMods = append(queryMods, qm.Where("request_headers = ?", v[0]))
+
 		case "sort.response_body":
 			orderBy = append(orderBy, "response_body "+sortDirection)
+		case "response_body.eq":
+			queryMods = append(queryMods, qm.Where("response_body = ?", v[0]))
+
 		case "sort.response_headers":
 			orderBy = append(orderBy, "response_headers "+sortDirection)
+		case "response_headers.eq":
+			queryMods = append(queryMods, qm.Where("response_headers = ?", v[0]))
+
 		case "sort.response_code":
 			orderBy = append(orderBy, "response_code "+sortDirection)
+		case "response_code.eq":
+			queryMods = append(queryMods, qm.Where("response_code = ?", v[0]))
+
+		case "response_code.gt":
+			queryMods = append(queryMods, qm.Where("response_code > ?", v[0]))
+		case "response_code.lt":
+			queryMods = append(queryMods, qm.Where("response_code < ?", v[0]))
+		case "response_code.gte":
+			queryMods = append(queryMods, qm.Where("response_code >= ?", v[0]))
+		case "response_code.lte":
+			queryMods = append(queryMods, qm.Where("response_code <= ?", v[0]))
+
 		case "sort.processing_duration":
 			orderBy = append(orderBy, "processing_duration "+sortDirection)
+		case "processing_duration.eq":
+			queryMods = append(queryMods, qm.Where("processing_duration = ?", v[0]))
+
+		case "processing_duration.gt":
+			queryMods = append(queryMods, qm.Where("processing_duration > ?", v[0]))
+		case "processing_duration.lt":
+			queryMods = append(queryMods, qm.Where("processing_duration < ?", v[0]))
+		case "processing_duration.gte":
+			queryMods = append(queryMods, qm.Where("processing_duration >= ?", v[0]))
+		case "processing_duration.lte":
+			queryMods = append(queryMods, qm.Where("processing_duration <= ?", v[0]))
+
 		case "sort.request_method":
 			orderBy = append(orderBy, "request_method "+sortDirection)
+		case "request_method.eq":
+			queryMods = append(queryMods, qm.Where("request_method = ?", v[0]))
+
+		case "request_method.cont":
+			request_methodSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("request_method ILIKE ?", request_methodSearchString))
+
 		case "sort.user_id":
 			orderBy = append(orderBy, "user_id "+sortDirection)
+		case "user_id.eq":
+			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
+
 		case "sort.ip_address":
 			orderBy = append(orderBy, "ip_address "+sortDirection)
+		case "ip_address.eq":
+			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
+
+		case "ip_address.cont":
+			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("ip_address ILIKE ?", ip_addressSearchString))
+
 		case "sort.created_at":
 			orderBy = append(orderBy, "created_at "+sortDirection)
+		case "created_at.eq":
+			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+
+		case "created_at.gt":
+			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
+		case "created_at.lt":
+			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
+		case "created_at.gte":
+			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
+		case "created_at.lte":
+			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
+
 		}
 	}
+
+	count, err := models.AccessLogs(queryMods...).CountG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	limit, offset := api.ExtractLimitOffset(c)
+
+	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
 
 	if len(orderBy) > 0 {
 		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
@@ -353,6 +455,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -365,6 +469,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "path",
 			Name:     "Path",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -377,6 +483,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_body",
 			Name:     "RequestBody",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -389,6 +497,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_headers",
 			Name:     "RequestHeaders",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -401,6 +511,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_body",
 			Name:     "ResponseBody",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -413,6 +525,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_headers",
 			Name:     "ResponseHeaders",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -425,6 +539,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_code",
 			Name:     "ResponseCode",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -437,6 +553,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "processing_duration",
 			Name:     "ProcessingDuration",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -449,6 +567,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_method",
 			Name:     "RequestMethod",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -461,6 +581,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -473,6 +595,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -485,6 +609,8 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,

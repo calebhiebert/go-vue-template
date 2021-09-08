@@ -4,6 +4,7 @@
 package modelcrud
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -16,9 +17,16 @@ import (
 )
 
 type APITokenIssuance struct {
-	ID        string `boil:"id" json:"id" toml:"id" yaml:"id"`
-	UserID    string `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	// uuid
+	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
+
+	// uuid
+	UserID string `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+
+	// character varying
 	IPAddress string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
+
+	// timestamp without time zone
 
 	CreatedAt *time.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
 }
@@ -68,18 +76,7 @@ func (*GeneratedCrudController) GetTokenIssuanceByID(c *gin.Context) {
 // @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Router /crud/tokenIssuances [get]
 func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
-	limit, offset := api.ExtractLimitOffset(c)
-
-	count, err := models.TokenIssuances().CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	queryMods := []qm.QueryMod{
-		qm.Limit(limit),
-		qm.Offset(offset),
-	}
+	queryMods := []qm.QueryMod{}
 
 	var orderBy []string
 
@@ -93,14 +90,49 @@ func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 		switch q {
 		case "sort.id":
 			orderBy = append(orderBy, "id "+sortDirection)
+		case "id.eq":
+			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+
 		case "sort.user_id":
 			orderBy = append(orderBy, "user_id "+sortDirection)
+		case "user_id.eq":
+			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
+
 		case "sort.ip_address":
 			orderBy = append(orderBy, "ip_address "+sortDirection)
+		case "ip_address.eq":
+			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
+
+		case "ip_address.cont":
+			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("ip_address ILIKE ?", ip_addressSearchString))
+
 		case "sort.created_at":
 			orderBy = append(orderBy, "created_at "+sortDirection)
+		case "created_at.eq":
+			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+
+		case "created_at.gt":
+			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
+		case "created_at.lt":
+			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
+		case "created_at.gte":
+			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
+		case "created_at.lte":
+			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
+
 		}
 	}
+
+	count, err := models.TokenIssuances(queryMods...).CountG(c.Request.Context())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	limit, offset := api.ExtractLimitOffset(c)
+
+	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
 
 	if len(orderBy) > 0 {
 		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
@@ -261,6 +293,8 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -273,6 +307,8 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -285,6 +321,8 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
+			FilterOperations: []string{
+				"eq", "cont"},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
@@ -297,6 +335,8 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,

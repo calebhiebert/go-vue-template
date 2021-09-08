@@ -32,6 +32,10 @@ export default {
 
     mounted() {
         this.loadSchema();
+
+        if (this.$route.name === "Admin") {
+            this.$router.replace({name: "AdminDashboard"});
+        }
     },
 
     data() {

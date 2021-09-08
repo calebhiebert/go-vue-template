@@ -26,15 +26,16 @@ func NewDefaultAdminModelFieldConfig() AdminModelFieldConfig {
 	return AdminModelFieldConfig{
 		ShowOnGraph: true,
 		Editable:    true,
-		IsEmail: false,
+		IsEmail:     false,
 	}
 }
 
 type AdminModelField struct {
-	ID       string                `json:"id"`
-	Name     string                `json:"name"`
-	Type     string                `json:"type"`
-	Nullable bool                  `json:"nullable"`
-	Editable bool                  `json:"editable"`
-	Config   AdminModelFieldConfig `json:"config"`
+	ID               string                `json:"id"`
+	Name             string                `json:"name"`
+	Type             string                `json:"type"`
+	Nullable         bool                  `json:"nullable"`
+	Editable         bool                  `json:"editable"`
+	Config           AdminModelFieldConfig `json:"config"`
+	FilterOperations []string              `json:"filter_operations"`
 }
