@@ -9,6 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var MissingUserError = NewAPIError("missing-user", http.StatusUnauthorized, "User is not authenticated")
+
 type APIError struct {
 	ID         string                 `json:"id"`
 	Message    string                 `json:"message"`
@@ -74,7 +76,7 @@ func APIErrorFromErr(err error) *APIError {
 }
 
 func (e *APIError) Error() string {
-	return fmt.Sprintf("(%s - %s): %s", e.ID, e.Code, e.Message)
+	return fmt.Sprintf("(%s - %d): %s", e.ID, e.Code, e.Message)
 }
 
 func (e *APIError) Respond(c *gin.Context) {

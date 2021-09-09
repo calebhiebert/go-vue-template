@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"github.com/calebhiebert/go-vue-template/generated"
+	"github.com/calebhiebert/go-vue-template/convert"
 )
 
 // This file will not be regenerated automatically.
@@ -9,5 +9,5 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	converter *generated.ConverterImpl
+	C convert.Converter
 }

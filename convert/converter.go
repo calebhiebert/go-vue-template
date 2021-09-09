@@ -12,8 +12,8 @@ import (
 // goverter:converter
 // goverter:extend NullStringToString
 // goverter:extend JSONToString
-// goverter:extend NullTimeToInt64
-// goverter:extend TimeToInt
+// goverter:extend NullTimeToString
+// goverter:extend TimeToString
 type Converter interface {
 	// goverter:ignore AvatarURL
 	ConvertUser(input models.User) model.User
@@ -48,4 +48,12 @@ func NullTimeToInt64(time null.Time) int {
 
 func TimeToInt(time time.Time) int {
 	return int(time.Unix())
+}
+
+func NullTimeToString(t null.Time) string {
+	return t.Time.Format(time.RFC3339)
+}
+
+func TimeToString(t time.Time) string {
+	return t.Format(time.RFC3339)
 }

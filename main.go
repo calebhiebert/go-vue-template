@@ -10,6 +10,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/calebhiebert/go-vue-template/db"
 	_ "github.com/calebhiebert/go-vue-template/docs"
+	cgen "github.com/calebhiebert/go-vue-template/generated"
 	"github.com/calebhiebert/go-vue-template/graph"
 	"github.com/calebhiebert/go-vue-template/graph/generated"
 	"github.com/calebhiebert/go-vue-template/models/modelcrud"
@@ -130,7 +131,9 @@ func main() {
 
 	gql.Use(accessLogMiddleware)
 
-	config := generated.Config{Resolvers: &graph.Resolver{}}
+	config := generated.Config{Resolvers: &graph.Resolver{
+		C: &cgen.ConverterImpl{},
+	}}
 	config.Directives.HasRole = userHasRoleDirective
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(config))

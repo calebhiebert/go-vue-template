@@ -26,7 +26,7 @@ func (r *queryResolver) Users(ctx context.Context, limit *int, offset *int) ([]*
 		return nil, err
 	}
 
-	return r.converter.ConvertUsers(users), nil
+	return r.C.ConvertUsers(users), nil
 }
 
 func (r *tokenIssuanceResolver) User(ctx context.Context, obj *model.TokenIssuance) (*model.User, error) {
