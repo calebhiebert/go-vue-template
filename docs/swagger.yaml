@@ -61,6 +61,64 @@ definitions:
       user_id:
         type: string
     type: object
+  modelcrud.APICreateAccessLogRequest:
+    properties:
+      ip_address:
+        type: string
+      path:
+        type: string
+      processing_duration:
+        type: integer
+      request_body:
+        type: string
+      request_headers:
+        additionalProperties: true
+        type: object
+      request_method:
+        type: string
+      response_body:
+        additionalProperties: true
+        type: object
+      response_code:
+        type: integer
+      response_headers:
+        additionalProperties: true
+        type: object
+      user_id:
+        type: string
+    type: object
+  modelcrud.APICreateTokenIssuanceRequest:
+    properties:
+      ip_address:
+        type: string
+      user_id:
+        type: string
+    type: object
+  modelcrud.APICreateUserRequest:
+    properties:
+      birthday:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      gender_self_defined:
+        type: boolean
+      image:
+        type: string
+      location:
+        type: string
+      login:
+        type: string
+      name:
+        type: string
+      roles:
+        items:
+          type: string
+        type: array
+      sub:
+        type: string
+    type: object
   modelcrud.APIGetAccessLogsResponse:
     properties:
       access_logs:
@@ -143,7 +201,17 @@ definitions:
     type: object
   modelcrud.APIUpdateUserRequest:
     properties:
+      birthday:
+        type: string
       email:
+        type: string
+      gender:
+        type: string
+      gender_self_defined:
+        type: boolean
+      image:
+        type: string
+      location:
         type: string
       login:
         type: string
@@ -158,6 +226,8 @@ definitions:
     type: object
   modelcrud.APIUser:
     properties:
+      birthday:
+        type: string
       created_at:
         description: timestamp without time zone
         type: string
@@ -166,8 +236,16 @@ definitions:
       email:
         description: character varying
         type: string
+      gender:
+        type: string
+      gender_self_defined:
+        type: boolean
       id:
         description: uuid
+        type: string
+      image:
+        type: string
+      location:
         type: string
       login:
         type: string
@@ -200,7 +278,7 @@ info:
   contact: {}
   license:
     name: Unknown
-  title: Go Vue Template
+  title: go-vue-template
   version: "0.1"
 paths:
   /auth/loginjwt:
@@ -332,6 +410,24 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APIAccessLog'
       summary: Gets a list for all entities of the AccessLog type
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Creation parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APICreateAccessLogRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIAccessLog'
+      summary: Creates a new AccessLog
   /crud/accessLogs/:id:
     delete:
       parameters:
@@ -433,6 +529,24 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APITokenIssuance'
       summary: Gets a list for all entities of the TokenIssuance type
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Creation parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APICreateTokenIssuanceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APITokenIssuance'
+      summary: Creates a new TokenIssuance
   /crud/tokenIssuances/:id:
     delete:
       parameters:
@@ -538,6 +652,27 @@ paths:
         in: query
         name: sort.roles
         type: string
+      - description: 'Sort by image. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.image
+        type: string
+      - description: 'Sort by birthday. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.birthday
+        type: string
+      - description: 'Sort by gender_self_defined. Value should be ASC or DESC. eg:
+          ?sort.created_at=DESC'
+        in: query
+        name: sort.gender_self_defined
+        type: string
+      - description: 'Sort by gender. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.gender
+        type: string
+      - description: 'Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.location
+        type: string
       - description: 'Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
         in: query
         name: sort.created_at
@@ -558,6 +693,24 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APIUser'
       summary: Gets a list for all entities of the User type
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Creation parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APICreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Creates a new User
   /crud/users/:id:
     delete:
       parameters:

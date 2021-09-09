@@ -25,67 +25,92 @@ import (
 
 // User is an object representing the database table.
 type User struct {
-	ID        string            `boil:"id" json:"id" toml:"id" yaml:"id"`
-	Name      string            `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Login     null.String       `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-	Email     string            `boil:"email" json:"email" toml:"email" yaml:"email"`
-	PWHash    null.String       `boil:"pw_hash" json:"-" toml:"-" yaml:"-"`
-	Sub       null.String       `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
-	Roles     types.StringArray `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
-	CreatedAt time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-	UpdatedAt time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	DeletedAt null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
+	ID                string            `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Name              string            `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Login             null.String       `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
+	Email             string            `boil:"email" json:"email" toml:"email" yaml:"email"`
+	PWHash            null.String       `boil:"pw_hash" json:"-" toml:"-" yaml:"-"`
+	Sub               null.String       `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
+	Roles             types.StringArray `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
+	Image             null.String       `boil:"image" json:"image,omitempty" toml:"image" yaml:"image,omitempty"`
+	Birthday          null.Time         `boil:"birthday" json:"birthday,omitempty" toml:"birthday" yaml:"birthday,omitempty"`
+	GenderSelfDefined null.Bool         `boil:"gender_self_defined" json:"gender_self_defined,omitempty" toml:"gender_self_defined" yaml:"gender_self_defined,omitempty"`
+	Gender            null.String       `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
+	Location          null.String       `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+	CreatedAt         time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
+	UpdatedAt         time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
 
 	R *userR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L userL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var UserColumns = struct {
-	ID        string
-	Name      string
-	Login     string
-	Email     string
-	PWHash    string
-	Sub       string
-	Roles     string
-	CreatedAt string
-	UpdatedAt string
-	DeletedAt string
+	ID                string
+	Name              string
+	Login             string
+	Email             string
+	PWHash            string
+	Sub               string
+	Roles             string
+	Image             string
+	Birthday          string
+	GenderSelfDefined string
+	Gender            string
+	Location          string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:        "id",
-	Name:      "name",
-	Login:     "login",
-	Email:     "email",
-	PWHash:    "pw_hash",
-	Sub:       "sub",
-	Roles:     "roles",
-	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
-	DeletedAt: "deleted_at",
+	ID:                "id",
+	Name:              "name",
+	Login:             "login",
+	Email:             "email",
+	PWHash:            "pw_hash",
+	Sub:               "sub",
+	Roles:             "roles",
+	Image:             "image",
+	Birthday:          "birthday",
+	GenderSelfDefined: "gender_self_defined",
+	Gender:            "gender",
+	Location:          "location",
+	CreatedAt:         "created_at",
+	UpdatedAt:         "updated_at",
+	DeletedAt:         "deleted_at",
 }
 
 var UserTableColumns = struct {
-	ID        string
-	Name      string
-	Login     string
-	Email     string
-	PWHash    string
-	Sub       string
-	Roles     string
-	CreatedAt string
-	UpdatedAt string
-	DeletedAt string
+	ID                string
+	Name              string
+	Login             string
+	Email             string
+	PWHash            string
+	Sub               string
+	Roles             string
+	Image             string
+	Birthday          string
+	GenderSelfDefined string
+	Gender            string
+	Location          string
+	CreatedAt         string
+	UpdatedAt         string
+	DeletedAt         string
 }{
-	ID:        "users.id",
-	Name:      "users.name",
-	Login:     "users.login",
-	Email:     "users.email",
-	PWHash:    "users.pw_hash",
-	Sub:       "users.sub",
-	Roles:     "users.roles",
-	CreatedAt: "users.created_at",
-	UpdatedAt: "users.updated_at",
-	DeletedAt: "users.deleted_at",
+	ID:                "users.id",
+	Name:              "users.name",
+	Login:             "users.login",
+	Email:             "users.email",
+	PWHash:            "users.pw_hash",
+	Sub:               "users.sub",
+	Roles:             "users.roles",
+	Image:             "users.image",
+	Birthday:          "users.birthday",
+	GenderSelfDefined: "users.gender_self_defined",
+	Gender:            "users.gender",
+	Location:          "users.location",
+	CreatedAt:         "users.created_at",
+	UpdatedAt:         "users.updated_at",
+	DeletedAt:         "users.deleted_at",
 }
 
 // Generated where
@@ -111,6 +136,29 @@ func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
+type whereHelpernull_Bool struct{ field string }
+
+func (w whereHelpernull_Bool) EQ(x null.Bool) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, false, x)
+}
+func (w whereHelpernull_Bool) NEQ(x null.Bool) qm.QueryMod {
+	return qmhelper.WhereNullEQ(w.field, true, x)
+}
+func (w whereHelpernull_Bool) IsNull() qm.QueryMod    { return qmhelper.WhereIsNull(w.field) }
+func (w whereHelpernull_Bool) IsNotNull() qm.QueryMod { return qmhelper.WhereIsNotNull(w.field) }
+func (w whereHelpernull_Bool) LT(x null.Bool) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LT, x)
+}
+func (w whereHelpernull_Bool) LTE(x null.Bool) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.LTE, x)
+}
+func (w whereHelpernull_Bool) GT(x null.Bool) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GT, x)
+}
+func (w whereHelpernull_Bool) GTE(x null.Bool) qm.QueryMod {
+	return qmhelper.Where(w.field, qmhelper.GTE, x)
+}
+
 type whereHelpertime_Time struct{ field string }
 
 func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
@@ -133,27 +181,37 @@ func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
 }
 
 var UserWhere = struct {
-	ID        whereHelperstring
-	Name      whereHelperstring
-	Login     whereHelpernull_String
-	Email     whereHelperstring
-	PWHash    whereHelpernull_String
-	Sub       whereHelpernull_String
-	Roles     whereHelpertypes_StringArray
-	CreatedAt whereHelpertime_Time
-	UpdatedAt whereHelpertime_Time
-	DeletedAt whereHelpernull_Time
+	ID                whereHelperstring
+	Name              whereHelperstring
+	Login             whereHelpernull_String
+	Email             whereHelperstring
+	PWHash            whereHelpernull_String
+	Sub               whereHelpernull_String
+	Roles             whereHelpertypes_StringArray
+	Image             whereHelpernull_String
+	Birthday          whereHelpernull_Time
+	GenderSelfDefined whereHelpernull_Bool
+	Gender            whereHelpernull_String
+	Location          whereHelpernull_String
+	CreatedAt         whereHelpertime_Time
+	UpdatedAt         whereHelpertime_Time
+	DeletedAt         whereHelpernull_Time
 }{
-	ID:        whereHelperstring{field: "\"users\".\"id\""},
-	Name:      whereHelperstring{field: "\"users\".\"name\""},
-	Login:     whereHelpernull_String{field: "\"users\".\"login\""},
-	Email:     whereHelperstring{field: "\"users\".\"email\""},
-	PWHash:    whereHelpernull_String{field: "\"users\".\"pw_hash\""},
-	Sub:       whereHelpernull_String{field: "\"users\".\"sub\""},
-	Roles:     whereHelpertypes_StringArray{field: "\"users\".\"roles\""},
-	CreatedAt: whereHelpertime_Time{field: "\"users\".\"created_at\""},
-	UpdatedAt: whereHelpertime_Time{field: "\"users\".\"updated_at\""},
-	DeletedAt: whereHelpernull_Time{field: "\"users\".\"deleted_at\""},
+	ID:                whereHelperstring{field: "\"users\".\"id\""},
+	Name:              whereHelperstring{field: "\"users\".\"name\""},
+	Login:             whereHelpernull_String{field: "\"users\".\"login\""},
+	Email:             whereHelperstring{field: "\"users\".\"email\""},
+	PWHash:            whereHelpernull_String{field: "\"users\".\"pw_hash\""},
+	Sub:               whereHelpernull_String{field: "\"users\".\"sub\""},
+	Roles:             whereHelpertypes_StringArray{field: "\"users\".\"roles\""},
+	Image:             whereHelpernull_String{field: "\"users\".\"image\""},
+	Birthday:          whereHelpernull_Time{field: "\"users\".\"birthday\""},
+	GenderSelfDefined: whereHelpernull_Bool{field: "\"users\".\"gender_self_defined\""},
+	Gender:            whereHelpernull_String{field: "\"users\".\"gender\""},
+	Location:          whereHelpernull_String{field: "\"users\".\"location\""},
+	CreatedAt:         whereHelpertime_Time{field: "\"users\".\"created_at\""},
+	UpdatedAt:         whereHelpertime_Time{field: "\"users\".\"updated_at\""},
+	DeletedAt:         whereHelpernull_Time{field: "\"users\".\"deleted_at\""},
 }
 
 // UserRels is where relationship names are stored.
@@ -180,8 +238,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "created_at", "updated_at", "deleted_at"}
-	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "deleted_at"}
+	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "image", "birthday", "gender_self_defined", "gender", "location", "created_at", "updated_at", "deleted_at"}
+	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "image", "birthday", "gender_self_defined", "gender", "location", "deleted_at"}
 	userColumnsWithDefault    = []string{"roles", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 )

@@ -3,16 +3,25 @@ package api
 import (
 	"database/sql"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type APIError struct {
-	ID      string      `json:"id"`
+	ID         string                 `json:"id"`
+	Message    string                 `json:"message"`
+	Code       int                    `json:"code"`
+	Validation []ValidationFieldError `json:"validation,omitempty"`
+	Details    interface{}            `json:"details"`
+}
+
+type ValidationFieldError struct {
+	Tag     string      `json:"tag"`
+	Field   string      `json:"field"`
+	Value   interface{} `json:"value"`
 	Message string      `json:"message"`
-	Code    int         `json:"code"`
-	Details interface{} `json:"details"`
 }
 
 func NewAPIError(id string, code int, message string) *APIError {
@@ -34,6 +43,26 @@ func APIErrorFromErr(err error) *APIError {
 
 	if e, ok := err.(*APIError); ok {
 		return e
+	}
+
+	if e, ok := err.(validator.ValidationErrors); ok {
+		var errs []ValidationFieldError
+
+		for _, ve := range e {
+			errs = append(errs, ValidationFieldError{
+				Tag:     ve.Tag(),
+				Field:   ve.Field(),
+				Value:   ve.Value(),
+				Message: ve.Error(),
+			})
+		}
+
+		return &APIError{
+			ID:         "validation-error",
+			Code:       http.StatusBadRequest,
+			Message:    "There was an error validating the input",
+			Validation: errs,
+		}
 	}
 
 	return &APIError{

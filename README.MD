@@ -1,4 +1,4 @@
-# Go Vue Template
+# go-vue-template
 
 This is a little template project to create apps using 
 

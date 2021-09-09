@@ -9,6 +9,7 @@ type AdminModelConfig struct {
 
 type AdminModel struct {
 	Name          string             `json:"name"`
+	NameSingular  string             `json:"name_singular"`
 	Fields        []*AdminModelField `json:"fields"`
 	Config        AdminModelConfig   `json:"config"`
 	CanSoftDelete bool               `json:"can_soft_delete"`
@@ -35,6 +36,7 @@ type AdminModelField struct {
 	Name             string                `json:"name"`
 	Type             string                `json:"type"`
 	Nullable         bool                  `json:"nullable"`
+	Required         bool                  `json:"required"`
 	Editable         bool                  `json:"editable"`
 	Config           AdminModelFieldConfig `json:"config"`
 	FilterOperations []string              `json:"filter_operations"`

@@ -191,6 +191,34 @@ var doc = `{
                     }
                 }
             },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new AccessLog",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateAccessLogRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIAccessLog"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "produces": [
                     "application/json"
@@ -336,6 +364,34 @@ var doc = `{
                         "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.created_at",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APITokenIssuance"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new TokenIssuance",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateTokenIssuanceRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -513,6 +569,36 @@ var doc = `{
                     },
                     {
                         "type": "string",
+                        "description": "Sort by image. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.image",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by birthday. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.birthday",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by gender_self_defined. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.gender_self_defined",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by gender. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.gender",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.location",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.created_at",
                         "in": "query"
@@ -528,6 +614,34 @@ var doc = `{
                         "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.deleted_at",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUser"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new User",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateUserRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -809,6 +923,93 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APICreateAccessLogRequest": {
+            "type": "object",
+            "properties": {
+                "ip_address": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "processing_duration": {
+                    "type": "integer"
+                },
+                "request_body": {
+                    "type": "string"
+                },
+                "request_headers": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "request_method": {
+                    "type": "string"
+                },
+                "response_body": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "response_code": {
+                    "type": "integer"
+                },
+                "response_headers": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateTokenIssuanceRequest": {
+            "type": "object",
+            "properties": {
+                "ip_address": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "birthday": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "gender_self_defined": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "login": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sub": {
+                    "type": "string"
+                }
+            }
+        },
         "modelcrud.APIGetAccessLogsResponse": {
             "type": "object",
             "properties": {
@@ -932,7 +1133,22 @@ var doc = `{
         "modelcrud.APIUpdateUserRequest": {
             "type": "object",
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "email": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "gender_self_defined": {
+                    "type": "boolean"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
                     "type": "string"
                 },
                 "login": {
@@ -955,6 +1171,9 @@ var doc = `{
         "modelcrud.APIUser": {
             "type": "object",
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "created_at": {
                     "description": "timestamp without time zone",
                     "type": "string"
@@ -966,8 +1185,20 @@ var doc = `{
                     "description": "character varying",
                     "type": "string"
                 },
+                "gender": {
+                    "type": "string"
+                },
+                "gender_self_defined": {
+                    "type": "boolean"
+                },
                 "id": {
                     "description": "uuid",
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "location": {
                     "type": "string"
                 },
                 "login": {
@@ -1029,7 +1260,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "Go Vue Template",
+	Title:       "go-vue-template",
 	Description: "",
 }
 

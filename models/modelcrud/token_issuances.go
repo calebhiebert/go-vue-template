@@ -4,287 +4,22 @@
 package modelcrud
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/calebhiebert/go-vue-template/api"
-	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
-	"github.com/volatiletech/sqlboiler/v4/boil"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
-
-type APITokenIssuance struct {
-	// uuid
-	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
-
-	// uuid
-	UserID string `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
-
-	// character varying
-	IPAddress string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
-
-	// timestamp without time zone
-
-	CreatedAt *time.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-}
-
-type GetTokenIssuancesResponse struct {
-	TokenIssuances models.TokenIssuanceSlice `json:"token_issuances"`
-	Total          int64                     `json:"total"`
-	NextOffset     int64                     `json:"next_offset"`
-}
-
-type APIGetTokenIssuancesResponse struct {
-	TokenIssuances []APITokenIssuance `json:"token_issuances"`
-	Total          int64              `json:"total"`
-	NextOffset     int64              `json:"next_offset"`
-}
-
-// GetTokenIssuanceByID godoc
-// @Summary Gets a single TokenIssuance entity by their id
-// @Produce json
-// @Success 200 {object} APIGetTokenIssuancesResponse
-// @Param id path string true "TokenIssuance id"
-// @Router /crud/tokenIssuances/:id [get]
-func (*GeneratedCrudController) GetTokenIssuanceByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	TokenIssuance, err := models.TokenIssuances(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, TokenIssuance)
-}
-
-// GetTokenIssuances godoc
-// @Summary Gets a list for all entities of the TokenIssuance type
-// @Produce json
-// @Success 200 {object} APITokenIssuance
-// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.user_id query string false "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.ip_address query string false "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Router /crud/tokenIssuances [get]
-func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
-	queryMods := []qm.QueryMod{}
-
-	var orderBy []string
-
-	for q, v := range c.Request.URL.Query() {
-		sortDirection := "ASC"
-
-		if v[0] == "DESC" || v[0] == "desc" {
-			sortDirection = "DESC"
-		}
-
-		switch q {
-		case "sort.id":
-			orderBy = append(orderBy, "id "+sortDirection)
-		case "id.eq":
-			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
-
-		case "sort.user_id":
-			orderBy = append(orderBy, "user_id "+sortDirection)
-		case "user_id.eq":
-			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
-
-		case "sort.ip_address":
-			orderBy = append(orderBy, "ip_address "+sortDirection)
-		case "ip_address.eq":
-			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
-
-		case "ip_address.cont":
-			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("ip_address ILIKE ?", ip_addressSearchString))
-
-		case "sort.created_at":
-			orderBy = append(orderBy, "created_at "+sortDirection)
-		case "created_at.eq":
-			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
-
-		case "created_at.gt":
-			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
-		case "created_at.lt":
-			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
-		case "created_at.gte":
-			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
-		case "created_at.lte":
-			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
-
-		}
-	}
-
-	count, err := models.TokenIssuances(queryMods...).CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	limit, offset := api.ExtractLimitOffset(c)
-
-	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
-
-	if len(orderBy) > 0 {
-		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
-	} else {
-		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
-	}
-
-	tokenIssuances, err := models.TokenIssuances(queryMods...).AllG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if tokenIssuances == nil {
-		tokenIssuances = models.TokenIssuanceSlice{}
-	}
-
-	c.JSON(http.StatusOK, GetTokenIssuancesResponse{
-		TokenIssuances: tokenIssuances,
-		Total:          count,
-		NextOffset:     int64(offset + limit),
-	})
-}
-
-type APIUpdateTokenIssuanceRequest struct {
-	UserID    *string `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
-	IPAddress *string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
-}
-
-type UpdateTokenIssuanceRequest struct {
-	UserID    *string `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id"`
-	IPAddress *string `boil:"ip_address" json:"ip_address,omitempty" toml:"ip_address" yaml:"ip_address"`
-}
-
-// UpdateTokenIssuanceByID godoc
-// @Summary Updates a single TokenIssuance entity based on their id
-// @Produce json
-// @Accept json
-// @Param req body APIUpdateTokenIssuanceRequest true "Update parameters"
-// @Param id path string true "TokenIssuance id"
-// @Success 200 {object} APITokenIssuance
-// @Router /crud/tokenIssuances/:id [put]
-func (*GeneratedCrudController) UpdateTokenIssuanceByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	var updateReq UpdateTokenIssuanceRequest
-
-	err := c.BindJSON(&updateReq)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	existingTokenIssuance, err := models.TokenIssuances(qm.Where("id = ?", id), qm.For("UPDATE")).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if updateReq.UserID != nil {
-		existingTokenIssuance.UserID = *updateReq.UserID
-	}
-
-	if updateReq.IPAddress != nil {
-		existingTokenIssuance.IPAddress = *updateReq.IPAddress
-	}
-
-	_, err = existingTokenIssuance.UpdateG(c.Request.Context(), boil.Infer())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingTokenIssuance)
-}
-
-// DeleteTokenIssuanceByID godoc
-// @Summary Soft deletes a single TokenIssuance entity based on their id
-// @Produce json
-// @Success 200 {object} APITokenIssuance
-// @Param id path string true "TokenIssuance id"
-// @Router /crud/tokenIssuances/:id [delete]
-func (*GeneratedCrudController) DeleteTokenIssuanceByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	existingTokenIssuance, err := models.TokenIssuances(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	_, err = existingTokenIssuance.DeleteG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingTokenIssuance)
-}
-
-// BulkDeleteTokenIssuancesByIDs godoc
-// @Summary Soft deletes a range of tokenIssuances by their ids
-// @Produce json
-// @Success 200 {object} DeletedCount
-// @Param req body IDList true "List of ids to delete"
-// @Param hardDelete query string false "Hard delete tokenIssuance"
-// @Router /crud/tokenIssuances [delete]
-func (*GeneratedCrudController) BulkDeleteTokenIssuancesByIDs(c *gin.Context) {
-
-	var ids IDList
-
-	err := c.BindJSON(&ids)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	var idInterface []interface{}
-
-	for _, id := range ids.IDs {
-		idInterface = append(idInterface, id)
-	}
-
-	deleted, err := models.TokenIssuances(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
-}
 
 func (gcc *GeneratedCrudController) RegisterTokenIssuances(rg *gin.RouterGroup) {
 	rg.GET("/tokenIssuances/:id", gcc.GetTokenIssuanceByID)
 	rg.GET("/tokenIssuances", gcc.GetTokenIssuances)
 	rg.PUT("/tokenIssuances/:id", gcc.UpdateTokenIssuanceByID)
+	rg.POST("/tokenIssuances", gcc.CreateTokenIssuance)
 	rg.DELETE("/tokenIssuances/:id", gcc.DeleteTokenIssuanceByID)
 	rg.DELETE("/tokenIssuances", gcc.BulkDeleteTokenIssuancesByIDs)
 }
 
 var TokenIssuancesAdmin = api.AdminModel{
 	Name:          "TokenIssuances",
+	NameSingular:  "TokenIssuance",
 	CanSoftDelete: false,
 	URLName:       "tokenIssuances",
 	DataName:      "token_issuances",
@@ -293,6 +28,7 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: false,
@@ -307,6 +43,7 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -321,6 +58,7 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -335,6 +73,7 @@ var TokenIssuancesAdmin = api.AdminModel{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,

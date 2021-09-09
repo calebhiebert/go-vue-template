@@ -5,27 +5,29 @@
 
 {{- define "filter_operations" -}}
     []string{
-        "eq",
-        {{- if eq .DBType "uuid" -}}
-        {{- else if eq .DBType "jsonb" -}}
-        {{- else if eq .Type "string" -}}
-            "cont",
-        {{- else if eq .Type "null.String" -}}
-            "cont",
-        {{- else if eq .Type "int" -}}
-            "gt", "lt", "gte", "lte",
-        {{- else if eq .Type "null.Int" -}}
-            "gt", "lt", "gte", "lte",
-        {{- else if eq .Type "time.Time" -}}
-            "gt", "lt", "gte", "lte",
-        {{- else if eq .Type "null.Time" -}}
-            "gt", "lt", "gte", "lte",
-        {{- end -}}
+    "eq",
+    {{- if eq .DBType "uuid" -}}
+    {{- else if eq .DBType "jsonb" -}}
+    {{- else if eq .Type "string" -}}
+        "cont",
+    {{- else if eq .Type "null.String" -}}
+        "cont",
+    {{- else if eq .Type "int" -}}
+        "gt", "lt", "gte", "lte",
+    {{- else if eq .Type "null.Int" -}}
+        "gt", "lt", "gte", "lte",
+    {{- else if eq .Type "null.Bool" -}}
+    {{- else if eq .Type "time.Time" -}}
+        "gt", "lt", "gte", "lte",
+    {{- else if eq .Type "null.Time" -}}
+        "gt", "lt", "gte", "lte",
+    {{- end -}}
     }
 {{- end }}
 
 var {{ $alias.UpPlural }}Admin = api.AdminModel{
 Name: "{{ $alias.UpPlural }}",
+NameSingular: "{{ $alias.UpSingular }}",
 CanSoftDelete: {{ if $soft }}true{{ else }}false{{end}},
 URLName: "{{ $alias.DownPlural }}",
 DataName: "{{ $orig_tbl_name }}",
@@ -33,16 +35,21 @@ Fields: []*api.AdminModelField{
 {{- range $field := .Table.Columns }}
     {{- $colAlias := $alias.Column $field.Name -}}
     {{- $orig_col_name := $field.Name -}}
+    {{- $defaultLen := len $field.Default -}}
+    {{- $hasDefault := gt $defaultLen 0 -}}
     {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
     {{- else }}
         &api.AdminModelField{
         ID: "{{ $orig_col_name }}",
         Name: "{{ $colAlias }}",
         Nullable: {{ $field.Nullable }},
+        Required: {{ if or $field.Nullable $hasDefault }}false{{else}}true{{ end }},
         FilterOperations: {{ template "filter_operations" $field }},
         Editable:
-        {{- if eq $orig_col_name "id" -}}
+        {{- if and (eq $orig_col_name "id") (eq $field.DBType "uuid") -}}
             false
+        {{- else if eq $orig_col_name "id" -}}
+            true
         {{- else if eq $orig_col_name "created_at" -}}
             false
         {{- else if eq $orig_col_name "updated_at" -}}
@@ -53,9 +60,9 @@ Fields: []*api.AdminModelField{
             true
         {{- end -}},
         Config: api.AdminModelFieldConfig{
-            ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
-            Editable: true,
-            IsEmail: {{- if eq $orig_col_name "email" -}}true{{- else -}}false{{- end -}},
+        ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
+        Editable: true,
+        IsEmail: {{- if eq $orig_col_name "email" -}}true{{- else -}}false{{- end -}},
         },
         Type:
         {{- if eq $field.Type "null.String" -}}
@@ -74,6 +81,8 @@ Fields: []*api.AdminModelField{
             "array"
         {{- else if eq $field.Type "null.Int" -}}
             "int"
+        {{- else if eq $field.Type "null.Bool" -}}
+            "bool"
         {{- else -}}
             "{{ $field.Type }}"
         {{- end -}},

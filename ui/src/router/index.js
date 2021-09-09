@@ -53,6 +53,11 @@ const routes = [
 				name: "AdminModelEdit",
 				component: () => import("../views/admin/ModelEdit.vue"),
 			},
+			{
+				path: "create/:model",
+				name: "AdminModelCreate",
+				component: () => import("../views/admin/ModelCreate.vue")
+			}
 		],
 	},
 ];

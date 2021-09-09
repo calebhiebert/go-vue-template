@@ -4,427 +4,15 @@
 package modelcrud
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/calebhiebert/go-vue-template/api"
-	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/boil"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
-	"github.com/volatiletech/sqlboiler/v4/types"
 )
-
-type APIUser struct {
-	// uuid
-	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
-
-	// character varying
-	Name string `boil:"name" json:"name" toml:"name" yaml:"name"`
-
-	// character varying
-
-	Login *string `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-
-	// character varying
-	Email string `boil:"email" json:"email" toml:"email" yaml:"email"`
-
-	// character varying
-
-	Sub *string `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
-
-	// ARRAYcharacter varying
-
-	Roles []string `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
-
-	// timestamp without time zone
-	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
-
-	// timestamp without time zone
-	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-
-	// timestamp without time zone
-
-	DeletedAt *time.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
-}
-
-type GetUsersResponse struct {
-	Users      models.UserSlice `json:"users"`
-	Total      int64            `json:"total"`
-	NextOffset int64            `json:"next_offset"`
-}
-
-type APIGetUsersResponse struct {
-	Users      []APIUser `json:"users"`
-	Total      int64     `json:"total"`
-	NextOffset int64     `json:"next_offset"`
-}
-
-// GetUserByID godoc
-// @Summary Gets a single User entity by their id
-// @Produce json
-// @Success 200 {object} APIGetUsersResponse
-// @Param id path string true "User id"
-// @Router /crud/users/:id [get]
-func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	User, err := models.Users(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, User)
-}
-
-// GetUsers godoc
-// @Summary Gets a list for all entities of the User type
-// @Produce json
-// @Success 200 {object} APIUser
-// @Param withDeleted query string false "Include deleted users in the results"
-// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.name query string false "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.login query string false "Sort by login. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.email query string false "Sort by email. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.sub query string false "Sort by sub. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.roles query string false "Sort by roles. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.updated_at query string false "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.deleted_at query string false "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Router /crud/users [get]
-func (*GeneratedCrudController) GetUsers(c *gin.Context) {
-	queryMods := []qm.QueryMod{}
-
-	withDeleted := c.Query("withDeleted") == "true"
-
-	if withDeleted {
-		queryMods = append(queryMods, qm.WithDeleted())
-	}
-
-	var orderBy []string
-
-	for q, v := range c.Request.URL.Query() {
-		sortDirection := "ASC"
-
-		if v[0] == "DESC" || v[0] == "desc" {
-			sortDirection = "DESC"
-		}
-
-		switch q {
-		case "sort.id":
-			orderBy = append(orderBy, "id "+sortDirection)
-		case "id.eq":
-			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
-
-		case "sort.name":
-			orderBy = append(orderBy, "name "+sortDirection)
-		case "name.eq":
-			queryMods = append(queryMods, qm.Where("name = ?", v[0]))
-
-		case "name.cont":
-			nameSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("name ILIKE ?", nameSearchString))
-
-		case "sort.login":
-			orderBy = append(orderBy, "login "+sortDirection)
-		case "login.eq":
-			queryMods = append(queryMods, qm.Where("login = ?", v[0]))
-
-		case "login.cont":
-			loginSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("login ILIKE ?", loginSearchString))
-
-		case "sort.email":
-			orderBy = append(orderBy, "email "+sortDirection)
-		case "email.eq":
-			queryMods = append(queryMods, qm.Where("email = ?", v[0]))
-
-		case "email.cont":
-			emailSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("email ILIKE ?", emailSearchString))
-
-		case "sort.sub":
-			orderBy = append(orderBy, "sub "+sortDirection)
-		case "sub.eq":
-			queryMods = append(queryMods, qm.Where("sub = ?", v[0]))
-
-		case "sub.cont":
-			subSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("sub ILIKE ?", subSearchString))
-
-		case "sort.roles":
-			orderBy = append(orderBy, "roles "+sortDirection)
-		case "roles.eq":
-			queryMods = append(queryMods, qm.Where("roles = ?", v[0]))
-
-		case "sort.created_at":
-			orderBy = append(orderBy, "created_at "+sortDirection)
-		case "created_at.eq":
-			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
-
-		case "created_at.gt":
-			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
-		case "created_at.lt":
-			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
-		case "created_at.gte":
-			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
-		case "created_at.lte":
-			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
-
-		case "sort.updated_at":
-			orderBy = append(orderBy, "updated_at "+sortDirection)
-		case "updated_at.eq":
-			queryMods = append(queryMods, qm.Where("updated_at = ?", v[0]))
-
-		case "updated_at.gt":
-			queryMods = append(queryMods, qm.Where("updated_at > ?", v[0]))
-		case "updated_at.lt":
-			queryMods = append(queryMods, qm.Where("updated_at < ?", v[0]))
-		case "updated_at.gte":
-			queryMods = append(queryMods, qm.Where("updated_at >= ?", v[0]))
-		case "updated_at.lte":
-			queryMods = append(queryMods, qm.Where("updated_at <= ?", v[0]))
-
-		case "sort.deleted_at":
-			orderBy = append(orderBy, "deleted_at "+sortDirection)
-		case "deleted_at.eq":
-			queryMods = append(queryMods, qm.Where("deleted_at = ?", v[0]))
-
-		case "deleted_at.gt":
-			queryMods = append(queryMods, qm.Where("deleted_at > ?", v[0]))
-		case "deleted_at.lt":
-			queryMods = append(queryMods, qm.Where("deleted_at < ?", v[0]))
-		case "deleted_at.gte":
-			queryMods = append(queryMods, qm.Where("deleted_at >= ?", v[0]))
-		case "deleted_at.lte":
-			queryMods = append(queryMods, qm.Where("deleted_at <= ?", v[0]))
-
-		}
-	}
-
-	count, err := models.Users(queryMods...).CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	limit, offset := api.ExtractLimitOffset(c)
-
-	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
-
-	if len(orderBy) > 0 {
-		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
-	} else {
-		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
-	}
-
-	users, err := models.Users(queryMods...).AllG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if users == nil {
-		users = models.UserSlice{}
-	}
-
-	c.JSON(http.StatusOK, GetUsersResponse{
-		Users:      users,
-		Total:      count,
-		NextOffset: int64(offset + limit),
-	})
-}
-
-type APIUpdateUserRequest struct {
-	Name *string `boil:"name" json:"name" toml:"name" yaml:"name"`
-
-	Login *string `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-	Email *string `boil:"email" json:"email" toml:"email" yaml:"email"`
-
-	Sub *string `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
-
-	Roles []string `boil:"roles" json:"roles" toml:"roles" yaml:"roles"`
-}
-
-type UpdateUserRequest struct {
-	Name  *string            `boil:"name" json:"name,omitempty" toml:"name" yaml:"name"`
-	Login *null.String       `boil:"login" json:"login,omitempty" toml:"login" yaml:"login,omitempty"`
-	Email *string            `boil:"email" json:"email,omitempty" toml:"email" yaml:"email"`
-	Sub   *null.String       `boil:"sub" json:"sub,omitempty" toml:"sub" yaml:"sub,omitempty"`
-	Roles *types.StringArray `boil:"roles" json:"roles,omitempty" toml:"roles" yaml:"roles"`
-}
-
-// UpdateUserByID godoc
-// @Summary Updates a single User entity based on their id
-// @Produce json
-// @Accept json
-// @Param req body APIUpdateUserRequest true "Update parameters"
-// @Param id path string true "User id"
-// @Success 200 {object} APIUser
-// @Router /crud/users/:id [put]
-func (*GeneratedCrudController) UpdateUserByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	var updateReq UpdateUserRequest
-
-	err := c.BindJSON(&updateReq)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	existingUser, err := models.Users(qm.Where("id = ?", id), qm.For("UPDATE")).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if updateReq.Name != nil {
-		existingUser.Name = *updateReq.Name
-	}
-
-	if updateReq.Login != nil {
-		existingUser.Login = *updateReq.Login
-	}
-
-	if updateReq.Email != nil {
-		existingUser.Email = *updateReq.Email
-	}
-
-	if updateReq.Sub != nil {
-		existingUser.Sub = *updateReq.Sub
-	}
-
-	if updateReq.Roles != nil {
-		existingUser.Roles = *updateReq.Roles
-	}
-
-	_, err = existingUser.UpdateG(c.Request.Context(), boil.Infer())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingUser)
-}
-
-// DeleteUserByID godoc
-// @Summary Soft deletes a single User entity based on their id
-// @Produce json
-// @Success 200 {object} APIUser
-// @Param id path string true "User id"
-// @Param hardDelete query string false "Hard delete user"
-// @Router /crud/users/:id [delete]
-func (*GeneratedCrudController) DeleteUserByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	hardDelete := c.Query("hardDelete") == "true"
-
-	existingUser, err := models.Users(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	_, err = existingUser.DeleteG(c.Request.Context(), hardDelete)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingUser)
-}
-
-// BulkDeleteUsersByIDs godoc
-// @Summary Soft deletes a range of users by their ids
-// @Produce json
-// @Success 200 {object} DeletedCount
-// @Param req body IDList true "List of ids to delete"
-// @Param hardDelete query string false "Hard delete user"
-// @Router /crud/users [delete]
-func (*GeneratedCrudController) BulkDeleteUsersByIDs(c *gin.Context) {
-
-	var ids IDList
-
-	err := c.BindJSON(&ids)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	hardDelete := c.Query("hardDelete") == "true"
-
-	var idInterface []interface{}
-
-	for _, id := range ids.IDs {
-		idInterface = append(idInterface, id)
-	}
-
-	deleted, err := models.Users(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context(), hardDelete)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
-}
-
-// UnDeleteUserByID godoc
-// @Summary Undeletes a user by id
-// @Produce json
-// @Success 200 {object} APIUser
-// @Param id path string true "User id"
-// @Router /crud/users/:id/unDelete [post]
-func (*GeneratedCrudController) UnDeleteUserByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	deletedUser, err := models.Users(qm.Where("id = ?", id), qm.WithDeleted()).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	deletedUser.DeletedAt = null.Time{
-		Valid: false,
-	}
-
-	_, err = deletedUser.UpdateG(c.Request.Context(), boil.Whitelist("deleted_at"))
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, deletedUser)
-}
 
 func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 	rg.GET("/users/:id", gcc.GetUserByID)
 	rg.GET("/users", gcc.GetUsers)
 	rg.PUT("/users/:id", gcc.UpdateUserByID)
+	rg.POST("/users", gcc.CreateUser)
 	rg.DELETE("/users/:id", gcc.DeleteUserByID)
 	rg.DELETE("/users", gcc.BulkDeleteUsersByIDs)
 	rg.POST("/users/:id/unDelete", gcc.UnDeleteUserByID)
@@ -432,6 +20,7 @@ func (gcc *GeneratedCrudController) RegisterUsers(rg *gin.RouterGroup) {
 
 var UsersAdmin = api.AdminModel{
 	Name:          "Users",
+	NameSingular:  "User",
 	CanSoftDelete: true,
 	URLName:       "users",
 	DataName:      "users",
@@ -440,6 +29,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: false,
@@ -454,6 +44,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "name",
 			Name:     "Name",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -468,6 +59,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "login",
 			Name:     "Login",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -482,6 +74,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "email",
 			Name:     "Email",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -496,6 +89,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "sub",
 			Name:     "Sub",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -510,6 +104,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "roles",
 			Name:     "Roles",
 			Nullable: false,
+			Required: false,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -521,9 +116,85 @@ var UsersAdmin = api.AdminModel{
 			Type: "array",
 		},
 		&api.AdminModelField{
+			ID:       "image",
+			Name:     "Image",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq", "cont"},
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
+		},
+		&api.AdminModelField{
+			ID:       "birthday",
+			Name:     "Birthday",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq", "gt", "lt", "gte", "lte"},
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "time",
+		},
+		&api.AdminModelField{
+			ID:       "gender_self_defined",
+			Name:     "GenderSelfDefined",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq"},
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "bool",
+		},
+		&api.AdminModelField{
+			ID:       "gender",
+			Name:     "Gender",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq", "cont"},
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
+		},
+		&api.AdminModelField{
+			ID:       "location",
+			Name:     "Location",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq", "cont"},
+			Editable: true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
+		},
+		&api.AdminModelField{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: false,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
@@ -538,6 +209,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "updated_at",
 			Name:     "UpdatedAt",
 			Nullable: false,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
@@ -552,6 +224,7 @@ var UsersAdmin = api.AdminModel{
 			ID:       "deleted_at",
 			Name:     "DeletedAt",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,
@@ -577,6 +250,16 @@ type UsersModelConfigType struct {
 	Sub api.AdminModelFieldConfig
 
 	Roles api.AdminModelFieldConfig
+
+	Image api.AdminModelFieldConfig
+
+	Birthday api.AdminModelFieldConfig
+
+	GenderSelfDefined api.AdminModelFieldConfig
+
+	Gender api.AdminModelFieldConfig
+
+	Location api.AdminModelFieldConfig
 
 	CreatedAt api.AdminModelFieldConfig
 
@@ -617,6 +300,31 @@ var UsersModelConfig = UsersModelConfigType{
 		Editable:    true,
 		IsEmail:     false,
 	},
+	Image: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	Birthday: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	GenderSelfDefined: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	Gender: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	Location: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 		Editable:    true,
@@ -648,10 +356,20 @@ func (c UsersModelConfigType) Apply() {
 
 	UsersAdmin.Fields[6].Config = c.Roles
 
-	UsersAdmin.Fields[7].Config = c.CreatedAt
+	UsersAdmin.Fields[7].Config = c.Image
 
-	UsersAdmin.Fields[8].Config = c.UpdatedAt
+	UsersAdmin.Fields[8].Config = c.Birthday
 
-	UsersAdmin.Fields[9].Config = c.DeletedAt
+	UsersAdmin.Fields[9].Config = c.GenderSelfDefined
+
+	UsersAdmin.Fields[10].Config = c.Gender
+
+	UsersAdmin.Fields[11].Config = c.Location
+
+	UsersAdmin.Fields[12].Config = c.CreatedAt
+
+	UsersAdmin.Fields[13].Config = c.UpdatedAt
+
+	UsersAdmin.Fields[14].Config = c.DeletedAt
 
 }

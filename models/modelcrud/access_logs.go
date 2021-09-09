@@ -4,449 +4,22 @@
 package modelcrud
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/calebhiebert/go-vue-template/api"
-	"github.com/calebhiebert/go-vue-template/models"
 	"github.com/gin-gonic/gin"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/boil"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
-	"github.com/volatiletech/sqlboiler/v4/types"
 )
-
-type APIAccessLog struct {
-	// uuid
-	ID string `boil:"id" json:"id" toml:"id" yaml:"id"`
-
-	// character varying
-	Path string `boil:"path" json:"path" toml:"path" yaml:"path"`
-
-	// text
-
-	RequestBody *string `boil:"request_body" json:"request_body,omitempty" toml:"request_body" yaml:"request_body,omitempty"`
-
-	// jsonb
-
-	RequestHeaders map[string]interface{} `boil:"request_headers" json:"request_headers,omitempty" toml:"request_headers" yaml:"request_headers,omitempty"`
-
-	// jsonb
-
-	ResponseBody map[string]interface{} `boil:"response_body" json:"response_body" toml:"response_body" yaml:"response_body"`
-
-	// jsonb
-
-	ResponseHeaders map[string]interface{} `boil:"response_headers" json:"response_headers" toml:"response_headers" yaml:"response_headers"`
-
-	// integer
-	ResponseCode int `boil:"response_code" json:"response_code" toml:"response_code" yaml:"response_code"`
-
-	// integer
-	ProcessingDuration int `boil:"processing_duration" json:"processing_duration" toml:"processing_duration" yaml:"processing_duration"`
-
-	// character varying
-	RequestMethod string `boil:"request_method" json:"request_method" toml:"request_method" yaml:"request_method"`
-
-	// uuid
-
-	UserID *string `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
-
-	// character varying
-	IPAddress string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
-
-	// timestamp without time zone
-
-	CreatedAt *time.Time `boil:"created_at" json:"created_at,omitempty" toml:"created_at" yaml:"created_at,omitempty"`
-}
-
-type GetAccessLogsResponse struct {
-	AccessLogs models.AccessLogSlice `json:"access_logs"`
-	Total      int64                 `json:"total"`
-	NextOffset int64                 `json:"next_offset"`
-}
-
-type APIGetAccessLogsResponse struct {
-	AccessLogs []APIAccessLog `json:"access_logs"`
-	Total      int64          `json:"total"`
-	NextOffset int64          `json:"next_offset"`
-}
-
-// GetAccessLogByID godoc
-// @Summary Gets a single AccessLog entity by their id
-// @Produce json
-// @Success 200 {object} APIGetAccessLogsResponse
-// @Param id path string true "AccessLog id"
-// @Router /crud/accessLogs/:id [get]
-func (*GeneratedCrudController) GetAccessLogByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	AccessLog, err := models.AccessLogs(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, AccessLog)
-}
-
-// GetAccessLogs godoc
-// @Summary Gets a list for all entities of the AccessLog type
-// @Produce json
-// @Success 200 {object} APIAccessLog
-// @Param sort.id query string false "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.path query string false "Sort by path. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.request_body query string false "Sort by request_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.request_headers query string false "Sort by request_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.response_body query string false "Sort by response_body. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.response_headers query string false "Sort by response_headers. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.response_code query string false "Sort by response_code. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.processing_duration query string false "Sort by processing_duration. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.request_method query string false "Sort by request_method. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.user_id query string false "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.ip_address query string false "Sort by ip_address. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
-// @Router /crud/accessLogs [get]
-func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
-	queryMods := []qm.QueryMod{}
-
-	var orderBy []string
-
-	for q, v := range c.Request.URL.Query() {
-		sortDirection := "ASC"
-
-		if v[0] == "DESC" || v[0] == "desc" {
-			sortDirection = "DESC"
-		}
-
-		switch q {
-		case "sort.id":
-			orderBy = append(orderBy, "id "+sortDirection)
-		case "id.eq":
-			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
-
-		case "sort.path":
-			orderBy = append(orderBy, "path "+sortDirection)
-		case "path.eq":
-			queryMods = append(queryMods, qm.Where("path = ?", v[0]))
-
-		case "path.cont":
-			pathSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("path ILIKE ?", pathSearchString))
-
-		case "sort.request_body":
-			orderBy = append(orderBy, "request_body "+sortDirection)
-		case "request_body.eq":
-			queryMods = append(queryMods, qm.Where("request_body = ?", v[0]))
-
-		case "request_body.cont":
-			request_bodySearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("request_body ILIKE ?", request_bodySearchString))
-
-		case "sort.request_headers":
-			orderBy = append(orderBy, "request_headers "+sortDirection)
-		case "request_headers.eq":
-			queryMods = append(queryMods, qm.Where("request_headers = ?", v[0]))
-
-		case "sort.response_body":
-			orderBy = append(orderBy, "response_body "+sortDirection)
-		case "response_body.eq":
-			queryMods = append(queryMods, qm.Where("response_body = ?", v[0]))
-
-		case "sort.response_headers":
-			orderBy = append(orderBy, "response_headers "+sortDirection)
-		case "response_headers.eq":
-			queryMods = append(queryMods, qm.Where("response_headers = ?", v[0]))
-
-		case "sort.response_code":
-			orderBy = append(orderBy, "response_code "+sortDirection)
-		case "response_code.eq":
-			queryMods = append(queryMods, qm.Where("response_code = ?", v[0]))
-
-		case "response_code.gt":
-			queryMods = append(queryMods, qm.Where("response_code > ?", v[0]))
-		case "response_code.lt":
-			queryMods = append(queryMods, qm.Where("response_code < ?", v[0]))
-		case "response_code.gte":
-			queryMods = append(queryMods, qm.Where("response_code >= ?", v[0]))
-		case "response_code.lte":
-			queryMods = append(queryMods, qm.Where("response_code <= ?", v[0]))
-
-		case "sort.processing_duration":
-			orderBy = append(orderBy, "processing_duration "+sortDirection)
-		case "processing_duration.eq":
-			queryMods = append(queryMods, qm.Where("processing_duration = ?", v[0]))
-
-		case "processing_duration.gt":
-			queryMods = append(queryMods, qm.Where("processing_duration > ?", v[0]))
-		case "processing_duration.lt":
-			queryMods = append(queryMods, qm.Where("processing_duration < ?", v[0]))
-		case "processing_duration.gte":
-			queryMods = append(queryMods, qm.Where("processing_duration >= ?", v[0]))
-		case "processing_duration.lte":
-			queryMods = append(queryMods, qm.Where("processing_duration <= ?", v[0]))
-
-		case "sort.request_method":
-			orderBy = append(orderBy, "request_method "+sortDirection)
-		case "request_method.eq":
-			queryMods = append(queryMods, qm.Where("request_method = ?", v[0]))
-
-		case "request_method.cont":
-			request_methodSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("request_method ILIKE ?", request_methodSearchString))
-
-		case "sort.user_id":
-			orderBy = append(orderBy, "user_id "+sortDirection)
-		case "user_id.eq":
-			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
-
-		case "sort.ip_address":
-			orderBy = append(orderBy, "ip_address "+sortDirection)
-		case "ip_address.eq":
-			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
-
-		case "ip_address.cont":
-			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
-			queryMods = append(queryMods, qm.Where("ip_address ILIKE ?", ip_addressSearchString))
-
-		case "sort.created_at":
-			orderBy = append(orderBy, "created_at "+sortDirection)
-		case "created_at.eq":
-			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
-
-		case "created_at.gt":
-			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
-		case "created_at.lt":
-			queryMods = append(queryMods, qm.Where("created_at < ?", v[0]))
-		case "created_at.gte":
-			queryMods = append(queryMods, qm.Where("created_at >= ?", v[0]))
-		case "created_at.lte":
-			queryMods = append(queryMods, qm.Where("created_at <= ?", v[0]))
-
-		}
-	}
-
-	count, err := models.AccessLogs(queryMods...).CountG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	limit, offset := api.ExtractLimitOffset(c)
-
-	queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
-
-	if len(orderBy) > 0 {
-		queryMods = append(queryMods, qm.OrderBy(strings.Join(orderBy, ", ")))
-	} else {
-		queryMods = append(queryMods, qm.OrderBy("created_at DESC"))
-	}
-
-	accessLogs, err := models.AccessLogs(queryMods...).AllG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if accessLogs == nil {
-		accessLogs = models.AccessLogSlice{}
-	}
-
-	c.JSON(http.StatusOK, GetAccessLogsResponse{
-		AccessLogs: accessLogs,
-		Total:      count,
-		NextOffset: int64(offset + limit),
-	})
-}
-
-type APIUpdateAccessLogRequest struct {
-	Path *string `boil:"path" json:"path" toml:"path" yaml:"path"`
-
-	RequestBody *string `boil:"request_body" json:"request_body,omitempty" toml:"request_body" yaml:"request_body,omitempty"`
-
-	RequestHeaders map[string]interface{} `boil:"request_headers" json:"request_headers,omitempty" toml:"request_headers" yaml:"request_headers,omitempty"`
-
-	ResponseBody map[string]interface{} `boil:"response_body" json:"response_body" toml:"response_body" yaml:"response_body"`
-
-	ResponseHeaders    map[string]interface{} `boil:"response_headers" json:"response_headers" toml:"response_headers" yaml:"response_headers"`
-	ResponseCode       *int                   `boil:"response_code" json:"response_code" toml:"response_code" yaml:"response_code"`
-	ProcessingDuration *int                   `boil:"processing_duration" json:"processing_duration" toml:"processing_duration" yaml:"processing_duration"`
-	RequestMethod      *string                `boil:"request_method" json:"request_method" toml:"request_method" yaml:"request_method"`
-
-	UserID    *string `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
-	IPAddress *string `boil:"ip_address" json:"ip_address" toml:"ip_address" yaml:"ip_address"`
-}
-
-type UpdateAccessLogRequest struct {
-	Path               *string      `boil:"path" json:"path,omitempty" toml:"path" yaml:"path"`
-	RequestBody        *null.String `boil:"request_body" json:"request_body,omitempty" toml:"request_body" yaml:"request_body,omitempty"`
-	RequestHeaders     *null.JSON   `boil:"request_headers" json:"request_headers,omitempty" toml:"request_headers" yaml:"request_headers,omitempty"`
-	ResponseBody       *types.JSON  `boil:"response_body" json:"response_body,omitempty" toml:"response_body" yaml:"response_body"`
-	ResponseHeaders    *types.JSON  `boil:"response_headers" json:"response_headers,omitempty" toml:"response_headers" yaml:"response_headers"`
-	ResponseCode       *int         `boil:"response_code" json:"response_code,omitempty" toml:"response_code" yaml:"response_code"`
-	ProcessingDuration *int         `boil:"processing_duration" json:"processing_duration,omitempty" toml:"processing_duration" yaml:"processing_duration"`
-	RequestMethod      *string      `boil:"request_method" json:"request_method,omitempty" toml:"request_method" yaml:"request_method"`
-	UserID             *null.String `boil:"user_id" json:"user_id,omitempty" toml:"user_id" yaml:"user_id,omitempty"`
-	IPAddress          *string      `boil:"ip_address" json:"ip_address,omitempty" toml:"ip_address" yaml:"ip_address"`
-}
-
-// UpdateAccessLogByID godoc
-// @Summary Updates a single AccessLog entity based on their id
-// @Produce json
-// @Accept json
-// @Param req body APIUpdateAccessLogRequest true "Update parameters"
-// @Param id path string true "AccessLog id"
-// @Success 200 {object} APIAccessLog
-// @Router /crud/accessLogs/:id [put]
-func (*GeneratedCrudController) UpdateAccessLogByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	var updateReq UpdateAccessLogRequest
-
-	err := c.BindJSON(&updateReq)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	existingAccessLog, err := models.AccessLogs(qm.Where("id = ?", id), qm.For("UPDATE")).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	if updateReq.Path != nil {
-		existingAccessLog.Path = *updateReq.Path
-	}
-
-	if updateReq.RequestBody != nil {
-		existingAccessLog.RequestBody = *updateReq.RequestBody
-	}
-
-	if updateReq.RequestHeaders != nil {
-		existingAccessLog.RequestHeaders = *updateReq.RequestHeaders
-	}
-
-	if updateReq.ResponseBody != nil {
-		existingAccessLog.ResponseBody = *updateReq.ResponseBody
-	}
-
-	if updateReq.ResponseHeaders != nil {
-		existingAccessLog.ResponseHeaders = *updateReq.ResponseHeaders
-	}
-
-	if updateReq.ResponseCode != nil {
-		existingAccessLog.ResponseCode = *updateReq.ResponseCode
-	}
-
-	if updateReq.ProcessingDuration != nil {
-		existingAccessLog.ProcessingDuration = *updateReq.ProcessingDuration
-	}
-
-	if updateReq.RequestMethod != nil {
-		existingAccessLog.RequestMethod = *updateReq.RequestMethod
-	}
-
-	if updateReq.UserID != nil {
-		existingAccessLog.UserID = *updateReq.UserID
-	}
-
-	if updateReq.IPAddress != nil {
-		existingAccessLog.IPAddress = *updateReq.IPAddress
-	}
-
-	_, err = existingAccessLog.UpdateG(c.Request.Context(), boil.Infer())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingAccessLog)
-}
-
-// DeleteAccessLogByID godoc
-// @Summary Soft deletes a single AccessLog entity based on their id
-// @Produce json
-// @Success 200 {object} APIAccessLog
-// @Param id path string true "AccessLog id"
-// @Router /crud/accessLogs/:id [delete]
-func (*GeneratedCrudController) DeleteAccessLogByID(c *gin.Context) {
-	id := c.Param("id")
-
-	if id == "" {
-		api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invalid").Respond(c)
-		return
-	}
-
-	existingAccessLog, err := models.AccessLogs(qm.Where("id = ?", id)).OneG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	_, err = existingAccessLog.DeleteG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, existingAccessLog)
-}
-
-// BulkDeleteAccessLogsByIDs godoc
-// @Summary Soft deletes a range of accessLogs by their ids
-// @Produce json
-// @Success 200 {object} DeletedCount
-// @Param req body IDList true "List of ids to delete"
-// @Param hardDelete query string false "Hard delete accessLog"
-// @Router /crud/accessLogs [delete]
-func (*GeneratedCrudController) BulkDeleteAccessLogsByIDs(c *gin.Context) {
-
-	var ids IDList
-
-	err := c.BindJSON(&ids)
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	var idInterface []interface{}
-
-	for _, id := range ids.IDs {
-		idInterface = append(idInterface, id)
-	}
-
-	deleted, err := models.AccessLogs(qm.WhereIn("id IN ?", idInterface...)).DeleteAllG(c.Request.Context())
-	if err != nil {
-		api.APIErrorFromErr(err).Respond(c)
-		return
-	}
-
-	c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
-}
 
 func (gcc *GeneratedCrudController) RegisterAccessLogs(rg *gin.RouterGroup) {
 	rg.GET("/accessLogs/:id", gcc.GetAccessLogByID)
 	rg.GET("/accessLogs", gcc.GetAccessLogs)
 	rg.PUT("/accessLogs/:id", gcc.UpdateAccessLogByID)
+	rg.POST("/accessLogs", gcc.CreateAccessLog)
 	rg.DELETE("/accessLogs/:id", gcc.DeleteAccessLogByID)
 	rg.DELETE("/accessLogs", gcc.BulkDeleteAccessLogsByIDs)
 }
 
 var AccessLogsAdmin = api.AdminModel{
 	Name:          "AccessLogs",
+	NameSingular:  "AccessLog",
 	CanSoftDelete: false,
 	URLName:       "accessLogs",
 	DataName:      "access_logs",
@@ -455,6 +28,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "id",
 			Name:     "ID",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: false,
@@ -469,6 +43,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "path",
 			Name:     "Path",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -483,6 +58,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_body",
 			Name:     "RequestBody",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -497,6 +73,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_headers",
 			Name:     "RequestHeaders",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -511,6 +88,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_body",
 			Name:     "ResponseBody",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -525,6 +103,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_headers",
 			Name:     "ResponseHeaders",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -539,6 +118,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "response_code",
 			Name:     "ResponseCode",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: true,
@@ -553,6 +133,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "processing_duration",
 			Name:     "ProcessingDuration",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: true,
@@ -567,6 +148,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "request_method",
 			Name:     "RequestMethod",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -581,6 +163,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "user_id",
 			Name:     "UserID",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq"},
 			Editable: true,
@@ -595,6 +178,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "ip_address",
 			Name:     "IPAddress",
 			Nullable: false,
+			Required: true,
 			FilterOperations: []string{
 				"eq", "cont"},
 			Editable: true,
@@ -609,6 +193,7 @@ var AccessLogsAdmin = api.AdminModel{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: true,
+			Required: false,
 			FilterOperations: []string{
 				"eq", "gt", "lt", "gte", "lte"},
 			Editable: false,

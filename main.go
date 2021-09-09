@@ -33,7 +33,7 @@ import (
 //go:generate echo "Generating swagger documentation"
 //go:generate swag init --exclude ui
 
-// @title Go Vue Template
+// @title go-vue-template
 // @version 0.1
 
 // @license.name Unknown
