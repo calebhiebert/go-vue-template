@@ -32,12 +32,20 @@ func NewDefaultAdminModelFieldConfig() AdminModelFieldConfig {
 }
 
 type AdminModelField struct {
-	ID               string                `json:"id"`
-	Name             string                `json:"name"`
-	Type             string                `json:"type"`
-	Nullable         bool                  `json:"nullable"`
-	Required         bool                  `json:"required"`
-	Editable         bool                  `json:"editable"`
-	Config           AdminModelFieldConfig `json:"config"`
-	FilterOperations []string              `json:"filter_operations"`
+	ID               string                   `json:"id"`
+	Name             string                   `json:"name"`
+	Type             string                   `json:"type"`
+	Nullable         bool                     `json:"nullable"`
+	Required         bool                     `json:"required"`
+	Editable         bool                     `json:"editable"`
+	Config           AdminModelFieldConfig    `json:"config"`
+	FilterOperations []string                 `json:"filter_operations"`
+	ForeignFields    []AdminModelForeignField `json:"foreign_fields"`
+}
+
+type AdminModelForeignField struct {
+	Model    string `json:"model"`
+	Field    string `json:"field"`
+	Nullable bool   `json:"nullable"`
+	Unique   bool   `json:"unique"`
 }

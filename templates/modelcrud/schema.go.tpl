@@ -45,6 +45,22 @@ Fields: []*api.AdminModelField{
         Nullable: {{ $field.Nullable }},
         Required: {{ if or $field.Nullable $hasDefault }}false{{else}}true{{ end }},
         FilterOperations: {{ template "filter_operations" $field }},
+        ForeignFields: []api.AdminModelForeignField{
+        {{- range $fkey := $.Table.FKeys -}}
+            {{ if eq $fkey.Column $orig_col_name}}
+                {{- $ltable := $.Aliases.Table $fkey.Table -}}
+                {{- $ftable := $.Aliases.Table $fkey.ForeignTable -}}
+                {{- $rel := $ltable.Relationship $fkey.Name -}}
+                {{- $canSoftDelete := (getTable $.Tables $fkey.ForeignTable).CanSoftDelete }}
+                {
+                Model: "{{ $fkey.ForeignTable }}",
+                Field: "{{ $fkey.ForeignColumn }}",
+                Nullable: {{ $fkey.Nullable }},
+                Unique: {{ $fkey.Unique }},
+                },
+            {{ end }}
+        {{- end -}}
+        },
         Editable:
         {{- if and (eq $orig_col_name "id") (eq $field.DBType "uuid") -}}
             false
