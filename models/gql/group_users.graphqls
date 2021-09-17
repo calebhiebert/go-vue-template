@@ -1,0 +1,22 @@
+
+
+type GroupUser {group_id: String!
+    user_id: String!
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateGroupUser {group_id: String
+    user_id: String
+    
+    
+    
+    }
+
+input CreateGroupUser {group_id: String!
+    user_id: String!
+    
+    
+    
+    }

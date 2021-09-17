@@ -30,14 +30,15 @@ var TokenIssuancesAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
-			Editable: false,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
 				IsEmail:     false,
 			},
-			Type: "string",
+			Type: "uuid",
 		},
 		&api.AdminModelField{
 			ID:       "user_id",
@@ -45,14 +46,22 @@ var TokenIssuancesAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{
+				{
+					Model:    "users",
+					Field:    "id",
+					Nullable: false,
+					Unique:   false,
+				},
+			},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
 				IsEmail:     false,
 			},
-			Type: "string",
+			Type: "uuid",
 		},
 		&api.AdminModelField{
 			ID:       "ip_address",
@@ -60,8 +69,9 @@ var TokenIssuancesAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -75,8 +85,9 @@ var TokenIssuancesAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: false,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,

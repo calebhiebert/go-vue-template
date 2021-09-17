@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users
     gender_self_defined BOOLEAN,
     gender              VARCHAR,
     location            VARCHAR,
+    phone               VARCHAR UNIQUE,
 
     created_at          TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     updated_at          TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
@@ -28,3 +29,11 @@ CREATE TABLE IF NOT EXISTS users
             (gender_self_defined = true AND gender IS NOT NULL AND (LENGTH(gender) > 2 AND LENGTH(gender) < 30))
         )
 );
+
+insert into public.users (id, name, login, email, pw_hash, sub, roles, image, birthday, gender_self_defined, gender,
+                          location)
+values ('7403c893-cd37-41b5-85a5-a3adc51f138e', 'Admin', 'admin@admin.admin', 'admin@admin.admin',
+        '$2a$14$uYJgftrFx/tXBst6w8IdaeM7MTbfajUibXmfIm4X.VobeKia.ub5m', null, '{user,admin}', null, null, null, null,
+        null),
+       ('54edce03-c535-4342-8518-4d5b9b1194b6', 'User', 'user@user.user', 'user@user.user',
+        '$2a$14$HOrBkLTNcyDA98AC./YhEu/p5YBlKV/UAD6.1jJf2oOGpz6UVSwau', null, '{user}', null, null, null, null, null);

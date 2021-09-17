@@ -37,7 +37,8 @@ third_party = [
     '"github.com/volatiletech/sqlboiler/v4/queries/qm"',
     '"github.com/volatiletech/sqlboiler/v4/queries/qmhelper"',
     '"github.com/volatiletech/strmangle"',
-    '"github.com/gofrs/uuid"'
+    '"github.com/gofrs/uuid"',
+    '"github.com/calebhiebert/go-vue-template/graph/model"'
 ]
 
 standard = [

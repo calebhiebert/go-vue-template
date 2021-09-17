@@ -1,0 +1,25 @@
+
+
+type ProfileQuestion {id: ID!
+    question: String!
+    answer_type: Int!
+    options: Any!
+    weight: Float!
+    created_at: Time
+    }
+
+input UpdateProfileQuestion {
+    question: String
+    answer_type: Int
+    
+    weight: Float
+    
+    }
+
+input CreateProfileQuestion {
+    question: String!
+    answer_type: Int!
+    options: Any
+    weight: Float
+    
+    }

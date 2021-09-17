@@ -4,3 +4,12 @@ JAEGER_AGENT_PORT=6831
 DATABASE_URL=postgres://go-vue-template:go-vue-template@localhost:5432/go-vue-template?sslmode=disable
 
 HOSTED_URL=http://localhost:8080
+
+S3_ENDPOINT=localhost:9003
+S3_KEY=minioadmin
+S3_SECRET=minioadmin
+S3_SSL=false
+
+HASURA_URL=http://localhost:8888/v1/graphql
+
+JWT_KEY=ohsosecret

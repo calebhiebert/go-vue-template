@@ -31,14 +31,15 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
-			Editable: false,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
 				IsEmail:     false,
 			},
-			Type: "string",
+			Type: "uuid",
 		},
 		&api.AdminModelField{
 			ID:       "name",
@@ -46,8 +47,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -61,8 +63,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -76,8 +79,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -91,8 +95,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -106,8 +111,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: false,
 			FilterOperations: []string{
-				"eq"},
-			Editable: true,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -121,8 +127,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -136,8 +143,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: true,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -151,8 +159,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq"},
-			Editable: true,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -166,8 +175,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -181,8 +191,25 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "string",
+		},
+		&api.AdminModelField{
+			ID:       "phone",
+			Name:     "Phone",
+			Nullable: true,
+			Required: false,
+			FilterOperations: []string{
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -196,8 +223,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: false,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -211,8 +239,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: false,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: false,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -226,8 +255,9 @@ var UsersAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: false,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: false,
 				Editable:    true,
@@ -260,6 +290,8 @@ type UsersModelConfigType struct {
 	Gender api.AdminModelFieldConfig
 
 	Location api.AdminModelFieldConfig
+
+	Phone api.AdminModelFieldConfig
 
 	CreatedAt api.AdminModelFieldConfig
 
@@ -325,6 +357,11 @@ var UsersModelConfig = UsersModelConfigType{
 		Editable:    true,
 		IsEmail:     false,
 	},
+	Phone: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
 	CreatedAt: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 		Editable:    true,
@@ -366,10 +403,12 @@ func (c UsersModelConfigType) Apply() {
 
 	UsersAdmin.Fields[11].Config = c.Location
 
-	UsersAdmin.Fields[12].Config = c.CreatedAt
+	UsersAdmin.Fields[12].Config = c.Phone
 
-	UsersAdmin.Fields[13].Config = c.UpdatedAt
+	UsersAdmin.Fields[13].Config = c.CreatedAt
 
-	UsersAdmin.Fields[14].Config = c.DeletedAt
+	UsersAdmin.Fields[14].Config = c.UpdatedAt
+
+	UsersAdmin.Fields[15].Config = c.DeletedAt
 
 }

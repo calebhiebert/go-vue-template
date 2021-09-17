@@ -39,6 +39,8 @@ type APICreateUserRequest struct {
 	Gender *string `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
 
 	Location *string `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+
+	Phone *string `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 }
 
 type CreateUserRequest struct {
@@ -53,6 +55,7 @@ type CreateUserRequest struct {
 	GenderSelfDefined *null.Bool         `boil:"gender_self_defined" json:"gender_self_defined,omitempty" toml:"gender_self_defined"  yaml:"gender_self_defined,omitempty"`
 	Gender            *null.String       `boil:"gender" json:"gender,omitempty" toml:"gender"  yaml:"gender,omitempty"`
 	Location          *null.String       `boil:"location" json:"location,omitempty" toml:"location"  yaml:"location,omitempty"`
+	Phone             *null.String       `boil:"phone" json:"phone,omitempty" toml:"phone"  yaml:"phone,omitempty"`
 }
 
 // CreateUser godoc
@@ -109,6 +112,10 @@ func (*GeneratedCrudController) CreateUser(c *gin.Context) {
 
 	if createReq.Location != nil {
 		newUser.Location = *createReq.Location
+	}
+
+	if createReq.Phone != nil {
+		newUser.Phone = *createReq.Phone
 	}
 
 	err = newUser.InsertG(c.Request.Context(), boil.Infer())

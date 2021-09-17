@@ -1,0 +1,43 @@
+
+
+type Event {id: ID!
+    game_type_id: String!
+    event_date: Time!
+    player_count: Int!
+    name: String!
+    created_by_id: String!
+    course_id: String!
+    parent_id: CString
+    public: Boolean!
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateEvent {
+    game_type_id: String
+    event_date: Time
+    player_count: Int
+    name: String
+    
+    course_id: String
+    parent_id: CString
+    public: Boolean
+    
+    
+    
+    }
+
+input CreateEvent {
+    game_type_id: String!
+    event_date: Time!
+    player_count: Int!
+    name: String
+    
+    course_id: String!
+    parent_id: CString
+    public: Boolean
+    
+    
+    
+    }

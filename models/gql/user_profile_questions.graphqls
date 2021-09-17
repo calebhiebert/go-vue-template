@@ -1,0 +1,25 @@
+
+
+type UserProfileQuestion {user_id: String!
+    profile_question_id: String!
+    a_number: Int
+    a_rating: Int
+    a_days: CString
+    a_text: CString
+    }
+
+input UpdateUserProfileQuestion {user_id: String
+    profile_question_id: String
+    a_number: Int
+    a_rating: Int
+    a_days: CString
+    a_text: CString
+    }
+
+input CreateUserProfileQuestion {user_id: String!
+    profile_question_id: String!
+    a_number: Int
+    a_rating: Int
+    a_days: CString
+    a_text: CString
+    }

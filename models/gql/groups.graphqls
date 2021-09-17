@@ -1,0 +1,25 @@
+
+
+type Group {id: ID!
+    name: String!
+    created_by_id: String!
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateGroup {
+    name: String
+    
+    
+    
+    
+    }
+
+input CreateGroup {
+    name: String!
+    
+    
+    
+    
+    }

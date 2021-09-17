@@ -10,6 +10,7 @@ import (
 )
 
 var MissingUserError = NewAPIError("missing-user", http.StatusUnauthorized, "User is not authenticated")
+var MissingPermissionsError = NewAPIError("missing-permissions", http.StatusForbidden, "User is missing permissions")
 
 type APIError struct {
 	ID         string                 `json:"id"`

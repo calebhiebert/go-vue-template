@@ -30,14 +30,15 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
-			Editable: false,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
 				IsEmail:     false,
 			},
-			Type: "string",
+			Type: "uuid",
 		},
 		&api.AdminModelField{
 			ID:       "path",
@@ -45,8 +46,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -60,8 +62,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -75,10 +78,11 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq"},
-			Editable: true,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
-				ShowOnGraph: true,
+				ShowOnGraph: false,
 				Editable:    true,
 				IsEmail:     false,
 			},
@@ -90,10 +94,11 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
-			Editable: true,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
-				ShowOnGraph: true,
+				ShowOnGraph: false,
 				Editable:    true,
 				IsEmail:     false,
 			},
@@ -105,10 +110,11 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq"},
-			Editable: true,
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
-				ShowOnGraph: true,
+				ShowOnGraph: false,
 				Editable:    true,
 				IsEmail:     false,
 			},
@@ -120,8 +126,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: true,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -135,8 +142,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: true,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -150,8 +158,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -165,14 +174,22 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq"},
+				"eq", "null"},
+			ForeignFields: []api.AdminModelForeignField{
+				{
+					Model:    "users",
+					Field:    "id",
+					Nullable: true,
+					Unique:   false,
+				},
+			},
 			Editable: true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
 				IsEmail:     false,
 			},
-			Type: "string",
+			Type: "uuid",
 		},
 		&api.AdminModelField{
 			ID:       "ip_address",
@@ -180,8 +197,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: false,
 			Required: true,
 			FilterOperations: []string{
-				"eq", "cont"},
-			Editable: true,
+				"eq", "null", "cont"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -195,8 +213,9 @@ var AccessLogsAdmin = api.AdminModel{
 			Nullable: true,
 			Required: false,
 			FilterOperations: []string{
-				"eq", "gt", "lt", "gte", "lte"},
-			Editable: false,
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      false,
 			Config: api.AdminModelFieldConfig{
 				ShowOnGraph: true,
 				Editable:    true,
@@ -251,17 +270,17 @@ var AccessLogsModelConfig = AccessLogsModelConfigType{
 		IsEmail:     false,
 	},
 	RequestHeaders: api.AdminModelFieldConfig{
-		ShowOnGraph: true,
+		ShowOnGraph: false,
 		Editable:    true,
 		IsEmail:     false,
 	},
 	ResponseBody: api.AdminModelFieldConfig{
-		ShowOnGraph: true,
+		ShowOnGraph: false,
 		Editable:    true,
 		IsEmail:     false,
 	},
 	ResponseHeaders: api.AdminModelFieldConfig{
-		ShowOnGraph: true,
+		ShowOnGraph: false,
 		Editable:    true,
 		IsEmail:     false,
 	},

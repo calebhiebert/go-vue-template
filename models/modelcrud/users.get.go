@@ -57,6 +57,10 @@ type APIUser struct {
 
 	Location *string `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
 
+	// character varying
+
+	Phone *string `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
+
 	// timestamp without time zone
 	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 
@@ -119,6 +123,7 @@ func (*GeneratedCrudController) GetUserByID(c *gin.Context) {
 // @Param sort.gender_self_defined query string false "Sort by gender_self_defined. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.gender query string false "Sort by gender. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.location query string false "Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.phone query string false "Sort by phone. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.updated_at query string false "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.deleted_at query string false "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
@@ -146,11 +151,23 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "id "+sortDirection)
 		case "id.eq":
 			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+		case "id.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("id IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("id IS NOT NULL"))
+			}
 
 		case "sort.name":
 			orderBy = append(orderBy, "name "+sortDirection)
 		case "name.eq":
 			queryMods = append(queryMods, qm.Where("name = ?", v[0]))
+		case "name.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("name IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("name IS NOT NULL"))
+			}
 
 		case "name.cont":
 			nameSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -160,6 +177,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "login "+sortDirection)
 		case "login.eq":
 			queryMods = append(queryMods, qm.Where("login = ?", v[0]))
+		case "login.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("login IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("login IS NOT NULL"))
+			}
 
 		case "login.cont":
 			loginSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -169,6 +192,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "email "+sortDirection)
 		case "email.eq":
 			queryMods = append(queryMods, qm.Where("email = ?", v[0]))
+		case "email.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("email IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("email IS NOT NULL"))
+			}
 
 		case "email.cont":
 			emailSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -178,6 +207,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "sub "+sortDirection)
 		case "sub.eq":
 			queryMods = append(queryMods, qm.Where("sub = ?", v[0]))
+		case "sub.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("sub IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("sub IS NOT NULL"))
+			}
 
 		case "sub.cont":
 			subSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -187,11 +222,23 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "roles "+sortDirection)
 		case "roles.eq":
 			queryMods = append(queryMods, qm.Where("roles = ?", v[0]))
+		case "roles.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("roles IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("roles IS NOT NULL"))
+			}
 
 		case "sort.image":
 			orderBy = append(orderBy, "image "+sortDirection)
 		case "image.eq":
 			queryMods = append(queryMods, qm.Where("image = ?", v[0]))
+		case "image.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("image IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("image IS NOT NULL"))
+			}
 
 		case "image.cont":
 			imageSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -201,6 +248,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "birthday "+sortDirection)
 		case "birthday.eq":
 			queryMods = append(queryMods, qm.Where("birthday = ?", v[0]))
+		case "birthday.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("birthday IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("birthday IS NOT NULL"))
+			}
 
 		case "birthday.gt":
 			queryMods = append(queryMods, qm.Where("birthday > ?", v[0]))
@@ -215,11 +268,23 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "gender_self_defined "+sortDirection)
 		case "gender_self_defined.eq":
 			queryMods = append(queryMods, qm.Where("gender_self_defined = ?", v[0]))
+		case "gender_self_defined.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("gender_self_defined IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("gender_self_defined IS NOT NULL"))
+			}
 
 		case "sort.gender":
 			orderBy = append(orderBy, "gender "+sortDirection)
 		case "gender.eq":
 			queryMods = append(queryMods, qm.Where("gender = ?", v[0]))
+		case "gender.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("gender IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("gender IS NOT NULL"))
+			}
 
 		case "gender.cont":
 			genderSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -229,15 +294,42 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "location "+sortDirection)
 		case "location.eq":
 			queryMods = append(queryMods, qm.Where("location = ?", v[0]))
+		case "location.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("location IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("location IS NOT NULL"))
+			}
 
 		case "location.cont":
 			locationSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
 			queryMods = append(queryMods, qm.Where("location ILIKE ?", locationSearchString))
 
+		case "sort.phone":
+			orderBy = append(orderBy, "phone "+sortDirection)
+		case "phone.eq":
+			queryMods = append(queryMods, qm.Where("phone = ?", v[0]))
+		case "phone.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("phone IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("phone IS NOT NULL"))
+			}
+
+		case "phone.cont":
+			phoneSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
+			queryMods = append(queryMods, qm.Where("phone ILIKE ?", phoneSearchString))
+
 		case "sort.created_at":
 			orderBy = append(orderBy, "created_at "+sortDirection)
 		case "created_at.eq":
 			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+		case "created_at.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("created_at IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("created_at IS NOT NULL"))
+			}
 
 		case "created_at.gt":
 			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))
@@ -252,6 +344,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "updated_at "+sortDirection)
 		case "updated_at.eq":
 			queryMods = append(queryMods, qm.Where("updated_at = ?", v[0]))
+		case "updated_at.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("updated_at IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("updated_at IS NOT NULL"))
+			}
 
 		case "updated_at.gt":
 			queryMods = append(queryMods, qm.Where("updated_at > ?", v[0]))
@@ -266,6 +364,12 @@ func (*GeneratedCrudController) GetUsers(c *gin.Context) {
 			orderBy = append(orderBy, "deleted_at "+sortDirection)
 		case "deleted_at.eq":
 			queryMods = append(queryMods, qm.Where("deleted_at = ?", v[0]))
+		case "deleted_at.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("deleted_at IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("deleted_at IS NOT NULL"))
+			}
 
 		case "deleted_at.gt":
 			queryMods = append(queryMods, qm.Where("deleted_at > ?", v[0]))

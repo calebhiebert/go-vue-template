@@ -1,0 +1,19 @@
+
+
+type GameType {id: ID!
+    name: String!
+    is_custom: Boolean!
+    deleted_at: Time
+    }
+
+input UpdateGameType {
+    name: String
+    is_custom: Boolean
+    
+    }
+
+input CreateGameType {
+    name: String!
+    is_custom: Boolean
+    
+    }

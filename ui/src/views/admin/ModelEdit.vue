@@ -48,8 +48,6 @@ export default {
         });
 
         this.model = model.data;
-
-        console.log(this.model);
       } catch (e) {
         const err = extractError(e);
 

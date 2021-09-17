@@ -1,0 +1,19 @@
+
+
+type EventPQMatchScore {event_id: String!
+    profile_question_id: String!
+    rating_avg: Int
+    num_avg: Float
+    }
+
+input UpdateEventPQMatchScore {event_id: String
+    profile_question_id: String
+    rating_avg: Int
+    num_avg: Float
+    }
+
+input CreateEventPQMatchScore {event_id: String!
+    profile_question_id: String!
+    rating_avg: Int
+    num_avg: Float
+    }

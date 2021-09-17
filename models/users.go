@@ -37,6 +37,7 @@ type User struct {
 	GenderSelfDefined null.Bool         `boil:"gender_self_defined" json:"gender_self_defined,omitempty" toml:"gender_self_defined" yaml:"gender_self_defined,omitempty"`
 	Gender            null.String       `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
 	Location          null.String       `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+	Phone             null.String       `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 	CreatedAt         time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt         time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -58,6 +59,7 @@ var UserColumns = struct {
 	GenderSelfDefined string
 	Gender            string
 	Location          string
+	Phone             string
 	CreatedAt         string
 	UpdatedAt         string
 	DeletedAt         string
@@ -74,6 +76,7 @@ var UserColumns = struct {
 	GenderSelfDefined: "gender_self_defined",
 	Gender:            "gender",
 	Location:          "location",
+	Phone:             "phone",
 	CreatedAt:         "created_at",
 	UpdatedAt:         "updated_at",
 	DeletedAt:         "deleted_at",
@@ -92,6 +95,7 @@ var UserTableColumns = struct {
 	GenderSelfDefined string
 	Gender            string
 	Location          string
+	Phone             string
 	CreatedAt         string
 	UpdatedAt         string
 	DeletedAt         string
@@ -108,6 +112,7 @@ var UserTableColumns = struct {
 	GenderSelfDefined: "users.gender_self_defined",
 	Gender:            "users.gender",
 	Location:          "users.location",
+	Phone:             "users.phone",
 	CreatedAt:         "users.created_at",
 	UpdatedAt:         "users.updated_at",
 	DeletedAt:         "users.deleted_at",
@@ -159,27 +164,6 @@ func (w whereHelpernull_Bool) GTE(x null.Bool) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
-type whereHelpertime_Time struct{ field string }
-
-func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
 var UserWhere = struct {
 	ID                whereHelperstring
 	Name              whereHelperstring
@@ -193,6 +177,7 @@ var UserWhere = struct {
 	GenderSelfDefined whereHelpernull_Bool
 	Gender            whereHelpernull_String
 	Location          whereHelpernull_String
+	Phone             whereHelpernull_String
 	CreatedAt         whereHelpertime_Time
 	UpdatedAt         whereHelpertime_Time
 	DeletedAt         whereHelpernull_Time
@@ -209,6 +194,7 @@ var UserWhere = struct {
 	GenderSelfDefined: whereHelpernull_Bool{field: "\"users\".\"gender_self_defined\""},
 	Gender:            whereHelpernull_String{field: "\"users\".\"gender\""},
 	Location:          whereHelpernull_String{field: "\"users\".\"location\""},
+	Phone:             whereHelpernull_String{field: "\"users\".\"phone\""},
 	CreatedAt:         whereHelpertime_Time{field: "\"users\".\"created_at\""},
 	UpdatedAt:         whereHelpertime_Time{field: "\"users\".\"updated_at\""},
 	DeletedAt:         whereHelpernull_Time{field: "\"users\".\"deleted_at\""},
@@ -216,17 +202,32 @@ var UserWhere = struct {
 
 // UserRels is where relationship names are stored.
 var UserRels = struct {
-	AccessLogs     string
-	TokenIssuances string
+	AccessLogs           string
+	EventUsers           string
+	CreatedByEvents      string
+	GroupUsers           string
+	CreatedByGroups      string
+	TokenIssuances       string
+	UserProfileQuestions string
 }{
-	AccessLogs:     "AccessLogs",
-	TokenIssuances: "TokenIssuances",
+	AccessLogs:           "AccessLogs",
+	EventUsers:           "EventUsers",
+	CreatedByEvents:      "CreatedByEvents",
+	GroupUsers:           "GroupUsers",
+	CreatedByGroups:      "CreatedByGroups",
+	TokenIssuances:       "TokenIssuances",
+	UserProfileQuestions: "UserProfileQuestions",
 }
 
 // userR is where relationships are stored.
 type userR struct {
-	AccessLogs     AccessLogSlice     `boil:"AccessLogs" json:"AccessLogs" toml:"AccessLogs" yaml:"AccessLogs"`
-	TokenIssuances TokenIssuanceSlice `boil:"TokenIssuances" json:"TokenIssuances" toml:"TokenIssuances" yaml:"TokenIssuances"`
+	AccessLogs           AccessLogSlice           `boil:"AccessLogs" json:"AccessLogs" toml:"AccessLogs" yaml:"AccessLogs"`
+	EventUsers           EventUserSlice           `boil:"EventUsers" json:"EventUsers" toml:"EventUsers" yaml:"EventUsers"`
+	CreatedByEvents      EventSlice               `boil:"CreatedByEvents" json:"CreatedByEvents" toml:"CreatedByEvents" yaml:"CreatedByEvents"`
+	GroupUsers           GroupUserSlice           `boil:"GroupUsers" json:"GroupUsers" toml:"GroupUsers" yaml:"GroupUsers"`
+	CreatedByGroups      GroupSlice               `boil:"CreatedByGroups" json:"CreatedByGroups" toml:"CreatedByGroups" yaml:"CreatedByGroups"`
+	TokenIssuances       TokenIssuanceSlice       `boil:"TokenIssuances" json:"TokenIssuances" toml:"TokenIssuances" yaml:"TokenIssuances"`
+	UserProfileQuestions UserProfileQuestionSlice `boil:"UserProfileQuestions" json:"UserProfileQuestions" toml:"UserProfileQuestions" yaml:"UserProfileQuestions"`
 }
 
 // NewStruct creates a new relationship struct
@@ -238,8 +239,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "image", "birthday", "gender_self_defined", "gender", "location", "created_at", "updated_at", "deleted_at"}
-	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "image", "birthday", "gender_self_defined", "gender", "location", "deleted_at"}
+	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "image", "birthday", "gender_self_defined", "gender", "location", "phone", "created_at", "updated_at", "deleted_at"}
+	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "image", "birthday", "gender_self_defined", "gender", "location", "phone", "deleted_at"}
 	userColumnsWithDefault    = []string{"roles", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 )
@@ -560,6 +561,94 @@ func (o *User) AccessLogs(mods ...qm.QueryMod) accessLogQuery {
 	return query
 }
 
+// EventUsers retrieves all the event_user's EventUsers with an executor.
+func (o *User) EventUsers(mods ...qm.QueryMod) eventUserQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"event_users\".\"user_id\"=?", o.ID),
+		qmhelper.WhereIsNull("\"event_users\".\"deleted_at\""),
+	)
+
+	query := EventUsers(queryMods...)
+	queries.SetFrom(query.Query, "\"event_users\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"event_users\".*"})
+	}
+
+	return query
+}
+
+// CreatedByEvents retrieves all the event's Events with an executor via created_by_id column.
+func (o *User) CreatedByEvents(mods ...qm.QueryMod) eventQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"events\".\"created_by_id\"=?", o.ID),
+		qmhelper.WhereIsNull("\"events\".\"deleted_at\""),
+	)
+
+	query := Events(queryMods...)
+	queries.SetFrom(query.Query, "\"events\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"events\".*"})
+	}
+
+	return query
+}
+
+// GroupUsers retrieves all the group_user's GroupUsers with an executor.
+func (o *User) GroupUsers(mods ...qm.QueryMod) groupUserQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"group_users\".\"user_id\"=?", o.ID),
+		qmhelper.WhereIsNull("\"group_users\".\"deleted_at\""),
+	)
+
+	query := GroupUsers(queryMods...)
+	queries.SetFrom(query.Query, "\"group_users\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"group_users\".*"})
+	}
+
+	return query
+}
+
+// CreatedByGroups retrieves all the group's Groups with an executor via created_by_id column.
+func (o *User) CreatedByGroups(mods ...qm.QueryMod) groupQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"groups\".\"created_by_id\"=?", o.ID),
+		qmhelper.WhereIsNull("\"groups\".\"deleted_at\""),
+	)
+
+	query := Groups(queryMods...)
+	queries.SetFrom(query.Query, "\"groups\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"groups\".*"})
+	}
+
+	return query
+}
+
 // TokenIssuances retrieves all the token_issuance's TokenIssuances with an executor.
 func (o *User) TokenIssuances(mods ...qm.QueryMod) tokenIssuanceQuery {
 	var queryMods []qm.QueryMod
@@ -576,6 +665,27 @@ func (o *User) TokenIssuances(mods ...qm.QueryMod) tokenIssuanceQuery {
 
 	if len(queries.GetSelect(query.Query)) == 0 {
 		queries.SetSelect(query.Query, []string{"\"token_issuances\".*"})
+	}
+
+	return query
+}
+
+// UserProfileQuestions retrieves all the user_profile_question's UserProfileQuestions with an executor.
+func (o *User) UserProfileQuestions(mods ...qm.QueryMod) userProfileQuestionQuery {
+	var queryMods []qm.QueryMod
+	if len(mods) != 0 {
+		queryMods = append(queryMods, mods...)
+	}
+
+	queryMods = append(queryMods,
+		qm.Where("\"user_profile_questions\".\"user_id\"=?", o.ID),
+	)
+
+	query := UserProfileQuestions(queryMods...)
+	queries.SetFrom(query.Query, "\"user_profile_questions\"")
+
+	if len(queries.GetSelect(query.Query)) == 0 {
+		queries.SetSelect(query.Query, []string{"\"user_profile_questions\".*"})
 	}
 
 	return query
@@ -679,6 +789,402 @@ func (userL) LoadAccessLogs(ctx context.Context, e boil.ContextExecutor, singula
 	return nil
 }
 
+// LoadEventUsers allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadEventUsers(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		object = maybeUser.(*User)
+	} else {
+		slice = *maybeUser.(*[]*User)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`event_users`),
+		qm.WhereIn(`event_users.user_id in ?`, args...),
+		qmhelper.WhereIsNull(`event_users.deleted_at`),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load event_users")
+	}
+
+	var resultSlice []*EventUser
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice event_users")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on event_users")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for event_users")
+	}
+
+	if len(eventUserAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.EventUsers = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &eventUserR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.EventUsers = append(local.R.EventUsers, foreign)
+				if foreign.R == nil {
+					foreign.R = &eventUserR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadCreatedByEvents allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadCreatedByEvents(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		object = maybeUser.(*User)
+	} else {
+		slice = *maybeUser.(*[]*User)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`events`),
+		qm.WhereIn(`events.created_by_id in ?`, args...),
+		qmhelper.WhereIsNull(`events.deleted_at`),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load events")
+	}
+
+	var resultSlice []*Event
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice events")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on events")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for events")
+	}
+
+	if len(eventAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.CreatedByEvents = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &eventR{}
+			}
+			foreign.R.CreatedBy = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.CreatedByID {
+				local.R.CreatedByEvents = append(local.R.CreatedByEvents, foreign)
+				if foreign.R == nil {
+					foreign.R = &eventR{}
+				}
+				foreign.R.CreatedBy = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadGroupUsers allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadGroupUsers(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		object = maybeUser.(*User)
+	} else {
+		slice = *maybeUser.(*[]*User)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`group_users`),
+		qm.WhereIn(`group_users.user_id in ?`, args...),
+		qmhelper.WhereIsNull(`group_users.deleted_at`),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load group_users")
+	}
+
+	var resultSlice []*GroupUser
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice group_users")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on group_users")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for group_users")
+	}
+
+	if len(groupUserAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.GroupUsers = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &groupUserR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.GroupUsers = append(local.R.GroupUsers, foreign)
+				if foreign.R == nil {
+					foreign.R = &groupUserR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadCreatedByGroups allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadCreatedByGroups(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		object = maybeUser.(*User)
+	} else {
+		slice = *maybeUser.(*[]*User)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`groups`),
+		qm.WhereIn(`groups.created_by_id in ?`, args...),
+		qmhelper.WhereIsNull(`groups.deleted_at`),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load groups")
+	}
+
+	var resultSlice []*Group
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice groups")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on groups")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for groups")
+	}
+
+	if len(groupAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.CreatedByGroups = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &groupR{}
+			}
+			foreign.R.CreatedBy = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.CreatedByID {
+				local.R.CreatedByGroups = append(local.R.CreatedByGroups, foreign)
+				if foreign.R == nil {
+					foreign.R = &groupR{}
+				}
+				foreign.R.CreatedBy = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
 // LoadTokenIssuances allows an eager lookup of values, cached into the
 // loaded structs of the objects. This is for a 1-M or N-M relationship.
 func (userL) LoadTokenIssuances(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
@@ -767,6 +1273,104 @@ func (userL) LoadTokenIssuances(ctx context.Context, e boil.ContextExecutor, sin
 				local.R.TokenIssuances = append(local.R.TokenIssuances, foreign)
 				if foreign.R == nil {
 					foreign.R = &tokenIssuanceR{}
+				}
+				foreign.R.User = local
+				break
+			}
+		}
+	}
+
+	return nil
+}
+
+// LoadUserProfileQuestions allows an eager lookup of values, cached into the
+// loaded structs of the objects. This is for a 1-M or N-M relationship.
+func (userL) LoadUserProfileQuestions(ctx context.Context, e boil.ContextExecutor, singular bool, maybeUser interface{}, mods queries.Applicator) error {
+	var slice []*User
+	var object *User
+
+	if singular {
+		object = maybeUser.(*User)
+	} else {
+		slice = *maybeUser.(*[]*User)
+	}
+
+	args := make([]interface{}, 0, 1)
+	if singular {
+		if object.R == nil {
+			object.R = &userR{}
+		}
+		args = append(args, object.ID)
+	} else {
+	Outer:
+		for _, obj := range slice {
+			if obj.R == nil {
+				obj.R = &userR{}
+			}
+
+			for _, a := range args {
+				if a == obj.ID {
+					continue Outer
+				}
+			}
+
+			args = append(args, obj.ID)
+		}
+	}
+
+	if len(args) == 0 {
+		return nil
+	}
+
+	query := NewQuery(
+		qm.From(`user_profile_questions`),
+		qm.WhereIn(`user_profile_questions.user_id in ?`, args...),
+	)
+	if mods != nil {
+		mods.Apply(query)
+	}
+
+	results, err := query.QueryContext(ctx, e)
+	if err != nil {
+		return errors.Wrap(err, "failed to eager load user_profile_questions")
+	}
+
+	var resultSlice []*UserProfileQuestion
+	if err = queries.Bind(results, &resultSlice); err != nil {
+		return errors.Wrap(err, "failed to bind eager loaded slice user_profile_questions")
+	}
+
+	if err = results.Close(); err != nil {
+		return errors.Wrap(err, "failed to close results in eager load on user_profile_questions")
+	}
+	if err = results.Err(); err != nil {
+		return errors.Wrap(err, "error occurred during iteration of eager loaded relations for user_profile_questions")
+	}
+
+	if len(userProfileQuestionAfterSelectHooks) != 0 {
+		for _, obj := range resultSlice {
+			if err := obj.doAfterSelectHooks(ctx, e); err != nil {
+				return err
+			}
+		}
+	}
+	if singular {
+		object.R.UserProfileQuestions = resultSlice
+		for _, foreign := range resultSlice {
+			if foreign.R == nil {
+				foreign.R = &userProfileQuestionR{}
+			}
+			foreign.R.User = object
+		}
+		return nil
+	}
+
+	for _, foreign := range resultSlice {
+		for _, local := range slice {
+			if local.ID == foreign.UserID {
+				local.R.UserProfileQuestions = append(local.R.UserProfileQuestions, foreign)
+				if foreign.R == nil {
+					foreign.R = &userProfileQuestionR{}
 				}
 				foreign.R.User = local
 				break
@@ -932,6 +1536,254 @@ func (o *User) RemoveAccessLogs(ctx context.Context, exec boil.ContextExecutor, 
 	return nil
 }
 
+// AddEventUsersG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.EventUsers.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddEventUsersG(ctx context.Context, insert bool, related ...*EventUser) error {
+	return o.AddEventUsers(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddEventUsers adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.EventUsers.
+// Sets related.R.User appropriately.
+func (o *User) AddEventUsers(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*EventUser) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"event_users\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, eventUserPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.UserID, rel.EventID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			EventUsers: related,
+		}
+	} else {
+		o.R.EventUsers = append(o.R.EventUsers, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &eventUserR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddCreatedByEventsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.CreatedByEvents.
+// Sets related.R.CreatedBy appropriately.
+// Uses the global database handle.
+func (o *User) AddCreatedByEventsG(ctx context.Context, insert bool, related ...*Event) error {
+	return o.AddCreatedByEvents(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddCreatedByEvents adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.CreatedByEvents.
+// Sets related.R.CreatedBy appropriately.
+func (o *User) AddCreatedByEvents(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Event) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.CreatedByID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"events\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"created_by_id"}),
+				strmangle.WhereClause("\"", "\"", 2, eventPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.CreatedByID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			CreatedByEvents: related,
+		}
+	} else {
+		o.R.CreatedByEvents = append(o.R.CreatedByEvents, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &eventR{
+				CreatedBy: o,
+			}
+		} else {
+			rel.R.CreatedBy = o
+		}
+	}
+	return nil
+}
+
+// AddGroupUsersG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.GroupUsers.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddGroupUsersG(ctx context.Context, insert bool, related ...*GroupUser) error {
+	return o.AddGroupUsers(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddGroupUsers adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.GroupUsers.
+// Sets related.R.User appropriately.
+func (o *User) AddGroupUsers(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*GroupUser) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"group_users\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, groupUserPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.GroupID, rel.UserID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			GroupUsers: related,
+		}
+	} else {
+		o.R.GroupUsers = append(o.R.GroupUsers, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &groupUserR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddCreatedByGroupsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.CreatedByGroups.
+// Sets related.R.CreatedBy appropriately.
+// Uses the global database handle.
+func (o *User) AddCreatedByGroupsG(ctx context.Context, insert bool, related ...*Group) error {
+	return o.AddCreatedByGroups(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddCreatedByGroups adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.CreatedByGroups.
+// Sets related.R.CreatedBy appropriately.
+func (o *User) AddCreatedByGroups(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*Group) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.CreatedByID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"groups\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"created_by_id"}),
+				strmangle.WhereClause("\"", "\"", 2, groupPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.ID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.CreatedByID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			CreatedByGroups: related,
+		}
+	} else {
+		o.R.CreatedByGroups = append(o.R.CreatedByGroups, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &groupR{
+				CreatedBy: o,
+			}
+		} else {
+			rel.R.CreatedBy = o
+		}
+	}
+	return nil
+}
+
 // AddTokenIssuancesG adds the given related objects to the existing relationships
 // of the user, optionally inserting them as new records.
 // Appends related to o.R.TokenIssuances.
@@ -985,6 +1837,68 @@ func (o *User) AddTokenIssuances(ctx context.Context, exec boil.ContextExecutor,
 	for _, rel := range related {
 		if rel.R == nil {
 			rel.R = &tokenIssuanceR{
+				User: o,
+			}
+		} else {
+			rel.R.User = o
+		}
+	}
+	return nil
+}
+
+// AddUserProfileQuestionsG adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.UserProfileQuestions.
+// Sets related.R.User appropriately.
+// Uses the global database handle.
+func (o *User) AddUserProfileQuestionsG(ctx context.Context, insert bool, related ...*UserProfileQuestion) error {
+	return o.AddUserProfileQuestions(ctx, boil.GetContextDB(), insert, related...)
+}
+
+// AddUserProfileQuestions adds the given related objects to the existing relationships
+// of the user, optionally inserting them as new records.
+// Appends related to o.R.UserProfileQuestions.
+// Sets related.R.User appropriately.
+func (o *User) AddUserProfileQuestions(ctx context.Context, exec boil.ContextExecutor, insert bool, related ...*UserProfileQuestion) error {
+	var err error
+	for _, rel := range related {
+		if insert {
+			rel.UserID = o.ID
+			if err = rel.Insert(ctx, exec, boil.Infer()); err != nil {
+				return errors.Wrap(err, "failed to insert into foreign table")
+			}
+		} else {
+			updateQuery := fmt.Sprintf(
+				"UPDATE \"user_profile_questions\" SET %s WHERE %s",
+				strmangle.SetParamNames("\"", "\"", 1, []string{"user_id"}),
+				strmangle.WhereClause("\"", "\"", 2, userProfileQuestionPrimaryKeyColumns),
+			)
+			values := []interface{}{o.ID, rel.UserID, rel.ProfileQuestionID}
+
+			if boil.IsDebug(ctx) {
+				writer := boil.DebugWriterFrom(ctx)
+				fmt.Fprintln(writer, updateQuery)
+				fmt.Fprintln(writer, values)
+			}
+			if _, err = exec.ExecContext(ctx, updateQuery, values...); err != nil {
+				return errors.Wrap(err, "failed to update foreign table")
+			}
+
+			rel.UserID = o.ID
+		}
+	}
+
+	if o.R == nil {
+		o.R = &userR{
+			UserProfileQuestions: related,
+		}
+	} else {
+		o.R.UserProfileQuestions = append(o.R.UserProfileQuestions, related...)
+	}
+
+	for _, rel := range related {
+		if rel.R == nil {
+			rel.R = &userProfileQuestionR{
 				User: o,
 			}
 		} else {

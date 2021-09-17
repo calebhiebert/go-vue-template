@@ -1,0 +1,43 @@
+
+
+type AccessLog {id: ID!
+    path: String!
+    request_body: CString
+    request_headers: Any
+    response_body: Any!
+    response_headers: Any!
+    response_code: Int!
+    processing_duration: Int!
+    request_method: String!
+    user_id: CString
+    ip_address: String!
+    created_at: Time
+    }
+
+input UpdateAccessLog {
+    path: String
+    request_body: CString
+    
+    
+    
+    response_code: Int
+    processing_duration: Int
+    request_method: String
+    user_id: CString
+    ip_address: String
+    
+    }
+
+input CreateAccessLog {
+    path: String!
+    request_body: CString
+    request_headers: Any
+    response_body: Any!
+    response_headers: Any!
+    response_code: Int!
+    processing_duration: Int!
+    request_method: String!
+    user_id: CString
+    ip_address: String!
+    
+    }

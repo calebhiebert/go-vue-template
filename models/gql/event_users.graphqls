@@ -1,0 +1,28 @@
+
+
+type EventUser {user_id: String!
+    event_id: String!
+    is_owner: Boolean!
+    accepted: Boolean!
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateEventUser {user_id: String
+    event_id: String
+    is_owner: Boolean
+    accepted: Boolean
+    
+    
+    
+    }
+
+input CreateEventUser {user_id: String!
+    event_id: String!
+    is_owner: Boolean
+    accepted: Boolean
+    
+    
+    
+    }

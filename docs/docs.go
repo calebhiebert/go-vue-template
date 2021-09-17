@@ -334,6 +334,2488 @@ var doc = `{
                 }
             }
         },
+        "/crud/courses": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Course type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted courses in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by address. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.address",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by latitude. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.latitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by longitude. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.longitude",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICourse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Course",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICourse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of courses by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete course",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/courses/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Course entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetCoursesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Course entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateCourseRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICourse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Course entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete course",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICourse"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/courses/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a course by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Course id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICourse"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/eventPQMatchScores": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the EventPQMatchScore type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by event_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.event_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by profile_question_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.profile_question_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by rating_avg. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.rating_avg",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by num_avg. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.num_avg",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventPQMatchScore"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new EventPQMatchScore",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateEventPQMatchScoreRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventPQMatchScore"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of eventPQMatchScores by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete eventPQMatchScore",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/eventPQMatchScores/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single EventPQMatchScore entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventPQMatchScore id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetEventPQMatchScoresResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single EventPQMatchScore entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateEventPQMatchScoreRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "EventPQMatchScore id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventPQMatchScore"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single EventPQMatchScore entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventPQMatchScore id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventPQMatchScore"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/eventUsers": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the EventUser type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted eventUsers in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by event_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.event_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by is_owner. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.is_owner",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by accepted. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.accepted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventUser"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new EventUser",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateEventUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventUser"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of eventUsers by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete eventUser",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/eventUsers/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single EventUser entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetEventUsersResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single EventUser entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateEventUserRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "EventUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventUser"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single EventUser entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete eventUser",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/eventUsers/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a eventUser by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "EventUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEventUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/events": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Event type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted events in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by game_type_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.game_type_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by event_date. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.event_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by player_count. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.player_count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_by_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_by_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by course_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.course_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by parent_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.parent_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by public. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.public",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEvent"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Event",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateEventRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEvent"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of events by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete event",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/events/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Event entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetEventsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Event entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateEventRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Event id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEvent"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Event entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete event",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEvent"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/events/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a event by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Event id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIEvent"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/gameTypes": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the GameType type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted gameTypes in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by is_custom. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.is_custom",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGameType"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new GameType",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateGameTypeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGameType"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of gameTypes by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete gameType",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/gameTypes/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single GameType entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GameType id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetGameTypesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single GameType entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateGameTypeRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "GameType id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGameType"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single GameType entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GameType id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete gameType",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGameType"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/gameTypes/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a gameType by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GameType id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGameType"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groupUsers": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the GroupUser type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted groupUsers in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by group_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.group_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroupUser"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new GroupUser",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateGroupUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroupUser"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of groupUsers by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete groupUser",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groupUsers/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single GroupUser entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GroupUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetGroupUsersResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single GroupUser entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateGroupUserRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "GroupUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroupUser"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single GroupUser entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GroupUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete groupUser",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroupUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groupUsers/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a groupUser by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "GroupUser id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroupUser"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groups": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Group type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted groups in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_by_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_by_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroup"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Group",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateGroupRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroup"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of groups by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete group",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groups/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Group entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetGroupsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Group entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateGroupRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroup"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Group entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete group",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroup"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/groups/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a group by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGroup"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/images": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Image type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted images in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Image",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateImageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of images by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete image",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/images/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Image entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetImagesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Image entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateImageRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Image entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete image",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/images/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a image by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/inviteShortcodes": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the InviteShortcode type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by invite_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.invite_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInviteShortcode"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new InviteShortcode",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateInviteShortcodeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInviteShortcode"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of inviteShortcodes by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete inviteShortcode",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/inviteShortcodes/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single InviteShortcode entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "InviteShortcode id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetInviteShortcodesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single InviteShortcode entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateInviteShortcodeRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "InviteShortcode id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInviteShortcode"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single InviteShortcode entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "InviteShortcode id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInviteShortcode"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/invites": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Invite type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted invites in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by event_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.event_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by group_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.group_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by suggested_name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.suggested_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by phone. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.phone",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by email. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.email",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInvite"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Invite",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateInviteRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInvite"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of invites by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete invite",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/invites/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Invite entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Invite id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetInvitesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Invite entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateInviteRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Invite id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInvite"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Invite entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Invite id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete invite",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInvite"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/invites/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a invite by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Invite id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIInvite"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/profileQuestions": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the ProfileQuestion type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by question. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.question",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by answer_type. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.answer_type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by options. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.options",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by weight. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.weight",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new ProfileQuestion",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateProfileQuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of profileQuestions by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete profileQuestion",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/profileQuestions/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single ProfileQuestion entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetProfileQuestionsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single ProfileQuestion entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateProfileQuestionRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "ProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single ProfileQuestion entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIProfileQuestion"
+                        }
+                    }
+                }
+            }
+        },
         "/crud/tokenIssuances": {
             "get": {
                 "produces": [
@@ -518,6 +3000,202 @@ var doc = `{
                 }
             }
         },
+        "/crud/userProfileQuestions": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the UserProfileQuestion type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by user_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by profile_question_id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.profile_question_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by a_number. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.a_number",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by a_rating. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.a_rating",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by a_days. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.a_days",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by a_text. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.a_text",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUserProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new UserProfileQuestion",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateUserProfileQuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUserProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of userProfileQuestions by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete userProfileQuestion",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/userProfileQuestions/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single UserProfileQuestion entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetUserProfileQuestionsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single UserProfileQuestion entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateUserProfileQuestionRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "UserProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUserProfileQuestion"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single UserProfileQuestion entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UserProfileQuestion id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUserProfileQuestion"
+                        }
+                    }
+                }
+            }
+        },
         "/crud/users": {
             "get": {
                 "produces": [
@@ -595,6 +3273,12 @@ var doc = `{
                         "type": "string",
                         "description": "Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.location",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by phone. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.phone",
                         "in": "query"
                     },
                     {
@@ -923,6 +3607,39 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APICourse": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
         "modelcrud.APICreateAccessLogRequest": {
             "type": "object",
             "properties": {
@@ -961,10 +3678,206 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APICreateCourseRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateEventPQMatchScoreRequest": {
+            "type": "object",
+            "properties": {
+                "event_id": {
+                    "type": "string"
+                },
+                "num_avg": {
+                    "type": "number"
+                },
+                "profile_question_id": {
+                    "type": "string"
+                },
+                "rating_avg": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APICreateEventRequest": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "string"
+                },
+                "event_date": {
+                    "type": "string"
+                },
+                "game_type_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parent_id": {
+                    "type": "string"
+                },
+                "player_count": {
+                    "type": "integer"
+                },
+                "public": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "modelcrud.APICreateEventUserRequest": {
+            "type": "object",
+            "properties": {
+                "accepted": {
+                    "type": "boolean"
+                },
+                "event_id": {
+                    "type": "string"
+                },
+                "is_owner": {
+                    "type": "boolean"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateGameTypeRequest": {
+            "type": "object",
+            "properties": {
+                "is_custom": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateGroupRequest": {
+            "type": "object",
+            "properties": {
+                "created_by_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateGroupUserRequest": {
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateImageRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateInviteRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "event_id": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "suggested_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateInviteShortcodeRequest": {
+            "type": "object",
+            "properties": {
+                "invite_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateProfileQuestionRequest": {
+            "type": "object",
+            "properties": {
+                "answer_type": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "question": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                }
+            }
+        },
         "modelcrud.APICreateTokenIssuanceRequest": {
             "type": "object",
             "properties": {
                 "ip_address": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APICreateUserProfileQuestionRequest": {
+            "type": "object",
+            "properties": {
+                "a_days": {
+                    "type": "string"
+                },
+                "a_number": {
+                    "type": "integer"
+                },
+                "a_rating": {
+                    "type": "integer"
+                },
+                "a_text": {
+                    "type": "string"
+                },
+                "profile_question_id": {
                     "type": "string"
                 },
                 "user_id": {
@@ -999,6 +3912,9 @@ var doc = `{
                 "name": {
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                },
                 "roles": {
                     "type": "array",
                     "items": {
@@ -1006,6 +3922,128 @@ var doc = `{
                     }
                 },
                 "sub": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIEvent": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "event_date": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "game_type_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "type": "string"
+                },
+                "player_count": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "public": {
+                    "description": "boolean",
+                    "type": "boolean"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIEventPQMatchScore": {
+            "type": "object",
+            "properties": {
+                "event_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "num_avg": {
+                    "type": "number"
+                },
+                "profile_question_id": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "rating_avg": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIEventUser": {
+            "type": "object",
+            "properties": {
+                "accepted": {
+                    "description": "boolean",
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "event_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "is_owner": {
+                    "description": "boolean",
+                    "type": "boolean"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIGameType": {
+            "type": "object",
+            "properties": {
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "is_custom": {
+                    "description": "boolean",
+                    "type": "boolean"
+                },
+                "name": {
+                    "description": "character varying",
                     "type": "string"
                 }
             }
@@ -1021,6 +4059,193 @@ var doc = `{
                 },
                 "next_offset": {
                     "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetCoursesResponse": {
+            "type": "object",
+            "properties": {
+                "courses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APICourse"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetEventPQMatchScoresResponse": {
+            "type": "object",
+            "properties": {
+                "event_pq_match_scores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIEventPQMatchScore"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetEventUsersResponse": {
+            "type": "object",
+            "properties": {
+                "event_users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIEventUser"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetEventsResponse": {
+            "type": "object",
+            "properties": {
+                "events": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIEvent"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetGameTypesResponse": {
+            "type": "object",
+            "properties": {
+                "game_types": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIGameType"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetGroupUsersResponse": {
+            "type": "object",
+            "properties": {
+                "group_users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIGroupUser"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetGroupsResponse": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIGroup"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetImagesResponse": {
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIImage"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetInviteShortcodesResponse": {
+            "type": "object",
+            "properties": {
+                "invite_shortcodes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIInviteShortcode"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetInvitesResponse": {
+            "type": "object",
+            "properties": {
+                "invites": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIInvite"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetProfileQuestionsResponse": {
+            "type": "object",
+            "properties": {
+                "next_offset": {
+                    "type": "integer"
+                },
+                "profile_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIProfileQuestion"
+                    }
                 },
                 "total": {
                     "type": "integer"
@@ -1044,6 +4269,23 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APIGetUserProfileQuestionsResponse": {
+            "type": "object",
+            "properties": {
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "user_profile_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIUserProfileQuestion"
+                    }
+                }
+            }
+        },
         "modelcrud.APIGetUsersResponse": {
             "type": "object",
             "properties": {
@@ -1058,6 +4300,170 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/modelcrud.APIUser"
                     }
+                }
+            }
+        },
+        "modelcrud.APIGroup": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIGroupUser": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIImage": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIInvite": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "event_id": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "suggested_name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIInviteShortcode": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "invite_id": {
+                    "description": "uuid",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIProfileQuestion": {
+            "type": "object",
+            "properties": {
+                "answer_type": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "question": {
+                    "description": "text",
+                    "type": "string"
+                },
+                "weight": {
+                    "description": "double precision",
+                    "type": "number"
                 }
             }
         },
@@ -1119,10 +4525,206 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APIUpdateCourseRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateEventPQMatchScoreRequest": {
+            "type": "object",
+            "properties": {
+                "event_id": {
+                    "type": "string"
+                },
+                "num_avg": {
+                    "type": "number"
+                },
+                "profile_question_id": {
+                    "type": "string"
+                },
+                "rating_avg": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIUpdateEventRequest": {
+            "type": "object",
+            "properties": {
+                "course_id": {
+                    "type": "string"
+                },
+                "created_by_id": {
+                    "type": "string"
+                },
+                "event_date": {
+                    "type": "string"
+                },
+                "game_type_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "parent_id": {
+                    "type": "string"
+                },
+                "player_count": {
+                    "type": "integer"
+                },
+                "public": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "modelcrud.APIUpdateEventUserRequest": {
+            "type": "object",
+            "properties": {
+                "accepted": {
+                    "type": "boolean"
+                },
+                "event_id": {
+                    "type": "string"
+                },
+                "is_owner": {
+                    "type": "boolean"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateGameTypeRequest": {
+            "type": "object",
+            "properties": {
+                "is_custom": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateGroupRequest": {
+            "type": "object",
+            "properties": {
+                "created_by_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateGroupUserRequest": {
+            "type": "object",
+            "properties": {
+                "group_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateImageRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateInviteRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "event_id": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "suggested_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateInviteShortcodeRequest": {
+            "type": "object",
+            "properties": {
+                "invite_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateProfileQuestionRequest": {
+            "type": "object",
+            "properties": {
+                "answer_type": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "question": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                }
+            }
+        },
         "modelcrud.APIUpdateTokenIssuanceRequest": {
             "type": "object",
             "properties": {
                 "ip_address": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUpdateUserProfileQuestionRequest": {
+            "type": "object",
+            "properties": {
+                "a_days": {
+                    "type": "string"
+                },
+                "a_number": {
+                    "type": "integer"
+                },
+                "a_rating": {
+                    "type": "integer"
+                },
+                "a_text": {
+                    "type": "string"
+                },
+                "profile_question_id": {
                     "type": "string"
                 },
                 "user_id": {
@@ -1155,6 +4757,9 @@ var doc = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "roles": {
@@ -1208,6 +4813,9 @@ var doc = `{
                     "description": "character varying",
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                },
                 "roles": {
                     "type": "array",
                     "items": {
@@ -1219,6 +4827,31 @@ var doc = `{
                 },
                 "updated_at": {
                     "description": "timestamp without time zone",
+                    "type": "string"
+                }
+            }
+        },
+        "modelcrud.APIUserProfileQuestion": {
+            "type": "object",
+            "properties": {
+                "a_days": {
+                    "type": "string"
+                },
+                "a_number": {
+                    "type": "integer"
+                },
+                "a_rating": {
+                    "type": "integer"
+                },
+                "a_text": {
+                    "type": "string"
+                },
+                "profile_question_id": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "uuid",
                     "type": "string"
                 }
             }
@@ -1260,7 +4893,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "go-vue-template",
+	Title:       "Go Vue Template",
 	Description: "",
 }
 

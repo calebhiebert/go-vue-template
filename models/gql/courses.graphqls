@@ -1,0 +1,31 @@
+
+
+type Course {id: ID!
+    name: String!
+    address: CString
+    latitude: Float
+    longitude: Float
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateCourse {
+    name: String
+    address: CString
+    latitude: Float
+    longitude: Float
+    
+    
+    
+    }
+
+input CreateCourse {
+    name: String!
+    address: CString
+    latitude: Float
+    longitude: Float
+    
+    
+    
+    }

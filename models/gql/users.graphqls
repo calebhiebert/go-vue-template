@@ -1,0 +1,52 @@
+
+
+type User {id: ID!
+    name: String!
+    login: CString
+    email: String!
+    sub: CString
+    roles: [String!]!
+    image: CString
+    birthday: Time
+    gender_self_defined: CBool
+    gender: CString
+    location: CString
+    phone: CString
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateUser {
+    name: String
+    login: CString
+    email: String
+    sub: CString
+    roles: [String]
+    image: CString
+    birthday: Time
+    gender_self_defined: CBool
+    gender: CString
+    location: CString
+    phone: CString
+    
+    
+    
+    }
+
+input CreateUser {
+    name: String!
+    login: CString
+    email: String!
+    sub: CString
+    roles: [String!]
+    image: CString
+    birthday: Time
+    gender_self_defined: CBool
+    gender: CString
+    location: CString
+    phone: CString
+    
+    
+    
+    }

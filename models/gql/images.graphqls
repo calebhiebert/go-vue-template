@@ -1,0 +1,28 @@
+
+
+type Image {id: ID!
+    name: String!
+    type: String!
+    size: Int!
+    created_at: Time!
+    updated_at: Time!
+    deleted_at: Time
+    }
+
+input UpdateImage {
+    name: String
+    type: String
+    size: Int
+    
+    
+    
+    }
+
+input CreateImage {
+    name: String!
+    type: String!
+    size: Int!
+    
+    
+    
+    }

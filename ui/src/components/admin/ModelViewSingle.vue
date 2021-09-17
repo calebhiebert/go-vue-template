@@ -5,7 +5,7 @@
         <div class="mt-4" v-for="field of schema.fields" :key="field.id">
             <h6 class="title is-6 mb-0">{{ field.name }}</h6>
 
-            <FieldView :field="field" :model="model"></FieldView>
+            <FieldView :field="field" :model="model" :expanded="true"></FieldView>
         </div>
     </div>
 </template>

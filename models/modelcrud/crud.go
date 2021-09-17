@@ -19,7 +19,19 @@ func RegisterGeneratedCrud(rg *gin.RouterGroup) {
 	gcc := GeneratedCrudController{}
 
 	gcc.RegisterAccessLogs(rg)
+	gcc.RegisterCourses(rg)
+	gcc.RegisterEventPQMatchScores(rg)
+	gcc.RegisterEventUsers(rg)
+	gcc.RegisterEvents(rg)
+	gcc.RegisterGameTypes(rg)
+	gcc.RegisterGroupUsers(rg)
+	gcc.RegisterGroups(rg)
+	gcc.RegisterImages(rg)
+	gcc.RegisterInviteShortcodes(rg)
+	gcc.RegisterInvites(rg)
+	gcc.RegisterProfileQuestions(rg)
 	gcc.RegisterTokenIssuances(rg)
+	gcc.RegisterUserProfileQuestions(rg)
 	gcc.RegisterUsers(rg)
 
 	rg.GET("/_schema", func(c *gin.Context) {

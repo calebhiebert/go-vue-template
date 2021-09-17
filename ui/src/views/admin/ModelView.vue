@@ -119,7 +119,6 @@ export default {
       this.loading = true;
 
       this.modelSchema = window._adminSchema.models[this.modelId];
-
       this.tableColumns = this.constructTableColumns(this.modelSchema);
 
       try {
