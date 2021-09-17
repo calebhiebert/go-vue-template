@@ -21,75 +21,10 @@ type CreateAccessLog struct {
 	IPAddress          string       `json:"ip_address"`
 }
 
-type CreateCourse struct {
-	Name      string       `json:"name"`
-	Address   *null.String `json:"address"`
-	Latitude  *float64     `json:"latitude"`
-	Longitude *float64     `json:"longitude"`
-}
-
-type CreateEvent struct {
-	GameTypeID  string       `json:"game_type_id"`
-	EventDate   time.Time    `json:"event_date"`
-	PlayerCount int          `json:"player_count"`
-	Name        *string      `json:"name"`
-	CourseID    string       `json:"course_id"`
-	ParentID    *null.String `json:"parent_id"`
-	Public      *bool        `json:"public"`
-}
-
-type CreateEventPQMatchScore struct {
-	EventID           string   `json:"event_id"`
-	ProfileQuestionID string   `json:"profile_question_id"`
-	RatingAvg         *int     `json:"rating_avg"`
-	NumAvg            *float64 `json:"num_avg"`
-}
-
-type CreateEventUser struct {
-	UserID   string `json:"user_id"`
-	EventID  string `json:"event_id"`
-	IsOwner  *bool  `json:"is_owner"`
-	Accepted *bool  `json:"accepted"`
-}
-
-type CreateGameType struct {
-	Name     string `json:"name"`
-	IsCustom *bool  `json:"is_custom"`
-}
-
-type CreateGroup struct {
-	Name    string      `json:"name"`
-	Invites []*DoInvite `json:"invites"`
-}
-
-type CreateGroupUser struct {
-	GroupID string `json:"group_id"`
-	UserID  string `json:"user_id"`
-}
-
 type CreateImage struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 	Size int    `json:"size"`
-}
-
-type CreateInvite struct {
-	EventID       *null.String `json:"event_id"`
-	GroupID       *null.String `json:"group_id"`
-	SuggestedName *null.String `json:"suggested_name"`
-	Phone         *null.String `json:"phone"`
-	Email         *null.String `json:"email"`
-}
-
-type CreateInviteShortcode struct {
-	InviteID string `json:"invite_id"`
-}
-
-type CreateProfileQuestion struct {
-	Question   string      `json:"question"`
-	AnswerType int         `json:"answer_type"`
-	Options    interface{} `json:"options"`
-	Weight     *float64    `json:"weight"`
 }
 
 type CreateTokenIssuance struct {
@@ -111,26 +46,6 @@ type CreateUser struct {
 	Phone             *null.String `json:"phone"`
 }
 
-type CreateUserProfileQuestion struct {
-	UserID            string       `json:"user_id"`
-	ProfileQuestionID string       `json:"profile_question_id"`
-	ANumber           *int         `json:"a_number"`
-	ARating           *int         `json:"a_rating"`
-	ADays             *null.String `json:"a_days"`
-	AText             *null.String `json:"a_text"`
-}
-
-type DoInvite struct {
-	UserID *string `json:"userId"`
-	Sms    *string `json:"sms"`
-	Email  *string `json:"email"`
-}
-
-type InviteAcceptResult struct {
-	EventID *string `json:"eventID"`
-	GroupID *string `json:"groupID"`
-}
-
 type UpdateAccessLog struct {
 	Path               *string      `json:"path"`
 	RequestBody        *null.String `json:"request_body"`
@@ -141,73 +56,10 @@ type UpdateAccessLog struct {
 	IPAddress          *string      `json:"ip_address"`
 }
 
-type UpdateCourse struct {
-	Name      *string      `json:"name"`
-	Address   *null.String `json:"address"`
-	Latitude  *float64     `json:"latitude"`
-	Longitude *float64     `json:"longitude"`
-}
-
-type UpdateEvent struct {
-	GameTypeID  *string      `json:"game_type_id"`
-	EventDate   *time.Time   `json:"event_date"`
-	PlayerCount *int         `json:"player_count"`
-	Name        *string      `json:"name"`
-	CourseID    *string      `json:"course_id"`
-	ParentID    *null.String `json:"parent_id"`
-	Public      *bool        `json:"public"`
-}
-
-type UpdateEventPQMatchScore struct {
-	EventID           *string  `json:"event_id"`
-	ProfileQuestionID *string  `json:"profile_question_id"`
-	RatingAvg         *int     `json:"rating_avg"`
-	NumAvg            *float64 `json:"num_avg"`
-}
-
-type UpdateEventUser struct {
-	UserID   *string `json:"user_id"`
-	EventID  *string `json:"event_id"`
-	IsOwner  *bool   `json:"is_owner"`
-	Accepted *bool   `json:"accepted"`
-}
-
-type UpdateGameType struct {
-	Name     *string `json:"name"`
-	IsCustom *bool   `json:"is_custom"`
-}
-
-type UpdateGroup struct {
-	Name *string `json:"name"`
-}
-
-type UpdateGroupUser struct {
-	GroupID *string `json:"group_id"`
-	UserID  *string `json:"user_id"`
-}
-
 type UpdateImage struct {
 	Name *string `json:"name"`
 	Type *string `json:"type"`
 	Size *int    `json:"size"`
-}
-
-type UpdateInvite struct {
-	EventID       *null.String `json:"event_id"`
-	GroupID       *null.String `json:"group_id"`
-	SuggestedName *null.String `json:"suggested_name"`
-	Phone         *null.String `json:"phone"`
-	Email         *null.String `json:"email"`
-}
-
-type UpdateInviteShortcode struct {
-	InviteID *string `json:"invite_id"`
-}
-
-type UpdateProfileQuestion struct {
-	Question   *string  `json:"question"`
-	AnswerType *int     `json:"answer_type"`
-	Weight     *float64 `json:"weight"`
 }
 
 type UpdateTokenIssuance struct {
@@ -227,13 +79,4 @@ type UpdateUser struct {
 	Gender            *null.String `json:"gender"`
 	Location          *null.String `json:"location"`
 	Phone             *null.String `json:"phone"`
-}
-
-type UpdateUserProfileQuestion struct {
-	UserID            *string      `json:"user_id"`
-	ProfileQuestionID *string      `json:"profile_question_id"`
-	ANumber           *int         `json:"a_number"`
-	ARating           *int         `json:"a_rating"`
-	ADays             *null.String `json:"a_days"`
-	AText             *null.String `json:"a_text"`
 }

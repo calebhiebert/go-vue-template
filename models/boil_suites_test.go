@@ -13,267 +13,103 @@ import "testing"
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogs)
-	t.Run("Courses", testCourses)
-	t.Run("EventPQMatchScores", testEventPQMatchScores)
-	t.Run("EventUsers", testEventUsers)
-	t.Run("Events", testEvents)
-	t.Run("GameTypes", testGameTypes)
-	t.Run("GroupUsers", testGroupUsers)
-	t.Run("Groups", testGroups)
 	t.Run("Images", testImages)
-	t.Run("InviteShortcodes", testInviteShortcodes)
-	t.Run("Invites", testInvites)
-	t.Run("ProfileQuestions", testProfileQuestions)
 	t.Run("TokenIssuances", testTokenIssuances)
-	t.Run("UserProfileQuestions", testUserProfileQuestions)
 	t.Run("Users", testUsers)
 }
 
 func TestSoftDelete(t *testing.T) {
-	t.Run("Courses", testCoursesSoftDelete)
-	t.Run("EventUsers", testEventUsersSoftDelete)
-	t.Run("Events", testEventsSoftDelete)
-	t.Run("GameTypes", testGameTypesSoftDelete)
-	t.Run("GroupUsers", testGroupUsersSoftDelete)
-	t.Run("Groups", testGroupsSoftDelete)
 	t.Run("Images", testImagesSoftDelete)
-	t.Run("Invites", testInvitesSoftDelete)
 	t.Run("Users", testUsersSoftDelete)
 }
 
 func TestQuerySoftDeleteAll(t *testing.T) {
-	t.Run("Courses", testCoursesQuerySoftDeleteAll)
-	t.Run("EventUsers", testEventUsersQuerySoftDeleteAll)
-	t.Run("Events", testEventsQuerySoftDeleteAll)
-	t.Run("GameTypes", testGameTypesQuerySoftDeleteAll)
-	t.Run("GroupUsers", testGroupUsersQuerySoftDeleteAll)
-	t.Run("Groups", testGroupsQuerySoftDeleteAll)
 	t.Run("Images", testImagesQuerySoftDeleteAll)
-	t.Run("Invites", testInvitesQuerySoftDeleteAll)
 	t.Run("Users", testUsersQuerySoftDeleteAll)
 }
 
 func TestSliceSoftDeleteAll(t *testing.T) {
-	t.Run("Courses", testCoursesSliceSoftDeleteAll)
-	t.Run("EventUsers", testEventUsersSliceSoftDeleteAll)
-	t.Run("Events", testEventsSliceSoftDeleteAll)
-	t.Run("GameTypes", testGameTypesSliceSoftDeleteAll)
-	t.Run("GroupUsers", testGroupUsersSliceSoftDeleteAll)
-	t.Run("Groups", testGroupsSliceSoftDeleteAll)
 	t.Run("Images", testImagesSliceSoftDeleteAll)
-	t.Run("Invites", testInvitesSliceSoftDeleteAll)
 	t.Run("Users", testUsersSliceSoftDeleteAll)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsDelete)
-	t.Run("Courses", testCoursesDelete)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresDelete)
-	t.Run("EventUsers", testEventUsersDelete)
-	t.Run("Events", testEventsDelete)
-	t.Run("GameTypes", testGameTypesDelete)
-	t.Run("GroupUsers", testGroupUsersDelete)
-	t.Run("Groups", testGroupsDelete)
 	t.Run("Images", testImagesDelete)
-	t.Run("InviteShortcodes", testInviteShortcodesDelete)
-	t.Run("Invites", testInvitesDelete)
-	t.Run("ProfileQuestions", testProfileQuestionsDelete)
 	t.Run("TokenIssuances", testTokenIssuancesDelete)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsDelete)
 	t.Run("Users", testUsersDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsQueryDeleteAll)
-	t.Run("Courses", testCoursesQueryDeleteAll)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresQueryDeleteAll)
-	t.Run("EventUsers", testEventUsersQueryDeleteAll)
-	t.Run("Events", testEventsQueryDeleteAll)
-	t.Run("GameTypes", testGameTypesQueryDeleteAll)
-	t.Run("GroupUsers", testGroupUsersQueryDeleteAll)
-	t.Run("Groups", testGroupsQueryDeleteAll)
 	t.Run("Images", testImagesQueryDeleteAll)
-	t.Run("InviteShortcodes", testInviteShortcodesQueryDeleteAll)
-	t.Run("Invites", testInvitesQueryDeleteAll)
-	t.Run("ProfileQuestions", testProfileQuestionsQueryDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesQueryDeleteAll)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceDeleteAll)
-	t.Run("Courses", testCoursesSliceDeleteAll)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresSliceDeleteAll)
-	t.Run("EventUsers", testEventUsersSliceDeleteAll)
-	t.Run("Events", testEventsSliceDeleteAll)
-	t.Run("GameTypes", testGameTypesSliceDeleteAll)
-	t.Run("GroupUsers", testGroupUsersSliceDeleteAll)
-	t.Run("Groups", testGroupsSliceDeleteAll)
 	t.Run("Images", testImagesSliceDeleteAll)
-	t.Run("InviteShortcodes", testInviteShortcodesSliceDeleteAll)
-	t.Run("Invites", testInvitesSliceDeleteAll)
-	t.Run("ProfileQuestions", testProfileQuestionsSliceDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceDeleteAll)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsExists)
-	t.Run("Courses", testCoursesExists)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresExists)
-	t.Run("EventUsers", testEventUsersExists)
-	t.Run("Events", testEventsExists)
-	t.Run("GameTypes", testGameTypesExists)
-	t.Run("GroupUsers", testGroupUsersExists)
-	t.Run("Groups", testGroupsExists)
 	t.Run("Images", testImagesExists)
-	t.Run("InviteShortcodes", testInviteShortcodesExists)
-	t.Run("Invites", testInvitesExists)
-	t.Run("ProfileQuestions", testProfileQuestionsExists)
 	t.Run("TokenIssuances", testTokenIssuancesExists)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsExists)
 	t.Run("Users", testUsersExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsFind)
-	t.Run("Courses", testCoursesFind)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresFind)
-	t.Run("EventUsers", testEventUsersFind)
-	t.Run("Events", testEventsFind)
-	t.Run("GameTypes", testGameTypesFind)
-	t.Run("GroupUsers", testGroupUsersFind)
-	t.Run("Groups", testGroupsFind)
 	t.Run("Images", testImagesFind)
-	t.Run("InviteShortcodes", testInviteShortcodesFind)
-	t.Run("Invites", testInvitesFind)
-	t.Run("ProfileQuestions", testProfileQuestionsFind)
 	t.Run("TokenIssuances", testTokenIssuancesFind)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsFind)
 	t.Run("Users", testUsersFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsBind)
-	t.Run("Courses", testCoursesBind)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresBind)
-	t.Run("EventUsers", testEventUsersBind)
-	t.Run("Events", testEventsBind)
-	t.Run("GameTypes", testGameTypesBind)
-	t.Run("GroupUsers", testGroupUsersBind)
-	t.Run("Groups", testGroupsBind)
 	t.Run("Images", testImagesBind)
-	t.Run("InviteShortcodes", testInviteShortcodesBind)
-	t.Run("Invites", testInvitesBind)
-	t.Run("ProfileQuestions", testProfileQuestionsBind)
 	t.Run("TokenIssuances", testTokenIssuancesBind)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsBind)
 	t.Run("Users", testUsersBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsOne)
-	t.Run("Courses", testCoursesOne)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresOne)
-	t.Run("EventUsers", testEventUsersOne)
-	t.Run("Events", testEventsOne)
-	t.Run("GameTypes", testGameTypesOne)
-	t.Run("GroupUsers", testGroupUsersOne)
-	t.Run("Groups", testGroupsOne)
 	t.Run("Images", testImagesOne)
-	t.Run("InviteShortcodes", testInviteShortcodesOne)
-	t.Run("Invites", testInvitesOne)
-	t.Run("ProfileQuestions", testProfileQuestionsOne)
 	t.Run("TokenIssuances", testTokenIssuancesOne)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsOne)
 	t.Run("Users", testUsersOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsAll)
-	t.Run("Courses", testCoursesAll)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresAll)
-	t.Run("EventUsers", testEventUsersAll)
-	t.Run("Events", testEventsAll)
-	t.Run("GameTypes", testGameTypesAll)
-	t.Run("GroupUsers", testGroupUsersAll)
-	t.Run("Groups", testGroupsAll)
 	t.Run("Images", testImagesAll)
-	t.Run("InviteShortcodes", testInviteShortcodesAll)
-	t.Run("Invites", testInvitesAll)
-	t.Run("ProfileQuestions", testProfileQuestionsAll)
 	t.Run("TokenIssuances", testTokenIssuancesAll)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsAll)
 	t.Run("Users", testUsersAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsCount)
-	t.Run("Courses", testCoursesCount)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresCount)
-	t.Run("EventUsers", testEventUsersCount)
-	t.Run("Events", testEventsCount)
-	t.Run("GameTypes", testGameTypesCount)
-	t.Run("GroupUsers", testGroupUsersCount)
-	t.Run("Groups", testGroupsCount)
 	t.Run("Images", testImagesCount)
-	t.Run("InviteShortcodes", testInviteShortcodesCount)
-	t.Run("Invites", testInvitesCount)
-	t.Run("ProfileQuestions", testProfileQuestionsCount)
 	t.Run("TokenIssuances", testTokenIssuancesCount)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsCount)
 	t.Run("Users", testUsersCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsHooks)
-	t.Run("Courses", testCoursesHooks)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresHooks)
-	t.Run("EventUsers", testEventUsersHooks)
-	t.Run("Events", testEventsHooks)
-	t.Run("GameTypes", testGameTypesHooks)
-	t.Run("GroupUsers", testGroupUsersHooks)
-	t.Run("Groups", testGroupsHooks)
 	t.Run("Images", testImagesHooks)
-	t.Run("InviteShortcodes", testInviteShortcodesHooks)
-	t.Run("Invites", testInvitesHooks)
-	t.Run("ProfileQuestions", testProfileQuestionsHooks)
 	t.Run("TokenIssuances", testTokenIssuancesHooks)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsHooks)
 	t.Run("Users", testUsersHooks)
 }
 
 func TestInsert(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsInsert)
 	t.Run("AccessLogs", testAccessLogsInsertWhitelist)
-	t.Run("Courses", testCoursesInsert)
-	t.Run("Courses", testCoursesInsertWhitelist)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresInsert)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresInsertWhitelist)
-	t.Run("EventUsers", testEventUsersInsert)
-	t.Run("EventUsers", testEventUsersInsertWhitelist)
-	t.Run("Events", testEventsInsert)
-	t.Run("Events", testEventsInsertWhitelist)
-	t.Run("GameTypes", testGameTypesInsert)
-	t.Run("GameTypes", testGameTypesInsertWhitelist)
-	t.Run("GroupUsers", testGroupUsersInsert)
-	t.Run("GroupUsers", testGroupUsersInsertWhitelist)
-	t.Run("Groups", testGroupsInsert)
-	t.Run("Groups", testGroupsInsertWhitelist)
 	t.Run("Images", testImagesInsert)
 	t.Run("Images", testImagesInsertWhitelist)
-	t.Run("InviteShortcodes", testInviteShortcodesInsert)
-	t.Run("InviteShortcodes", testInviteShortcodesInsertWhitelist)
-	t.Run("Invites", testInvitesInsert)
-	t.Run("Invites", testInvitesInsertWhitelist)
-	t.Run("ProfileQuestions", testProfileQuestionsInsert)
-	t.Run("ProfileQuestions", testProfileQuestionsInsertWhitelist)
 	t.Run("TokenIssuances", testTokenIssuancesInsert)
 	t.Run("TokenIssuances", testTokenIssuancesInsertWhitelist)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsInsert)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsInsertWhitelist)
 	t.Run("Users", testUsersInsert)
 	t.Run("Users", testUsersInsertWhitelist)
 }
@@ -282,23 +118,7 @@ func TestInsert(t *testing.T) {
 // or deadlocks can occur.
 func TestToOne(t *testing.T) {
 	t.Run("AccessLogToUserUsingUser", testAccessLogToOneUserUsingUser)
-	t.Run("EventPQMatchScoreToEventUsingEvent", testEventPQMatchScoreToOneEventUsingEvent)
-	t.Run("EventPQMatchScoreToProfileQuestionUsingProfileQuestion", testEventPQMatchScoreToOneProfileQuestionUsingProfileQuestion)
-	t.Run("EventUserToEventUsingEvent", testEventUserToOneEventUsingEvent)
-	t.Run("EventUserToUserUsingUser", testEventUserToOneUserUsingUser)
-	t.Run("EventToCourseUsingCourse", testEventToOneCourseUsingCourse)
-	t.Run("EventToUserUsingCreatedBy", testEventToOneUserUsingCreatedBy)
-	t.Run("EventToGameTypeUsingGameType", testEventToOneGameTypeUsingGameType)
-	t.Run("EventToEventUsingParent", testEventToOneEventUsingParent)
-	t.Run("GroupUserToGroupUsingGroup", testGroupUserToOneGroupUsingGroup)
-	t.Run("GroupUserToUserUsingUser", testGroupUserToOneUserUsingUser)
-	t.Run("GroupToUserUsingCreatedBy", testGroupToOneUserUsingCreatedBy)
-	t.Run("InviteShortcodeToInviteUsingInvite", testInviteShortcodeToOneInviteUsingInvite)
-	t.Run("InviteToEventUsingEvent", testInviteToOneEventUsingEvent)
-	t.Run("InviteToGroupUsingGroup", testInviteToOneGroupUsingGroup)
 	t.Run("TokenIssuanceToUserUsingUser", testTokenIssuanceToOneUserUsingUser)
-	t.Run("UserProfileQuestionToProfileQuestionUsingProfileQuestion", testUserProfileQuestionToOneProfileQuestionUsingProfileQuestion)
-	t.Run("UserProfileQuestionToUserUsingUser", testUserProfileQuestionToOneUserUsingUser)
 }
 
 // TestOneToOne tests cannot be run in parallel
@@ -308,56 +128,21 @@ func TestOneToOne(t *testing.T) {}
 // TestToMany tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToMany(t *testing.T) {
-	t.Run("CourseToEvents", testCourseToManyEvents)
-	t.Run("EventToEventPQMatchScores", testEventToManyEventPQMatchScores)
-	t.Run("EventToEventUsers", testEventToManyEventUsers)
-	t.Run("EventToParentEvents", testEventToManyParentEvents)
-	t.Run("EventToInvites", testEventToManyInvites)
-	t.Run("GameTypeToEvents", testGameTypeToManyEvents)
-	t.Run("GroupToGroupUsers", testGroupToManyGroupUsers)
-	t.Run("GroupToInvites", testGroupToManyInvites)
-	t.Run("InviteToInviteShortcodes", testInviteToManyInviteShortcodes)
-	t.Run("ProfileQuestionToEventPQMatchScores", testProfileQuestionToManyEventPQMatchScores)
-	t.Run("ProfileQuestionToUserProfileQuestions", testProfileQuestionToManyUserProfileQuestions)
 	t.Run("UserToAccessLogs", testUserToManyAccessLogs)
-	t.Run("UserToEventUsers", testUserToManyEventUsers)
-	t.Run("UserToCreatedByEvents", testUserToManyCreatedByEvents)
-	t.Run("UserToGroupUsers", testUserToManyGroupUsers)
-	t.Run("UserToCreatedByGroups", testUserToManyCreatedByGroups)
 	t.Run("UserToTokenIssuances", testUserToManyTokenIssuances)
-	t.Run("UserToUserProfileQuestions", testUserToManyUserProfileQuestions)
 }
 
 // TestToOneSet tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOneSet(t *testing.T) {
 	t.Run("AccessLogToUserUsingAccessLogs", testAccessLogToOneSetOpUserUsingUser)
-	t.Run("EventPQMatchScoreToEventUsingEventPQMatchScores", testEventPQMatchScoreToOneSetOpEventUsingEvent)
-	t.Run("EventPQMatchScoreToProfileQuestionUsingEventPQMatchScores", testEventPQMatchScoreToOneSetOpProfileQuestionUsingProfileQuestion)
-	t.Run("EventUserToEventUsingEventUsers", testEventUserToOneSetOpEventUsingEvent)
-	t.Run("EventUserToUserUsingEventUsers", testEventUserToOneSetOpUserUsingUser)
-	t.Run("EventToCourseUsingEvents", testEventToOneSetOpCourseUsingCourse)
-	t.Run("EventToUserUsingCreatedByEvents", testEventToOneSetOpUserUsingCreatedBy)
-	t.Run("EventToGameTypeUsingEvents", testEventToOneSetOpGameTypeUsingGameType)
-	t.Run("EventToEventUsingParentEvents", testEventToOneSetOpEventUsingParent)
-	t.Run("GroupUserToGroupUsingGroupUsers", testGroupUserToOneSetOpGroupUsingGroup)
-	t.Run("GroupUserToUserUsingGroupUsers", testGroupUserToOneSetOpUserUsingUser)
-	t.Run("GroupToUserUsingCreatedByGroups", testGroupToOneSetOpUserUsingCreatedBy)
-	t.Run("InviteShortcodeToInviteUsingInviteShortcodes", testInviteShortcodeToOneSetOpInviteUsingInvite)
-	t.Run("InviteToEventUsingInvites", testInviteToOneSetOpEventUsingEvent)
-	t.Run("InviteToGroupUsingInvites", testInviteToOneSetOpGroupUsingGroup)
 	t.Run("TokenIssuanceToUserUsingTokenIssuances", testTokenIssuanceToOneSetOpUserUsingUser)
-	t.Run("UserProfileQuestionToProfileQuestionUsingUserProfileQuestions", testUserProfileQuestionToOneSetOpProfileQuestionUsingProfileQuestion)
-	t.Run("UserProfileQuestionToUserUsingUserProfileQuestions", testUserProfileQuestionToOneSetOpUserUsingUser)
 }
 
 // TestToOneRemove tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToOneRemove(t *testing.T) {
 	t.Run("AccessLogToUserUsingAccessLogs", testAccessLogToOneRemoveOpUserUsingUser)
-	t.Run("EventToEventUsingParentEvents", testEventToOneRemoveOpEventUsingParent)
-	t.Run("InviteToEventUsingInvites", testInviteToOneRemoveOpEventUsingEvent)
-	t.Run("InviteToGroupUsingInvites", testInviteToOneRemoveOpGroupUsingGroup)
 }
 
 // TestOneToOneSet tests cannot be run in parallel
@@ -371,130 +156,53 @@ func TestOneToOneRemove(t *testing.T) {}
 // TestToManyAdd tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyAdd(t *testing.T) {
-	t.Run("CourseToEvents", testCourseToManyAddOpEvents)
-	t.Run("EventToEventPQMatchScores", testEventToManyAddOpEventPQMatchScores)
-	t.Run("EventToEventUsers", testEventToManyAddOpEventUsers)
-	t.Run("EventToParentEvents", testEventToManyAddOpParentEvents)
-	t.Run("EventToInvites", testEventToManyAddOpInvites)
-	t.Run("GameTypeToEvents", testGameTypeToManyAddOpEvents)
-	t.Run("GroupToGroupUsers", testGroupToManyAddOpGroupUsers)
-	t.Run("GroupToInvites", testGroupToManyAddOpInvites)
-	t.Run("InviteToInviteShortcodes", testInviteToManyAddOpInviteShortcodes)
-	t.Run("ProfileQuestionToEventPQMatchScores", testProfileQuestionToManyAddOpEventPQMatchScores)
-	t.Run("ProfileQuestionToUserProfileQuestions", testProfileQuestionToManyAddOpUserProfileQuestions)
 	t.Run("UserToAccessLogs", testUserToManyAddOpAccessLogs)
-	t.Run("UserToEventUsers", testUserToManyAddOpEventUsers)
-	t.Run("UserToCreatedByEvents", testUserToManyAddOpCreatedByEvents)
-	t.Run("UserToGroupUsers", testUserToManyAddOpGroupUsers)
-	t.Run("UserToCreatedByGroups", testUserToManyAddOpCreatedByGroups)
 	t.Run("UserToTokenIssuances", testUserToManyAddOpTokenIssuances)
-	t.Run("UserToUserProfileQuestions", testUserToManyAddOpUserProfileQuestions)
 }
 
 // TestToManySet tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManySet(t *testing.T) {
-	t.Run("EventToParentEvents", testEventToManySetOpParentEvents)
-	t.Run("EventToInvites", testEventToManySetOpInvites)
-	t.Run("GroupToInvites", testGroupToManySetOpInvites)
 	t.Run("UserToAccessLogs", testUserToManySetOpAccessLogs)
 }
 
 // TestToManyRemove tests cannot be run in parallel
 // or deadlocks can occur.
 func TestToManyRemove(t *testing.T) {
-	t.Run("EventToParentEvents", testEventToManyRemoveOpParentEvents)
-	t.Run("EventToInvites", testEventToManyRemoveOpInvites)
-	t.Run("GroupToInvites", testGroupToManyRemoveOpInvites)
 	t.Run("UserToAccessLogs", testUserToManyRemoveOpAccessLogs)
 }
 
 func TestReload(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReload)
-	t.Run("Courses", testCoursesReload)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresReload)
-	t.Run("EventUsers", testEventUsersReload)
-	t.Run("Events", testEventsReload)
-	t.Run("GameTypes", testGameTypesReload)
-	t.Run("GroupUsers", testGroupUsersReload)
-	t.Run("Groups", testGroupsReload)
 	t.Run("Images", testImagesReload)
-	t.Run("InviteShortcodes", testInviteShortcodesReload)
-	t.Run("Invites", testInvitesReload)
-	t.Run("ProfileQuestions", testProfileQuestionsReload)
 	t.Run("TokenIssuances", testTokenIssuancesReload)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsReload)
 	t.Run("Users", testUsersReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReloadAll)
-	t.Run("Courses", testCoursesReloadAll)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresReloadAll)
-	t.Run("EventUsers", testEventUsersReloadAll)
-	t.Run("Events", testEventsReloadAll)
-	t.Run("GameTypes", testGameTypesReloadAll)
-	t.Run("GroupUsers", testGroupUsersReloadAll)
-	t.Run("Groups", testGroupsReloadAll)
 	t.Run("Images", testImagesReloadAll)
-	t.Run("InviteShortcodes", testInviteShortcodesReloadAll)
-	t.Run("Invites", testInvitesReloadAll)
-	t.Run("ProfileQuestions", testProfileQuestionsReloadAll)
 	t.Run("TokenIssuances", testTokenIssuancesReloadAll)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSelect)
-	t.Run("Courses", testCoursesSelect)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresSelect)
-	t.Run("EventUsers", testEventUsersSelect)
-	t.Run("Events", testEventsSelect)
-	t.Run("GameTypes", testGameTypesSelect)
-	t.Run("GroupUsers", testGroupUsersSelect)
-	t.Run("Groups", testGroupsSelect)
 	t.Run("Images", testImagesSelect)
-	t.Run("InviteShortcodes", testInviteShortcodesSelect)
-	t.Run("Invites", testInvitesSelect)
-	t.Run("ProfileQuestions", testProfileQuestionsSelect)
 	t.Run("TokenIssuances", testTokenIssuancesSelect)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsSelect)
 	t.Run("Users", testUsersSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsUpdate)
-	t.Run("Courses", testCoursesUpdate)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresUpdate)
-	t.Run("EventUsers", testEventUsersUpdate)
-	t.Run("Events", testEventsUpdate)
-	t.Run("GameTypes", testGameTypesUpdate)
-	t.Run("GroupUsers", testGroupUsersUpdate)
-	t.Run("Groups", testGroupsUpdate)
 	t.Run("Images", testImagesUpdate)
-	t.Run("InviteShortcodes", testInviteShortcodesUpdate)
-	t.Run("Invites", testInvitesUpdate)
-	t.Run("ProfileQuestions", testProfileQuestionsUpdate)
 	t.Run("TokenIssuances", testTokenIssuancesUpdate)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceUpdateAll)
-	t.Run("Courses", testCoursesSliceUpdateAll)
-	t.Run("EventPQMatchScores", testEventPQMatchScoresSliceUpdateAll)
-	t.Run("EventUsers", testEventUsersSliceUpdateAll)
-	t.Run("Events", testEventsSliceUpdateAll)
-	t.Run("GameTypes", testGameTypesSliceUpdateAll)
-	t.Run("GroupUsers", testGroupUsersSliceUpdateAll)
-	t.Run("Groups", testGroupsSliceUpdateAll)
 	t.Run("Images", testImagesSliceUpdateAll)
-	t.Run("InviteShortcodes", testInviteShortcodesSliceUpdateAll)
-	t.Run("Invites", testInvitesSliceUpdateAll)
-	t.Run("ProfileQuestions", testProfileQuestionsSliceUpdateAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceUpdateAll)
-	t.Run("UserProfileQuestions", testUserProfileQuestionsSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

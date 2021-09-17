@@ -8,31 +8,9 @@ import "testing"
 func TestUpsert(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsUpsert)
 
-	t.Run("Courses", testCoursesUpsert)
-
-	t.Run("EventPQMatchScores", testEventPQMatchScoresUpsert)
-
-	t.Run("EventUsers", testEventUsersUpsert)
-
-	t.Run("Events", testEventsUpsert)
-
-	t.Run("GameTypes", testGameTypesUpsert)
-
-	t.Run("GroupUsers", testGroupUsersUpsert)
-
-	t.Run("Groups", testGroupsUpsert)
-
 	t.Run("Images", testImagesUpsert)
 
-	t.Run("InviteShortcodes", testInviteShortcodesUpsert)
-
-	t.Run("Invites", testInvitesUpsert)
-
-	t.Run("ProfileQuestions", testProfileQuestionsUpsert)
-
 	t.Run("TokenIssuances", testTokenIssuancesUpsert)
-
-	t.Run("UserProfileQuestions", testUserProfileQuestionsUpsert)
 
 	t.Run("Users", testUsersUpsert)
 }

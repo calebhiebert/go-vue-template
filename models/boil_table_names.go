@@ -4,35 +4,13 @@
 package models
 
 var TableNames = struct {
-	AccessLogs           string
-	Courses              string
-	EventPQMatchScores   string
-	EventUsers           string
-	Events               string
-	GameTypes            string
-	GroupUsers           string
-	Groups               string
-	Images               string
-	InviteShortcodes     string
-	Invites              string
-	ProfileQuestions     string
-	TokenIssuances       string
-	UserProfileQuestions string
-	Users                string
+	AccessLogs     string
+	Images         string
+	TokenIssuances string
+	Users          string
 }{
-	AccessLogs:           "access_logs",
-	Courses:              "courses",
-	EventPQMatchScores:   "event_pq_match_scores",
-	EventUsers:           "event_users",
-	Events:               "events",
-	GameTypes:            "game_types",
-	GroupUsers:           "group_users",
-	Groups:               "groups",
-	Images:               "images",
-	InviteShortcodes:     "invite_shortcodes",
-	Invites:              "invites",
-	ProfileQuestions:     "profile_questions",
-	TokenIssuances:       "token_issuances",
-	UserProfileQuestions: "user_profile_questions",
-	Users:                "users",
+	AccessLogs:     "access_logs",
+	Images:         "images",
+	TokenIssuances: "token_issuances",
+	Users:          "users",
 }

@@ -7,20 +7,9 @@ import "github.com/calebhiebert/go-vue-template/api"
 
 var AdminInfo api.AdminModelInfo = api.AdminModelInfo{
 	Models: map[string]api.AdminModel{
-		"access_logs":            AccessLogsAdmin,
-		"courses":                CoursesAdmin,
-		"event_pq_match_scores":  EventPQMatchScoresAdmin,
-		"event_users":            EventUsersAdmin,
-		"events":                 EventsAdmin,
-		"game_types":             GameTypesAdmin,
-		"group_users":            GroupUsersAdmin,
-		"groups":                 GroupsAdmin,
-		"images":                 ImagesAdmin,
-		"invite_shortcodes":      InviteShortcodesAdmin,
-		"invites":                InvitesAdmin,
-		"profile_questions":      ProfileQuestionsAdmin,
-		"token_issuances":        TokenIssuancesAdmin,
-		"user_profile_questions": UserProfileQuestionsAdmin,
-		"users":                  UsersAdmin,
+		"access_logs":     AccessLogsAdmin,
+		"images":          ImagesAdmin,
+		"token_issuances": TokenIssuancesAdmin,
+		"users":           UsersAdmin,
 	},
 }
