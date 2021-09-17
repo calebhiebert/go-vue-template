@@ -8,6 +8,8 @@ import "testing"
 func TestUpsert(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsUpsert)
 
+	t.Run("Images", testImagesUpsert)
+
 	t.Run("TokenIssuances", testTokenIssuancesUpsert)
 
 	t.Run("Users", testUsersUpsert)

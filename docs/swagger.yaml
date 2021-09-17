@@ -87,6 +87,15 @@ definitions:
       user_id:
         type: string
     type: object
+  modelcrud.APICreateImageRequest:
+    properties:
+      name:
+        type: string
+      size:
+        type: integer
+      type:
+        type: string
+    type: object
   modelcrud.APICreateTokenIssuanceRequest:
     properties:
       ip_address:
@@ -112,6 +121,8 @@ definitions:
         type: string
       name:
         type: string
+      phone:
+        type: string
       roles:
         items:
           type: string
@@ -124,6 +135,17 @@ definitions:
       access_logs:
         items:
           $ref: '#/definitions/modelcrud.APIAccessLog'
+        type: array
+      next_offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  modelcrud.APIGetImagesResponse:
+    properties:
+      images:
+        items:
+          $ref: '#/definitions/modelcrud.APIImage'
         type: array
       next_offset:
         type: integer
@@ -151,6 +173,29 @@ definitions:
         items:
           $ref: '#/definitions/modelcrud.APIUser'
         type: array
+    type: object
+  modelcrud.APIImage:
+    properties:
+      created_at:
+        description: timestamp without time zone
+        type: string
+      deleted_at:
+        type: string
+      id:
+        description: uuid
+        type: string
+      name:
+        description: character varying
+        type: string
+      size:
+        description: integer
+        type: integer
+      type:
+        description: character varying
+        type: string
+      updated_at:
+        description: timestamp without time zone
+        type: string
     type: object
   modelcrud.APITokenIssuance:
     properties:
@@ -192,6 +237,15 @@ definitions:
       user_id:
         type: string
     type: object
+  modelcrud.APIUpdateImageRequest:
+    properties:
+      name:
+        type: string
+      size:
+        type: integer
+      type:
+        type: string
+    type: object
   modelcrud.APIUpdateTokenIssuanceRequest:
     properties:
       ip_address:
@@ -216,6 +270,8 @@ definitions:
       login:
         type: string
       name:
+        type: string
+      phone:
         type: string
       roles:
         items:
@@ -252,6 +308,8 @@ definitions:
       name:
         description: character varying
         type: string
+      phone:
+        type: string
       roles:
         items:
           type: string
@@ -278,7 +336,7 @@ info:
   contact: {}
   license:
     name: Unknown
-  title: go-vue-template
+  title: Go Vue Template
   version: "0.1"
 paths:
   /auth/loginjwt:
@@ -482,6 +540,161 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APIAccessLog'
       summary: Updates a single AccessLog entity based on their id
+  /crud/images:
+    delete:
+      parameters:
+      - description: List of ids to delete
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.IDList'
+      - description: Hard delete image
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.DeletedCount'
+      summary: Soft deletes a range of images by their ids
+    get:
+      parameters:
+      - description: Include deleted images in the results
+        in: query
+        name: withDeleted
+        type: string
+      - description: 'Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.id
+        type: string
+      - description: 'Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.name
+        type: string
+      - description: 'Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.type
+        type: string
+      - description: 'Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.size
+        type: string
+      - description: 'Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.created_at
+        type: string
+      - description: 'Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.updated_at
+        type: string
+      - description: 'Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.deleted_at
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIImage'
+      summary: Gets a list for all entities of the Image type
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Creation parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APICreateImageRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIImage'
+      summary: Creates a new Image
+  /crud/images/:id:
+    delete:
+      parameters:
+      - description: Image id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Hard delete image
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIImage'
+      summary: Soft deletes a single Image entity based on their id
+    get:
+      parameters:
+      - description: Image id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIGetImagesResponse'
+      summary: Gets a single Image entity by their id
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APIUpdateImageRequest'
+      - description: Image id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIImage'
+      summary: Updates a single Image entity based on their id
+  /crud/images/:id/unDelete:
+    post:
+      parameters:
+      - description: Image id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIImage'
+      summary: Undeletes a image by id
   /crud/tokenIssuances:
     delete:
       parameters:
@@ -672,6 +885,10 @@ paths:
       - description: 'Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
         in: query
         name: sort.location
+        type: string
+      - description: 'Sort by phone. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.phone
         type: string
       - description: 'Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
         in: query

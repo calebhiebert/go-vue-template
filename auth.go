@@ -4,6 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"github.com/calebhiebert/go-vue-template/util"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"os"
 	"strings"
@@ -12,7 +15,6 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/calebhiebert/go-vue-template/models"
-	"github.com/cristalhq/jwt"
 	"github.com/friendsofgo/errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
@@ -24,8 +26,7 @@ import (
 
 const BcryptCost = 14
 
-// TODO obtain key more safely
-const JWTKey = "supersecret"
+var JWTKey = os.Getenv("JWT_KEY")
 
 type AuthenticationResult struct {
 	JWT  string      `json:"jwt"`
@@ -107,7 +108,7 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	}
 
 	tokenIssuance := models.TokenIssuance{
-		ID:        claims.ID,
+		ID:        claims.Id,
 		IPAddress: c.ClientIP(),
 		UserID:    claims.User.ID,
 	}
@@ -119,7 +120,7 @@ func (*Controller) RegisterUsernamePassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, AuthenticationResult{
-		JWT:  string(generatedToken.Raw()),
+		JWT:  string(generatedToken),
 		User: newUser,
 	})
 }
@@ -179,7 +180,7 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	}
 
 	tokenIssuance := models.TokenIssuance{
-		ID:        claims.ID,
+		ID:        claims.Id,
 		IPAddress: c.ClientIP(),
 		UserID:    claims.User.ID,
 	}
@@ -191,7 +192,7 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, AuthenticationResult{
-		JWT:  string(generatedToken.Raw()),
+		JWT:  string(generatedToken),
 		User: *user,
 	})
 }
@@ -202,43 +203,57 @@ func (*Controller) AuthenticateUsernamePassword(c *gin.Context) {
 // @Success 200 {object} object
 // @Router /auth/loginjwt [post]
 func (*Controller) AuthenticateJWT(c *gin.Context) {
+	token := c.GetHeader("Authorization")
 
-}
+	fmt.Println(token)
 
-func getJWTSigner() jwt.Signer {
-	signer, err := jwt.NewHS256([]byte(JWTKey))
-	if err != nil {
-		panic(err)
+	if strings.HasPrefix(token, "Bearer ") {
+		token = strings.TrimPrefix(token, "Bearer ")
+	} else {
+		api.NewAPIError("invalid-token", http.StatusUnauthorized, "The token was invalid").Respond(c)
+		return
 	}
 
-	return signer
+	err := authFirebaseJWT(token)
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
 }
 
-func createJWTForUser(user *models.User) (*jwt.Token, *JWTClaims, error) {
-	builder := jwt.NewTokenBuilder(getJWTSigner())
+func authFirebaseJWT(token string) error {
+	return nil
+}
 
+func createJWTForUser(user *models.User) (string, *JWTClaims, error) {
 	claims := JWTClaims{
 		StandardClaims: jwt.StandardClaims{
-			Audience:  []string{os.Getenv("HOSTED_URL")},
-			ExpiresAt: jwt.Timestamp(time.Now().UTC().Add(48 * time.Hour).Unix()),
-			ID:        uuid.Must(uuid.NewV4()).String(),
-			IssuedAt:  jwt.Timestamp(time.Now().UTC().Unix()),
+			Audience:  os.Getenv("HOSTED_URL"),
+			ExpiresAt: time.Now().UTC().Add(48 * time.Hour).Unix(),
+			Id:        uuid.Must(uuid.NewV4()).String(),
+			IssuedAt:  time.Now().UTC().Unix(),
 			Issuer:    os.Getenv("HOSTED_URL"),
 			Subject:   user.ID,
 		},
 		User: *user,
 	}
 
-	token, err := builder.Build(&claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	ss, err := token.SignedString([]byte(JWTKey))
 	if err != nil {
-		return nil, nil, err
+		return "", nil, err
 	}
 
-	return token, &claims, nil
+	return ss, &claims, nil
 }
 
 func verifyTokenMiddleware(c *gin.Context) {
 	token := c.GetHeader("Authorization")
+
+	if token == "" {
+		token = c.GetHeader("X-Hasura-Authorization")
+	}
 
 	if token == "" {
 		c.Next()
@@ -253,33 +268,27 @@ func verifyTokenMiddleware(c *gin.Context) {
 		return
 	}
 
-	parsedToken, err := jwt.ParseAndVerifyString(token, getJWTSigner())
+	parsedToken, err := jwt.ParseWithClaims(token, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(JWTKey), nil
+	})
 	if err != nil {
 		api.NewAPIError("invalid-token", http.StatusUnauthorized, "Failed to verify token").
 			Abort(c)
 		return
 	}
 
-	var claims JWTClaims
+	if claims, ok := parsedToken.Claims.(*JWTClaims); ok && parsedToken.Valid && claims.Valid() == nil {
+		c.Set("verified_user", &claims.User)
 
-	err = json.Unmarshal(parsedToken.RawClaims(), &claims)
-	if err != nil {
-		api.APIErrorFromErr(err).Abort(c)
-		return
+		ctxWithUser := context.WithValue(c.Request.Context(), "user", &claims.User)
+
+		c.Request = c.Request.WithContext(ctxWithUser)
+
+		c.Next()
+	} else {
+		api.NewAPIError("invalid-token", http.StatusUnauthorized, "Failed to verify token").
+			Abort(c)
 	}
-
-	if !time.Now().UTC().Before(claims.ExpiresAt.Time()) {
-		api.NewAPIError("token-expired", http.StatusUnauthorized, "The token provided has expired").Abort(c)
-		return
-	}
-
-	c.Set("verified_user", &claims.User)
-
-	ctxWithUser := context.WithValue(c.Request.Context(), "user", &claims.User)
-
-	c.Request = c.Request.WithContext(ctxWithUser)
-
-	c.Next()
 }
 
 func mustBeAuthenticatedMiddleware(c *gin.Context) {
@@ -310,12 +319,12 @@ func userHasRoleMiddleware(role string) func(c *gin.Context) {
 			}
 		}
 
-		api.NewAPIError("missing-user-role", http.StatusForbidden, "User is missing required role " + role).Abort(c)
+		api.NewAPIError("missing-user-role", http.StatusForbidden, "User is missing required role "+role).Abort(c)
 	}
 }
 
 func userHasRoleDirective(ctx context.Context, obj interface{}, next graphql.Resolver, role string) (res interface{}, err error) {
-	if user := extractUser(ctx); user == nil || !stringSliceContains(user.Roles, role) {
+	if user := util.ExtractUser(ctx); user == nil || !util.StringSliceContains(user.Roles, role) {
 		return nil, errors.New("User was missing required role")
 	}
 
@@ -329,13 +338,4 @@ func extractVerifiedUser(c *gin.Context) *models.User {
 	}
 
 	return user.(*models.User)
-}
-
-func extractUser(ctx context.Context) *models.User {
-	raw, ok := ctx.Value("user").(*models.User)
-	if !ok {
-		return nil
-	}
-
-	return raw
 }

@@ -91,16 +91,34 @@ func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 			orderBy = append(orderBy, "id "+sortDirection)
 		case "id.eq":
 			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+		case "id.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("id IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("id IS NOT NULL"))
+			}
 
 		case "sort.user_id":
 			orderBy = append(orderBy, "user_id "+sortDirection)
 		case "user_id.eq":
 			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
+		case "user_id.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("user_id IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("user_id IS NOT NULL"))
+			}
 
 		case "sort.ip_address":
 			orderBy = append(orderBy, "ip_address "+sortDirection)
 		case "ip_address.eq":
 			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
+		case "ip_address.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("ip_address IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("ip_address IS NOT NULL"))
+			}
 
 		case "ip_address.cont":
 			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -110,6 +128,12 @@ func (*GeneratedCrudController) GetTokenIssuances(c *gin.Context) {
 			orderBy = append(orderBy, "created_at "+sortDirection)
 		case "created_at.eq":
 			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+		case "created_at.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("created_at IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("created_at IS NOT NULL"))
+			}
 
 		case "created_at.gt":
 			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))

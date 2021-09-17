@@ -1,6 +1,8 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
+  - models/gql/*.graphqls
   - graph/*.graphqls
+  - graph/*.graphql
 
 # Where should the generated server code go?
 exec:
@@ -20,8 +22,9 @@ model:
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: graph
-  package: graph
+  dir: graph/resolve/
+  package: resolve
+  filename_template: "{name}.resolvers.go"
 
 # Optional: turn on use `gqlgen:"fieldName"` tags in your models
 # struct_tag: json
@@ -35,7 +38,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "github.com/calebhiebert/go-vue-template/graph/model"
+  - "github.com/calebhiebert/go-vue-template/models"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -43,18 +46,6 @@ autobind:
 # modelgen, the others will be allowed when binding to fields. Configure them to
 # your liking
 models:
-  User:
-    fields:
-      avatar_url:
-        resolver: true
-  AccessLog:
-    fields:
-      user:
-        resolver: true
-  TokenIssuance:
-    fields:
-      user:
-        resolver: true
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
@@ -66,3 +57,21 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+      - github.com/calebhiebert/go-vue-template/graph/gqlmarsh.NullInt
+
+  CBool:
+    model:
+      - github.com/calebhiebert/go-vue-template/graph/gqlmarsh.NullBoolean
+
+  Any:
+    model:
+      - github.com/99designs/gqlgen/graphql.Any
+
+  Time:
+    model:
+      - github.com/99designs/gqlgen/graphql.Time
+      - github.com/calebhiebert/go-vue-template/graph/gqlmarsh.NullTime
+
+  CString:
+    model:
+      - github.com/calebhiebert/go-vue-template/graph/gqlmarsh.NullString

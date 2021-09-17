@@ -5,10 +5,12 @@ package models
 
 var TableNames = struct {
 	AccessLogs     string
+	Images         string
 	TokenIssuances string
 	Users          string
 }{
 	AccessLogs:     "access_logs",
+	Images:         "images",
 	TokenIssuances: "token_issuances",
 	Users:          "users",
 }

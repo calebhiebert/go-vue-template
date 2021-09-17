@@ -2,37 +2,81 @@
 
 package model
 
-type AccessLog struct {
-	ID                 string  `json:"id"`
-	Path               string  `json:"path"`
-	RequestBody        *string `json:"request_body"`
-	ResponseBody       *string `json:"response_body"`
-	ResponseCode       int     `json:"response_code"`
-	ProcessingDuration int     `json:"processing_duration"`
-	RequestMethod      *string `json:"request_method"`
-	UserID             string  `json:"user_id"`
-	User               *User   `json:"user"`
-	IPAddress          string  `json:"ip_address"`
-	CreatedAt          int     `json:"created_at"`
+import (
+	"time"
+
+	null "github.com/volatiletech/null/v8"
+)
+
+type CreateAccessLog struct {
+	Path               string       `json:"path"`
+	RequestBody        *null.String `json:"request_body"`
+	RequestHeaders     interface{}  `json:"request_headers"`
+	ResponseBody       interface{}  `json:"response_body"`
+	ResponseHeaders    interface{}  `json:"response_headers"`
+	ResponseCode       int          `json:"response_code"`
+	ProcessingDuration int          `json:"processing_duration"`
+	RequestMethod      string       `json:"request_method"`
+	UserID             *null.String `json:"user_id"`
+	IPAddress          string       `json:"ip_address"`
 }
 
-type TokenIssuance struct {
-	ID        string `json:"id"`
+type CreateImage struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+	Size int    `json:"size"`
+}
+
+type CreateTokenIssuance struct {
 	UserID    string `json:"user_id"`
-	User      *User  `json:"user"`
 	IPAddress string `json:"ip_address"`
-	CreatedAt int    `json:"created_at"`
 }
 
-type User struct {
-	ID        string   `json:"id"`
-	Name      string   `json:"name"`
-	Login     *string  `json:"login"`
-	Email     string   `json:"email"`
-	Sub       *string  `json:"sub"`
-	Roles     []string `json:"roles"`
-	AvatarURL string   `json:"avatar_url"`
-	CreatedAt int      `json:"created_at"`
-	UpdatedAt int      `json:"updated_at"`
-	DeletedAt *int     `json:"deleted_at"`
+type CreateUser struct {
+	Name              string       `json:"name"`
+	Login             *null.String `json:"login"`
+	Email             string       `json:"email"`
+	Sub               *null.String `json:"sub"`
+	Roles             []string     `json:"roles"`
+	Image             *null.String `json:"image"`
+	Birthday          *time.Time   `json:"birthday"`
+	GenderSelfDefined *null.Bool   `json:"gender_self_defined"`
+	Gender            *null.String `json:"gender"`
+	Location          *null.String `json:"location"`
+	Phone             *null.String `json:"phone"`
+}
+
+type UpdateAccessLog struct {
+	Path               *string      `json:"path"`
+	RequestBody        *null.String `json:"request_body"`
+	ResponseCode       *int         `json:"response_code"`
+	ProcessingDuration *int         `json:"processing_duration"`
+	RequestMethod      *string      `json:"request_method"`
+	UserID             *null.String `json:"user_id"`
+	IPAddress          *string      `json:"ip_address"`
+}
+
+type UpdateImage struct {
+	Name *string `json:"name"`
+	Type *string `json:"type"`
+	Size *int    `json:"size"`
+}
+
+type UpdateTokenIssuance struct {
+	UserID    *string `json:"user_id"`
+	IPAddress *string `json:"ip_address"`
+}
+
+type UpdateUser struct {
+	Name              *string      `json:"name"`
+	Login             *null.String `json:"login"`
+	Email             *string      `json:"email"`
+	Sub               *null.String `json:"sub"`
+	Roles             []*string    `json:"roles"`
+	Image             *null.String `json:"image"`
+	Birthday          *time.Time   `json:"birthday"`
+	GenderSelfDefined *null.Bool   `json:"gender_self_defined"`
+	Gender            *null.String `json:"gender"`
+	Location          *null.String `json:"location"`
+	Phone             *null.String `json:"phone"`
 }

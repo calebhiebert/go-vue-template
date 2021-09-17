@@ -35,6 +35,8 @@ type APIUpdateUserRequest struct {
 	Gender *string `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
 
 	Location *string `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+
+	Phone *string `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 }
 
 type UpdateUserRequest struct {
@@ -48,6 +50,7 @@ type UpdateUserRequest struct {
 	GenderSelfDefined *null.Bool         `boil:"gender_self_defined" json:"gender_self_defined,omitempty" toml:"gender_self_defined" yaml:"gender_self_defined,omitempty"`
 	Gender            *null.String       `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
 	Location          *null.String       `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+	Phone             *null.String       `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 }
 
 // UpdateUserByID godoc
@@ -118,6 +121,10 @@ func (*GeneratedCrudController) UpdateUserByID(c *gin.Context) {
 
 	if updateReq.Location != nil {
 		existingUser.Location = *updateReq.Location
+	}
+
+	if updateReq.Phone != nil {
+		existingUser.Phone = *updateReq.Phone
 	}
 
 	_, err = existingUser.UpdateG(c.Request.Context(), boil.Infer())

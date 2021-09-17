@@ -1,23 +1,22 @@
-package main
+package util
 
 import (
 	"context"
-	"net/http"
-
 	"github.com/calebhiebert/go-vue-template/api"
 	"github.com/calebhiebert/go-vue-template/models"
+	"net/http"
 )
 
 type ValidateUserPermissionsFunction func(u *models.User) (bool, error)
 
 func ACAdminOr(ctx context.Context, f ValidateUserPermissionsFunction) error {
-	user := extractUser(ctx)
+	user := ExtractUser(ctx)
 
 	if user == nil {
 		return api.NewAPIError("missing-permissions", http.StatusForbidden, "Missing required permissions")
 	}
 
-	if stringSliceContains(user.Roles, "admin") {
+	if StringSliceContains(user.Roles, "admin") {
 		return nil
 	}
 

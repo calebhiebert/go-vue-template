@@ -1,0 +1,63 @@
+version: "3"
+services:
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "14268:14268"
+      - "14250:14250"
+      - "16686:16686"
+    environment:
+      SPAN_STORAGE_TYPE: memory
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: go-vue-template
+      POSTGRES_PASSWORD: go-vue-template
+    ports:
+      - "5432:5432"
+
+  # A simple database access utility for development
+  adminer:
+    image: adminer:4
+    ports:
+      - '9000:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: nette
+
+  graphql-engine:
+    image: hasura/graphql-engine:v2.0.9
+    ports:
+      - "8888:8080"
+    depends_on:
+      - "postgres"
+    restart: always
+    environment:
+      ## postgres database to store Hasura metadata
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://go-vue-template:go-vue-template@postgres:5432/go-vue-template
+      ## this env var can be used to add the above postgres database to Hasura as a data source. this can be removed/updated based on your needs
+      PG_DATABASE_URL: postgres://go-vue-template:go-vue-template@postgres:5432/go-vue-template
+      ## enable the console served by server
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      ## enable debugging mode. It is recommended to disable this in production
+      HASURA_GRAPHQL_DEV_MODE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      ## uncomment next line to set an admin secret
+      # HASURA_GRAPHQL_ADMIN_SECRET: go-vue-template
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9003:9003"
+      - "9004:9004"
+    command:
+      - server
+      - --address
+      - "0.0.0.0:9003"
+      - --console-address
+      - ":9004"
+      - /data

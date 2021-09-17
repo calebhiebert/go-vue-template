@@ -7,11 +7,13 @@
         <b-field :type="errorFor(field) ? 'is-danger' : null"
                  :message="errorFor(field) ? errorFor(field).message : null"
                  :label="field.name + (field.required ? ' (Required)' : '')">
-          <b-input v-if="field.type === 'string'" :type="field.config.is_email ? 'email' : undefined"
+          <component v-if="getCustomFieldComponent(field.id) !== null"
+                     v-model="value[field.id]" :required="field.required"
+                     :placeholder="field.name" :is="getCustomFieldComponent(field.id)">
+          </component>
+          <b-input v-else-if="field.type === 'string'" :type="field.config.is_email ? 'email' : undefined"
                    v-model="value[field.id]" :required="field.required"
-                   :placeholder="field.name">
-
-          </b-input>
+                   :placeholder="field.name"></b-input>
           <b-checkbox v-else-if="field.type === 'bool'" v-model="value[field.id]"></b-checkbox>
           <b-datetimepicker
               v-model="value[field.id]"
@@ -26,10 +28,10 @@
               :placeholder="field.name"
               ellipsis>
           </b-taginput>
-          <component v-else
-                     v-model="value[field.id]" :required="field.required"
-                     :placeholder="field.name" :is="getCustomFieldComponent(field.id)">
-          </component>
+          <v-jsoneditor v-else-if="field.type === 'json'" v-model="value[field.id]" :options="{mode: 'code'}">
+
+          </v-jsoneditor>
+
         </b-field>
 
       </fieldset>
@@ -44,10 +46,15 @@
 </template>
 
 <script>
-import FormFieldProfileQuestionAnswerType from "./FormFieldProfileQuestionAnswerType";
+import ImageUpload from "../ImageUpload";
+import VJsoneditor from 'v-jsoneditor'
 
 export default {
   name: "ModelForm",
+
+  components: {
+    VJsoneditor
+  },
 
   props: {
     schema: {
@@ -83,7 +90,7 @@ export default {
   created() {
     this.initData();
 
-    this.registerCustomField('profile_questions.answer_type', FormFieldProfileQuestionAnswerType);
+    this.registerCustomField("users.image", ImageUpload);
   },
 
   data() {
@@ -143,7 +150,7 @@ export default {
         }
       }
 
-      return this.customFieldComponents["*"];
+      return null;
     },
 
     formatTime(time) {

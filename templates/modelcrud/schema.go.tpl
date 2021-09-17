@@ -5,7 +5,7 @@
 
 {{- define "filter_operations" -}}
     []string{
-    "eq",
+    "eq", "null",
     {{- if eq .DBType "uuid" -}}
     {{- else if eq .DBType "jsonb" -}}
     {{- else if eq .Type "string" -}}
@@ -20,6 +20,8 @@
     {{- else if eq .Type "time.Time" -}}
         "gt", "lt", "gte", "lte",
     {{- else if eq .Type "null.Time" -}}
+        "gt", "lt", "gte", "lte",
+    {{- else if eq .Type "null.Float64" -}}
         "gt", "lt", "gte", "lte",
     {{- end -}}
     }
@@ -76,12 +78,14 @@ Fields: []*api.AdminModelField{
             true
         {{- end -}},
         Config: api.AdminModelFieldConfig{
-        ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
+        ShowOnGraph: {{ if or (eq $orig_col_name "deleted_at") (eq $field.DBType "jsonb") }}false{{ else }}true{{ end }},
         Editable: true,
         IsEmail: {{- if eq $orig_col_name "email" -}}true{{- else -}}false{{- end -}},
         },
         Type:
-        {{- if eq $field.Type "null.String" -}}
+        {{- if eq $field.DBType "uuid" -}}
+            "uuid"
+        {{- else if eq $field.Type "null.String" -}}
             "string"
         {{- else if eq $field.Type "types.String" -}}
             "string"
@@ -93,6 +97,8 @@ Fields: []*api.AdminModelField{
             "time"
         {{- else if eq $field.Type "time.Time" -}}
             "time"
+        {{- else if eq $field.Type "null.Float64" -}}
+            "float"
         {{- else if eq $field.Type "types.StringArray" -}}
             "array"
         {{- else if eq $field.Type "null.Int" -}}
@@ -126,7 +132,7 @@ var {{ titleCase $.Table.Name }}ModelConfig = {{ titleCase $.Table.Name }}ModelC
     {{- if ignore $orig_tbl_name $orig_col_name $.TagIgnore -}}
     {{- else }}
         {{ $colAlias }}: api.AdminModelFieldConfig{
-        ShowOnGraph: {{ if eq $orig_col_name "deleted_at" }}false{{ else }}true{{ end }},
+        ShowOnGraph: {{ if or (eq $orig_col_name "deleted_at") (eq $field.DBType "jsonb") }}false{{ else }}true{{ end }},
         Editable: true,
         IsEmail: {{- if eq $orig_tbl_name "email" -}}true{{- else -}}false{{- end -}},
         },

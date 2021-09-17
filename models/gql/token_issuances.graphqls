@@ -1,0 +1,19 @@
+
+
+type TokenIssuance {id: ID!
+    user_id: String!
+    ip_address: String!
+    created_at: Time
+    }
+
+input UpdateTokenIssuance {
+    user_id: String
+    ip_address: String
+    
+    }
+
+input CreateTokenIssuance {
+    user_id: String!
+    ip_address: String!
+    
+    }

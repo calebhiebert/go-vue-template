@@ -8,6 +8,7 @@ import "github.com/calebhiebert/go-vue-template/api"
 var AdminInfo api.AdminModelInfo = api.AdminModelInfo{
 	Models: map[string]api.AdminModel{
 		"access_logs":     AccessLogsAdmin,
+		"images":          ImagesAdmin,
 		"token_issuances": TokenIssuancesAdmin,
 		"users":           UsersAdmin,
 	},

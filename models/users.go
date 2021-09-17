@@ -37,6 +37,7 @@ type User struct {
 	GenderSelfDefined null.Bool         `boil:"gender_self_defined" json:"gender_self_defined,omitempty" toml:"gender_self_defined" yaml:"gender_self_defined,omitempty"`
 	Gender            null.String       `boil:"gender" json:"gender,omitempty" toml:"gender" yaml:"gender,omitempty"`
 	Location          null.String       `boil:"location" json:"location,omitempty" toml:"location" yaml:"location,omitempty"`
+	Phone             null.String       `boil:"phone" json:"phone,omitempty" toml:"phone" yaml:"phone,omitempty"`
 	CreatedAt         time.Time         `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt         time.Time         `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt         null.Time         `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -58,6 +59,7 @@ var UserColumns = struct {
 	GenderSelfDefined string
 	Gender            string
 	Location          string
+	Phone             string
 	CreatedAt         string
 	UpdatedAt         string
 	DeletedAt         string
@@ -74,6 +76,7 @@ var UserColumns = struct {
 	GenderSelfDefined: "gender_self_defined",
 	Gender:            "gender",
 	Location:          "location",
+	Phone:             "phone",
 	CreatedAt:         "created_at",
 	UpdatedAt:         "updated_at",
 	DeletedAt:         "deleted_at",
@@ -92,6 +95,7 @@ var UserTableColumns = struct {
 	GenderSelfDefined string
 	Gender            string
 	Location          string
+	Phone             string
 	CreatedAt         string
 	UpdatedAt         string
 	DeletedAt         string
@@ -108,6 +112,7 @@ var UserTableColumns = struct {
 	GenderSelfDefined: "users.gender_self_defined",
 	Gender:            "users.gender",
 	Location:          "users.location",
+	Phone:             "users.phone",
 	CreatedAt:         "users.created_at",
 	UpdatedAt:         "users.updated_at",
 	DeletedAt:         "users.deleted_at",
@@ -159,27 +164,6 @@ func (w whereHelpernull_Bool) GTE(x null.Bool) qm.QueryMod {
 	return qmhelper.Where(w.field, qmhelper.GTE, x)
 }
 
-type whereHelpertime_Time struct{ field string }
-
-func (w whereHelpertime_Time) EQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelpertime_Time) NEQ(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelpertime_Time) LT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertime_Time) LTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertime_Time) GT(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertime_Time) GTE(x time.Time) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
-
 var UserWhere = struct {
 	ID                whereHelperstring
 	Name              whereHelperstring
@@ -193,6 +177,7 @@ var UserWhere = struct {
 	GenderSelfDefined whereHelpernull_Bool
 	Gender            whereHelpernull_String
 	Location          whereHelpernull_String
+	Phone             whereHelpernull_String
 	CreatedAt         whereHelpertime_Time
 	UpdatedAt         whereHelpertime_Time
 	DeletedAt         whereHelpernull_Time
@@ -209,6 +194,7 @@ var UserWhere = struct {
 	GenderSelfDefined: whereHelpernull_Bool{field: "\"users\".\"gender_self_defined\""},
 	Gender:            whereHelpernull_String{field: "\"users\".\"gender\""},
 	Location:          whereHelpernull_String{field: "\"users\".\"location\""},
+	Phone:             whereHelpernull_String{field: "\"users\".\"phone\""},
 	CreatedAt:         whereHelpertime_Time{field: "\"users\".\"created_at\""},
 	UpdatedAt:         whereHelpertime_Time{field: "\"users\".\"updated_at\""},
 	DeletedAt:         whereHelpernull_Time{field: "\"users\".\"deleted_at\""},
@@ -238,8 +224,8 @@ func (*userR) NewStruct() *userR {
 type userL struct{}
 
 var (
-	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "image", "birthday", "gender_self_defined", "gender", "location", "created_at", "updated_at", "deleted_at"}
-	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "image", "birthday", "gender_self_defined", "gender", "location", "deleted_at"}
+	userAllColumns            = []string{"id", "name", "login", "email", "pw_hash", "sub", "roles", "image", "birthday", "gender_self_defined", "gender", "location", "phone", "created_at", "updated_at", "deleted_at"}
+	userColumnsWithoutDefault = []string{"id", "name", "login", "email", "pw_hash", "sub", "image", "birthday", "gender_self_defined", "gender", "location", "phone", "deleted_at"}
 	userColumnsWithDefault    = []string{"roles", "created_at", "updated_at"}
 	userPrimaryKeyColumns     = []string{"id"}
 )

@@ -33,6 +33,8 @@ type APICreate{{ $alias.UpSingular }}Request struct {
             {{$colAlias}} map[string]interface{} `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "null.Time" }}
             {{$colAlias}} *time.Time `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
+        {{- else if eq $column.Type "null.Float64" }}
+            {{$colAlias}} *float64 `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.StringArray" }}
             {{$colAlias}} []string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else -}}
@@ -94,9 +96,9 @@ new{{ $alias.UpSingular }} := models.{{ $alias.UpSingular }} {}
             new{{ $alias.UpSingular }}.{{ $colAlias }} = uuid.Must(uuid.NewV4()).String()
         {{ else }}
             if createReq.{{ $colAlias }} != nil {
-                new{{ $alias.UpSingular }}.{{ $colAlias }} = *createReq.{{ $colAlias }}
+            new{{ $alias.UpSingular }}.{{ $colAlias }} = *createReq.{{ $colAlias }}
             } else {
-                new{{ $alias.UpSingular }}.{{ $colAlias }} = Generate{{ $alias.UpSingular }}ID(&createReq)
+            new{{ $alias.UpSingular }}.{{ $colAlias }} = Generate{{ $alias.UpSingular }}ID(&createReq)
             }
         {{ end }}
     {{else -}}

@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "go-vue-template",
+        "title": "Go Vue Template",
         "contact": {},
         "license": {
             "name": "Unknown"
@@ -317,6 +317,245 @@
                 }
             }
         },
+        "/crud/images": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Image type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Include deleted images in the results",
+                        "name": "withDeleted",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.updated_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.deleted_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Image",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateImageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of images by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete image",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/images/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Image entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetImagesResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Image entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateImageRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Image entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete image",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/images/:id/unDelete": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Undeletes a image by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Image id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIImage"
+                        }
+                    }
+                }
+            }
+        },
         "/crud/tokenIssuances": {
             "get": {
                 "produces": [
@@ -578,6 +817,12 @@
                         "type": "string",
                         "description": "Sort by location. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.location",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by phone. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.phone",
                         "in": "query"
                     },
                     {
@@ -944,6 +1189,20 @@
                 }
             }
         },
+        "modelcrud.APICreateImageRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "modelcrud.APICreateTokenIssuanceRequest": {
             "type": "object",
             "properties": {
@@ -982,6 +1241,9 @@
                 "name": {
                     "type": "string"
                 },
+                "phone": {
+                    "type": "string"
+                },
                 "roles": {
                     "type": "array",
                     "items": {
@@ -1000,6 +1262,23 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/modelcrud.APIAccessLog"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIGetImagesResponse": {
+            "type": "object",
+            "properties": {
+                "images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIImage"
                     }
                 },
                 "next_offset": {
@@ -1041,6 +1320,38 @@
                     "items": {
                         "$ref": "#/definitions/modelcrud.APIUser"
                     }
+                }
+            }
+        },
+        "modelcrud.APIImage": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "size": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "timestamp without time zone",
+                    "type": "string"
                 }
             }
         },
@@ -1102,6 +1413,20 @@
                 }
             }
         },
+        "modelcrud.APIUpdateImageRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "modelcrud.APIUpdateTokenIssuanceRequest": {
             "type": "object",
             "properties": {
@@ -1138,6 +1463,9 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "roles": {
@@ -1189,6 +1517,9 @@
                 },
                 "name": {
                     "description": "character varying",
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "roles": {

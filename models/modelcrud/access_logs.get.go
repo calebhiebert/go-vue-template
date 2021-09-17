@@ -128,11 +128,23 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "id "+sortDirection)
 		case "id.eq":
 			queryMods = append(queryMods, qm.Where("id = ?", v[0]))
+		case "id.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("id IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("id IS NOT NULL"))
+			}
 
 		case "sort.path":
 			orderBy = append(orderBy, "path "+sortDirection)
 		case "path.eq":
 			queryMods = append(queryMods, qm.Where("path = ?", v[0]))
+		case "path.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("path IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("path IS NOT NULL"))
+			}
 
 		case "path.cont":
 			pathSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -142,6 +154,12 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "request_body "+sortDirection)
 		case "request_body.eq":
 			queryMods = append(queryMods, qm.Where("request_body = ?", v[0]))
+		case "request_body.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("request_body IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("request_body IS NOT NULL"))
+			}
 
 		case "request_body.cont":
 			request_bodySearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -151,21 +169,45 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "request_headers "+sortDirection)
 		case "request_headers.eq":
 			queryMods = append(queryMods, qm.Where("request_headers = ?", v[0]))
+		case "request_headers.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("request_headers IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("request_headers IS NOT NULL"))
+			}
 
 		case "sort.response_body":
 			orderBy = append(orderBy, "response_body "+sortDirection)
 		case "response_body.eq":
 			queryMods = append(queryMods, qm.Where("response_body = ?", v[0]))
+		case "response_body.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("response_body IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("response_body IS NOT NULL"))
+			}
 
 		case "sort.response_headers":
 			orderBy = append(orderBy, "response_headers "+sortDirection)
 		case "response_headers.eq":
 			queryMods = append(queryMods, qm.Where("response_headers = ?", v[0]))
+		case "response_headers.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("response_headers IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("response_headers IS NOT NULL"))
+			}
 
 		case "sort.response_code":
 			orderBy = append(orderBy, "response_code "+sortDirection)
 		case "response_code.eq":
 			queryMods = append(queryMods, qm.Where("response_code = ?", v[0]))
+		case "response_code.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("response_code IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("response_code IS NOT NULL"))
+			}
 
 		case "response_code.gt":
 			queryMods = append(queryMods, qm.Where("response_code > ?", v[0]))
@@ -180,6 +222,12 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "processing_duration "+sortDirection)
 		case "processing_duration.eq":
 			queryMods = append(queryMods, qm.Where("processing_duration = ?", v[0]))
+		case "processing_duration.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("processing_duration IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("processing_duration IS NOT NULL"))
+			}
 
 		case "processing_duration.gt":
 			queryMods = append(queryMods, qm.Where("processing_duration > ?", v[0]))
@@ -194,6 +242,12 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "request_method "+sortDirection)
 		case "request_method.eq":
 			queryMods = append(queryMods, qm.Where("request_method = ?", v[0]))
+		case "request_method.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("request_method IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("request_method IS NOT NULL"))
+			}
 
 		case "request_method.cont":
 			request_methodSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -203,11 +257,23 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "user_id "+sortDirection)
 		case "user_id.eq":
 			queryMods = append(queryMods, qm.Where("user_id = ?", v[0]))
+		case "user_id.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("user_id IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("user_id IS NOT NULL"))
+			}
 
 		case "sort.ip_address":
 			orderBy = append(orderBy, "ip_address "+sortDirection)
 		case "ip_address.eq":
 			queryMods = append(queryMods, qm.Where("ip_address = ?", v[0]))
+		case "ip_address.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("ip_address IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("ip_address IS NOT NULL"))
+			}
 
 		case "ip_address.cont":
 			ip_addressSearchString := fmt.Sprintf("%%%s%%", strings.ReplaceAll(v[0], "%", "\\%"))
@@ -217,6 +283,12 @@ func (*GeneratedCrudController) GetAccessLogs(c *gin.Context) {
 			orderBy = append(orderBy, "created_at "+sortDirection)
 		case "created_at.eq":
 			queryMods = append(queryMods, qm.Where("created_at = ?", v[0]))
+		case "created_at.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("created_at IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("created_at IS NOT NULL"))
+			}
 
 		case "created_at.gt":
 			queryMods = append(queryMods, qm.Where("created_at > ?", v[0]))

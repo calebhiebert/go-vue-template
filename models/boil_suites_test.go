@@ -13,78 +13,92 @@ import "testing"
 // Separating the tests thusly grants avoidance of Postgres deadlocks.
 func TestParent(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogs)
+	t.Run("Images", testImages)
 	t.Run("TokenIssuances", testTokenIssuances)
 	t.Run("Users", testUsers)
 }
 
 func TestSoftDelete(t *testing.T) {
+	t.Run("Images", testImagesSoftDelete)
 	t.Run("Users", testUsersSoftDelete)
 }
 
 func TestQuerySoftDeleteAll(t *testing.T) {
+	t.Run("Images", testImagesQuerySoftDeleteAll)
 	t.Run("Users", testUsersQuerySoftDeleteAll)
 }
 
 func TestSliceSoftDeleteAll(t *testing.T) {
+	t.Run("Images", testImagesSliceSoftDeleteAll)
 	t.Run("Users", testUsersSliceSoftDeleteAll)
 }
 
 func TestDelete(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsDelete)
+	t.Run("Images", testImagesDelete)
 	t.Run("TokenIssuances", testTokenIssuancesDelete)
 	t.Run("Users", testUsersDelete)
 }
 
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsQueryDeleteAll)
+	t.Run("Images", testImagesQueryDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
 
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceDeleteAll)
+	t.Run("Images", testImagesSliceDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
 
 func TestExists(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsExists)
+	t.Run("Images", testImagesExists)
 	t.Run("TokenIssuances", testTokenIssuancesExists)
 	t.Run("Users", testUsersExists)
 }
 
 func TestFind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsFind)
+	t.Run("Images", testImagesFind)
 	t.Run("TokenIssuances", testTokenIssuancesFind)
 	t.Run("Users", testUsersFind)
 }
 
 func TestBind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsBind)
+	t.Run("Images", testImagesBind)
 	t.Run("TokenIssuances", testTokenIssuancesBind)
 	t.Run("Users", testUsersBind)
 }
 
 func TestOne(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsOne)
+	t.Run("Images", testImagesOne)
 	t.Run("TokenIssuances", testTokenIssuancesOne)
 	t.Run("Users", testUsersOne)
 }
 
 func TestAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsAll)
+	t.Run("Images", testImagesAll)
 	t.Run("TokenIssuances", testTokenIssuancesAll)
 	t.Run("Users", testUsersAll)
 }
 
 func TestCount(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsCount)
+	t.Run("Images", testImagesCount)
 	t.Run("TokenIssuances", testTokenIssuancesCount)
 	t.Run("Users", testUsersCount)
 }
 
 func TestHooks(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsHooks)
+	t.Run("Images", testImagesHooks)
 	t.Run("TokenIssuances", testTokenIssuancesHooks)
 	t.Run("Users", testUsersHooks)
 }
@@ -92,6 +106,8 @@ func TestHooks(t *testing.T) {
 func TestInsert(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsInsert)
 	t.Run("AccessLogs", testAccessLogsInsertWhitelist)
+	t.Run("Images", testImagesInsert)
+	t.Run("Images", testImagesInsertWhitelist)
 	t.Run("TokenIssuances", testTokenIssuancesInsert)
 	t.Run("TokenIssuances", testTokenIssuancesInsertWhitelist)
 	t.Run("Users", testUsersInsert)
@@ -158,30 +174,35 @@ func TestToManyRemove(t *testing.T) {
 
 func TestReload(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReload)
+	t.Run("Images", testImagesReload)
 	t.Run("TokenIssuances", testTokenIssuancesReload)
 	t.Run("Users", testUsersReload)
 }
 
 func TestReloadAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReloadAll)
+	t.Run("Images", testImagesReloadAll)
 	t.Run("TokenIssuances", testTokenIssuancesReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
 
 func TestSelect(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSelect)
+	t.Run("Images", testImagesSelect)
 	t.Run("TokenIssuances", testTokenIssuancesSelect)
 	t.Run("Users", testUsersSelect)
 }
 
 func TestUpdate(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsUpdate)
+	t.Run("Images", testImagesUpdate)
 	t.Run("TokenIssuances", testTokenIssuancesUpdate)
 	t.Run("Users", testUsersUpdate)
 }
 
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceUpdateAll)
+	t.Run("Images", testImagesSliceUpdateAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

@@ -28,5 +28,7 @@ func SetupDatabase() (*sql.DB, error) {
 		return nil, err
 	}
 
+	addHooks()
+
 	return db, nil
 }

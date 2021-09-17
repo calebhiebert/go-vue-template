@@ -26,6 +26,8 @@ type API{{$alias.UpSingular}} struct {
             {{$colAlias}} map[string]interface{} `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "null.Time" }}
             {{$colAlias}} *time.Time `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
+        {{- else if eq $column.Type "null.Float64" }}
+            {{$colAlias}} *float64 `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else if eq $column.Type "types.StringArray" }}
             {{$colAlias}} []string `{{generateTags $.Tags $column.Name}}boil:"{{$column.Name}}" json:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}" toml:"{{$column.Name}}" yaml:"{{$column.Name}}{{if $column.Nullable}},omitempty{{end}}"`
         {{- else -}}
@@ -125,6 +127,12 @@ switch q {
         orderBy = append(orderBy, "{{$orig_col_name}} " + sortDirection)
         case "{{ $orig_col_name }}.eq":
         queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} = ?", v[0]))
+        case "{{ $orig_col_name }}.null":
+        if v[0] == "true" {
+        queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} IS NULL"))
+        } else {
+        queryMods = append(queryMods, qm.Where("{{ $orig_col_name }} IS NOT NULL"))
+        }
         {{ if eq $column.Type "int" }}
             {{ template "numeric_query_operators" $orig_col_name }}
         {{ else if eq $column.Type "time.Time" }}
@@ -132,6 +140,8 @@ switch q {
         {{ else if eq $column.Type "null.Int" }}
             {{ template "numeric_query_operators" $orig_col_name }}
         {{ else if eq $column.Type "null.Time" }}
+            {{ template "numeric_query_operators" $orig_col_name }}
+        {{ else if eq $column.Type "null.Float64" }}
             {{ template "numeric_query_operators" $orig_col_name }}
         {{ else if eq $column.Type "null.Bool" }}
         {{ end }}

@@ -2,16 +2,17 @@ package main
 
 import (
 	"fmt"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/calebhiebert/go-vue-template/graph/resolve"
+	"github.com/calebhiebert/go-vue-template/s3"
+	limits "github.com/gin-contrib/size"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/calebhiebert/go-vue-template/db"
 	_ "github.com/calebhiebert/go-vue-template/docs"
-	cgen "github.com/calebhiebert/go-vue-template/generated"
-	"github.com/calebhiebert/go-vue-template/graph"
 	"github.com/calebhiebert/go-vue-template/graph/generated"
 	"github.com/calebhiebert/go-vue-template/models/modelcrud"
 	"github.com/gin-contrib/cors"
@@ -28,13 +29,11 @@ import (
 //go:generate echo "Cleaning up SQL models"
 //go:generate goimports -w models/
 //go:generate echo "Generating GraphQL Code"
-//go:generate gqlgen generate
-//go:generate echo "Generating goverter code"
-//go:generate go run github.com/jmattheis/goverter/cmd/goverter github.com/calebhiebert/go-vue-template/convert
+//go:generate gqlgen generate --verbose
 //go:generate echo "Generating swagger documentation"
 //go:generate swag init --exclude ui
 
-// @title go-vue-template
+// @title Go Vue Template
 // @version 0.1
 
 // @license.name Unknown
@@ -65,6 +64,12 @@ func main() {
 	// Setup the global db connection for sqlboiler
 	boil.SetDB(dbConn)
 
+	// Setup the connection to s3
+	err = s3.InitS3()
+	if err != nil {
+		panic(err)
+	}
+
 	// Create the gin router
 	router := gin.Default()
 
@@ -83,7 +88,6 @@ func main() {
 	}))
 
 	ConfigAdminCrudModels()
-	addUserHooks()
 
 	// Create a new controller (this is where the api handlers live)
 	c := NewController()
@@ -94,6 +98,10 @@ func main() {
 	router.GET("/healthz", c.HealthCheck)
 	router.GET("/avatar/:id", c.GenerateAvatar)
 
+
+	router.GET("/image/:id", s3.GetImage)
+	router.POST("/image", limits.RequestSizeLimiter(s3.MaxImageSize), s3.UploadImage)
+
 	// *******************************
 	// * Authenticated Routes        *
 	// *******************************
@@ -101,7 +109,7 @@ func main() {
 
 	auth.POST("/register", c.RegisterUsernamePassword)
 	auth.POST("/loginup", c.AuthenticateUsernamePassword)
-	auth.POST("/loginjwt", verifyTokenMiddleware, c.AuthenticateJWT)
+	auth.POST("/loginjwt", c.AuthenticateJWT)
 
 	// *******************************
 	// * Protected Routes            *
@@ -131,23 +139,22 @@ func main() {
 
 	gql.Use(accessLogMiddleware)
 
-	config := generated.Config{Resolvers: &graph.Resolver{
-		C: &cgen.ConverterImpl{},
-	}}
-	config.Directives.HasRole = userHasRoleDirective
+	config := generated.Config{Resolvers: &resolve.Resolver{}}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(config))
-	plgrnd := playground.Handler("GraphQL playground", "/query")
+	plgrnd := playground.Handler("GraphQL playground", "/gql")
+
+	router.POST("/gql", verifyTokenMiddleware, HasuraProxy)
 
 	gql.GET("/graphql", func(c *gin.Context) {
 		plgrnd.ServeHTTP(c.Writer, c.Request)
 	})
 
-	gql.POST("/query", verifyTokenMiddleware, func(c *gin.Context) {
+	gql.POST("/mutate", verifyTokenMiddleware, func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
 	})
 
-	http.Handle("/query", srv)
+	http.Handle("/mutate", srv)
 
 	// *******************************
 	// * Swagger Setup               *
