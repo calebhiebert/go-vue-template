@@ -13,7 +13,7 @@ WORKDIR $GOPATH/src
 COPY . ./
 
 # Build the app
-RUN cd $GOPATH/src/go-vue-template && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 && go build -a -installsuffix nocgo -ldflags="-w -s" -o /go/bin/go-vue-template
+RUN cd $GOPATH/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 && go build -a -installsuffix nocgo -ldflags="-w -s" -o /go/bin/go-vue-template
 
 # Start from a scratch container for a nice and small image
 FROM alpine:3.8
