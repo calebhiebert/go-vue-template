@@ -28,6 +28,8 @@ type Image struct {
 	Name      string    `boil:"name" json:"name" toml:"name" yaml:"name"`
 	Type      string    `boil:"type" json:"type" toml:"type" yaml:"type"`
 	Size      int       `boil:"size" json:"size" toml:"size" yaml:"size"`
+	Width     int       `boil:"width" json:"width" toml:"width" yaml:"width"`
+	Height    int       `boil:"height" json:"height" toml:"height" yaml:"height"`
 	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 	UpdatedAt time.Time `boil:"updated_at" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
 	DeletedAt null.Time `boil:"deleted_at" json:"deleted_at,omitempty" toml:"deleted_at" yaml:"deleted_at,omitempty"`
@@ -41,6 +43,8 @@ var ImageColumns = struct {
 	Name      string
 	Type      string
 	Size      string
+	Width     string
+	Height    string
 	CreatedAt string
 	UpdatedAt string
 	DeletedAt string
@@ -49,6 +53,8 @@ var ImageColumns = struct {
 	Name:      "name",
 	Type:      "type",
 	Size:      "size",
+	Width:     "width",
+	Height:    "height",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
 	DeletedAt: "deleted_at",
@@ -59,6 +65,8 @@ var ImageTableColumns = struct {
 	Name      string
 	Type      string
 	Size      string
+	Width     string
+	Height    string
 	CreatedAt string
 	UpdatedAt string
 	DeletedAt string
@@ -67,6 +75,8 @@ var ImageTableColumns = struct {
 	Name:      "images.name",
 	Type:      "images.type",
 	Size:      "images.size",
+	Width:     "images.width",
+	Height:    "images.height",
 	CreatedAt: "images.created_at",
 	UpdatedAt: "images.updated_at",
 	DeletedAt: "images.deleted_at",
@@ -100,6 +110,8 @@ var ImageWhere = struct {
 	Name      whereHelperstring
 	Type      whereHelperstring
 	Size      whereHelperint
+	Width     whereHelperint
+	Height    whereHelperint
 	CreatedAt whereHelpertime_Time
 	UpdatedAt whereHelpertime_Time
 	DeletedAt whereHelpernull_Time
@@ -108,6 +120,8 @@ var ImageWhere = struct {
 	Name:      whereHelperstring{field: "\"images\".\"name\""},
 	Type:      whereHelperstring{field: "\"images\".\"type\""},
 	Size:      whereHelperint{field: "\"images\".\"size\""},
+	Width:     whereHelperint{field: "\"images\".\"width\""},
+	Height:    whereHelperint{field: "\"images\".\"height\""},
 	CreatedAt: whereHelpertime_Time{field: "\"images\".\"created_at\""},
 	UpdatedAt: whereHelpertime_Time{field: "\"images\".\"updated_at\""},
 	DeletedAt: whereHelpernull_Time{field: "\"images\".\"deleted_at\""},
@@ -130,8 +144,8 @@ func (*imageR) NewStruct() *imageR {
 type imageL struct{}
 
 var (
-	imageAllColumns            = []string{"id", "name", "type", "size", "created_at", "updated_at", "deleted_at"}
-	imageColumnsWithoutDefault = []string{"id", "name", "type", "size", "deleted_at"}
+	imageAllColumns            = []string{"id", "name", "type", "size", "width", "height", "created_at", "updated_at", "deleted_at"}
+	imageColumnsWithoutDefault = []string{"id", "name", "type", "size", "width", "height", "deleted_at"}
 	imageColumnsWithDefault    = []string{"created_at", "updated_at"}
 	imagePrimaryKeyColumns     = []string{"id"}
 )

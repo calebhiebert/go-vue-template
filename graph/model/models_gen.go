@@ -22,9 +22,11 @@ type CreateAccessLog struct {
 }
 
 type CreateImage struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-	Size int    `json:"size"`
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	Size   int    `json:"size"`
+	Width  int    `json:"width"`
+	Height int    `json:"height"`
 }
 
 type CreateTokenIssuance struct {
@@ -57,9 +59,11 @@ type UpdateAccessLog struct {
 }
 
 type UpdateImage struct {
-	Name *string `json:"name"`
-	Type *string `json:"type"`
-	Size *int    `json:"size"`
+	Name   *string `json:"name"`
+	Type   *string `json:"type"`
+	Size   *int    `json:"size"`
+	Width  *int    `json:"width"`
+	Height *int    `json:"height"`
 }
 
 type UpdateTokenIssuance struct {

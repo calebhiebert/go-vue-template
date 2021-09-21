@@ -90,6 +90,38 @@ var ImagesAdmin = api.AdminModel{
 			Type: "int",
 		},
 		&api.AdminModelField{
+			ID:       "width",
+			Name:     "Width",
+			Nullable: false,
+			Required: true,
+			FilterOperations: []string{
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "int",
+		},
+		&api.AdminModelField{
+			ID:       "height",
+			Name:     "Height",
+			Nullable: false,
+			Required: true,
+			FilterOperations: []string{
+				"eq", "null", "gt", "lt", "gte", "lte"},
+			ForeignFields: []api.AdminModelForeignField{},
+			Editable:      true,
+			Config: api.AdminModelFieldConfig{
+				ShowOnGraph: true,
+				Editable:    true,
+				IsEmail:     false,
+			},
+			Type: "int",
+		},
+		&api.AdminModelField{
 			ID:       "created_at",
 			Name:     "CreatedAt",
 			Nullable: false,
@@ -149,6 +181,10 @@ type ImagesModelConfigType struct {
 
 	Size api.AdminModelFieldConfig
 
+	Width api.AdminModelFieldConfig
+
+	Height api.AdminModelFieldConfig
+
 	CreatedAt api.AdminModelFieldConfig
 
 	UpdatedAt api.AdminModelFieldConfig
@@ -174,6 +210,16 @@ var ImagesModelConfig = ImagesModelConfigType{
 		IsEmail:     false,
 	},
 	Size: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	Width: api.AdminModelFieldConfig{
+		ShowOnGraph: true,
+		Editable:    true,
+		IsEmail:     false,
+	},
+	Height: api.AdminModelFieldConfig{
 		ShowOnGraph: true,
 		Editable:    true,
 		IsEmail:     false,
@@ -205,10 +251,14 @@ func (c ImagesModelConfigType) Apply() {
 
 	ImagesAdmin.Fields[3].Config = c.Size
 
-	ImagesAdmin.Fields[4].Config = c.CreatedAt
+	ImagesAdmin.Fields[4].Config = c.Width
 
-	ImagesAdmin.Fields[5].Config = c.UpdatedAt
+	ImagesAdmin.Fields[5].Config = c.Height
 
-	ImagesAdmin.Fields[6].Config = c.DeletedAt
+	ImagesAdmin.Fields[6].Config = c.CreatedAt
+
+	ImagesAdmin.Fields[7].Config = c.UpdatedAt
+
+	ImagesAdmin.Fields[8].Config = c.DeletedAt
 
 }

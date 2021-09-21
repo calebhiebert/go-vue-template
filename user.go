@@ -10,7 +10,7 @@ import (
 // @Summary Gets information on the current user
 // @Produce json
 // @Success 200 {object} modelcrud.APIUser
-// @Router /users/me [get]
+// @Router /api/users/me [get]
 func (*Controller) GetMe(c *gin.Context) {
 	user := extractVerifiedUser(c)
 

@@ -1,6 +1,7 @@
 package s3
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/calebhiebert/go-vue-template/api"
@@ -11,6 +12,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+	"image"
 	"io"
 	"net/http"
 	"os"
@@ -19,8 +21,6 @@ import (
 var S3 *minio.Client
 
 var MaxImageSize int64 = 5242880
-
-var ImageBucketName = "images"
 
 var AllowedMimes = []string{
 	"image/jpeg",
@@ -39,7 +39,7 @@ func InitS3() error {
 
 	S3 = minioClient
 
-	err = ensureBucket(context.Background(), ImageBucketName)
+	err = ensureBucket(context.Background(), os.Getenv("S3_IMAGE_BUCKET_NAME"))
 	if err != nil {
 		return err
 	}
@@ -78,29 +78,41 @@ func UploadImage(c *gin.Context) {
 		return
 	}
 
-	_, err = S3.PutObject(c.Request.Context(), ImageBucketName, id, file, ff.Size, minio.PutObjectOptions{})
+	var buf bytes.Buffer
+
+	fileReader := io.TeeReader(file, &buf)
+
+	img, t, err := image.Decode(fileReader)
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
-	image := models.Image{
-		ID:   id,
-		Name: ff.Filename,
-		Type: ff.Header.Get("Content-Type"),
-		Size: int(ff.Size),
-	}
-
-	err = image.InsertG(c.Request.Context(), boil.Infer())
+	_, err = S3.PutObject(c.Request.Context(), os.Getenv("S3_IMAGE_BUCKET_NAME"), id, &buf, ff.Size, minio.PutObjectOptions{})
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
 		return
 	}
 
-	c.JSON(http.StatusOK, image)
+	dbImage := models.Image{
+		ID:     id,
+		Name:   ff.Filename,
+		Type:   ff.Header.Get("Content-Type"),
+		Size:   int(ff.Size),
+		Width:  img.Bounds().Max.X,
+		Height: img.Bounds().Max.Y,
+	}
+
+	err = dbImage.InsertG(c.Request.Context(), boil.Infer())
+	if err != nil {
+		api.APIErrorFromErr(err).Respond(c)
+		return
+	}
+
+	c.JSON(http.StatusOK, dbImage)
 }
 
-func GetImage (c *gin.Context) {
+func GetImage(c *gin.Context) {
 	id := c.Param("id")
 
 	img, err := models.Images(qm.Where("id = ?", id)).OneG(c.Request.Context())
@@ -109,7 +121,7 @@ func GetImage (c *gin.Context) {
 		return
 	}
 
-	obj, err := S3.GetObject(c.Request.Context(), ImageBucketName, img.ID, minio.GetObjectOptions{})
+	obj, err := S3.GetObject(c.Request.Context(), os.Getenv("S3_IMAGE_BUCKET_NAME"), img.ID, minio.GetObjectOptions{})
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
 		return

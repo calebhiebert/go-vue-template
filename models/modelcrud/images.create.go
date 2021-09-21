@@ -18,16 +18,20 @@ type GenerateImageStringID func(*CreateImageRequest) string
 var GenerateImageID GenerateImageStringID
 
 type APICreateImageRequest struct {
-	Name *string `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Type *string `boil:"type" json:"type" toml:"type" yaml:"type"`
-	Size *int    `boil:"size" json:"size" toml:"size" yaml:"size"`
+	Name   *string `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Type   *string `boil:"type" json:"type" toml:"type" yaml:"type"`
+	Size   *int    `boil:"size" json:"size" toml:"size" yaml:"size"`
+	Width  *int    `boil:"width" json:"width" toml:"width" yaml:"width"`
+	Height *int    `boil:"height" json:"height" toml:"height" yaml:"height"`
 }
 
 type CreateImageRequest struct {
-	ID   *string `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
-	Name string  `boil:"name" json:"name,omitempty" toml:"name" binding:"required" yaml:"name"`
-	Type string  `boil:"type" json:"type,omitempty" toml:"type" binding:"required" yaml:"type"`
-	Size int     `boil:"size" json:"size,omitempty" toml:"size" binding:"required" yaml:"size"`
+	ID     *string `boil:"id" json:"id,omitempty" toml:"id" yaml:"id,omitempty"`
+	Name   string  `boil:"name" json:"name,omitempty" toml:"name" binding:"required" yaml:"name"`
+	Type   string  `boil:"type" json:"type,omitempty" toml:"type" binding:"required" yaml:"type"`
+	Size   int     `boil:"size" json:"size,omitempty" toml:"size" binding:"required" yaml:"size"`
+	Width  int     `boil:"width" json:"width,omitempty" toml:"width" binding:"required" yaml:"width"`
+	Height int     `boil:"height" json:"height,omitempty" toml:"height" binding:"required" yaml:"height"`
 }
 
 // CreateImage godoc
@@ -55,6 +59,10 @@ func (*GeneratedCrudController) CreateImage(c *gin.Context) {
 	newImage.Type = createReq.Type
 
 	newImage.Size = createReq.Size
+
+	newImage.Width = createReq.Width
+
+	newImage.Height = createReq.Height
 
 	err = newImage.InsertG(c.Request.Context(), boil.Infer())
 	if err != nil {

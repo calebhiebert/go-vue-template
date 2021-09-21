@@ -1,3 +1,23 @@
+FROM node:lts-alpine as ui
+
+# Mode should be either "staging" or "prod" (without quotes)
+ARG vuemode=staging
+
+# make the 'app' folder the current working directory
+WORKDIR /app
+
+# copy both 'package.json' and 'package-lock.json' (if available)
+COPY ui/package*.json ui/yarn.lock ./
+
+RUN yarn
+
+# copy project files and folders to the current working directory (i.e. 'app' folder)
+COPY ui ./
+
+RUN ls -lah
+
+RUN yarn build --mode $vuemode
+
 # Start with a golang image
 FROM golang:1.17-stretch as build
 
@@ -11,6 +31,10 @@ WORKDIR $GOPATH/src
 
 # Copy all application files
 COPY . ./
+
+# Copy the built ui files from the first stage
+
+COPY --from=ui /app/dist ./ui/dist
 
 # Build the app
 RUN cd $GOPATH/src && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 && go build -a -installsuffix nocgo -ldflags="-w -s" -o /go/bin/go-vue-template

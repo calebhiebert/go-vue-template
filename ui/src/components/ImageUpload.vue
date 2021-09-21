@@ -53,7 +53,7 @@ export default {
           theme: 'auto',
         })
         .use(XHRUpload, {
-          endpoint: `${API_BASE_URL}/image`,
+          endpoint: `${API_BASE_URL}/api/image`,
           fieldName: 'image',
           headers: {
             'Authorization': `Bearer ${getToken()}`,
@@ -65,7 +65,7 @@ export default {
 
     this.uppy.on('complete', (result) => {
       if (result.successful.length > 0) {
-        const url = `${API_BASE_URL}/image/${result.successful[0].response.body.id}`;
+        const url = `${API_BASE_URL}/api/image/${result.successful[0].response.body.id}`;
 
         this.$emit('input', url);
       }

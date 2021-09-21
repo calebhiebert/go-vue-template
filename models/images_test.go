@@ -669,7 +669,7 @@ func testImagesSelect(t *testing.T) {
 }
 
 var (
-	imageDBTypes = map[string]string{`ID`: `uuid`, `Name`: `character varying`, `Type`: `character varying`, `Size`: `integer`, `CreatedAt`: `timestamp without time zone`, `UpdatedAt`: `timestamp without time zone`, `DeletedAt`: `timestamp without time zone`}
+	imageDBTypes = map[string]string{`ID`: `uuid`, `Name`: `character varying`, `Type`: `character varying`, `Size`: `integer`, `Width`: `integer`, `Height`: `integer`, `CreatedAt`: `timestamp without time zone`, `UpdatedAt`: `timestamp without time zone`, `DeletedAt`: `timestamp without time zone`}
 	_            = bytes.MinRead
 )
 

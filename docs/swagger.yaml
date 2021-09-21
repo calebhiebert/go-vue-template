@@ -89,12 +89,16 @@ definitions:
     type: object
   modelcrud.APICreateImageRequest:
     properties:
+      height:
+        type: integer
       name:
         type: string
       size:
         type: integer
       type:
         type: string
+      width:
+        type: integer
     type: object
   modelcrud.APICreateTokenIssuanceRequest:
     properties:
@@ -239,12 +243,16 @@ definitions:
     type: object
   modelcrud.APIUpdateImageRequest:
     properties:
+      height:
+        type: integer
       name:
         type: string
       size:
         type: integer
       type:
         type: string
+      width:
+        type: integer
     type: object
   modelcrud.APIUpdateTokenIssuanceRequest:
     properties:

@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS images
     type       VARCHAR                                                        NOT NULL,
     size       INTEGER                                                        NOT NULL,
 
+    width      INTEGER                                                        NOT NULL,
+    height     INTEGER                                                        NOT NULL,
+
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() at time zone 'utc') NOT NULL,
     deleted_at TIMESTAMP WITHOUT TIME ZONE

@@ -42,8 +42,8 @@
 
                     this.currentUser = result.data;
                 } catch (e) {
-                    if (e.response.statusCode === 401) {
-                        this.$router.push({name: "Login"});
+                    if (e.response.status === 401) {
+                        await this.$router.push({name: "Login"});
                     }
 
                     this.error = extractError(e);

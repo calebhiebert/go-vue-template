@@ -18,7 +18,7 @@
             <b-navbar-item tag="div">
                 <figure style="width: 28px; height: 36px; padding-top: 4px;" class="mr-2">
                     <b-image :responsive="true" ratio="1by1" v-if="authenticated && user !== null" :rounded="true"
-                             :src="`${apiUrl}/avatar/${user.id}`">
+                             :src="`${apiUrl}/api/avatar/${user.id}`">
                     </b-image>
                 </figure>
 

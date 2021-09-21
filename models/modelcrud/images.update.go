@@ -14,15 +14,19 @@ import (
 )
 
 type APIUpdateImageRequest struct {
-	Name *string `boil:"name" json:"name" toml:"name" yaml:"name"`
-	Type *string `boil:"type" json:"type" toml:"type" yaml:"type"`
-	Size *int    `boil:"size" json:"size" toml:"size" yaml:"size"`
+	Name   *string `boil:"name" json:"name" toml:"name" yaml:"name"`
+	Type   *string `boil:"type" json:"type" toml:"type" yaml:"type"`
+	Size   *int    `boil:"size" json:"size" toml:"size" yaml:"size"`
+	Width  *int    `boil:"width" json:"width" toml:"width" yaml:"width"`
+	Height *int    `boil:"height" json:"height" toml:"height" yaml:"height"`
 }
 
 type UpdateImageRequest struct {
-	Name *string `boil:"name" json:"name,omitempty" toml:"name" yaml:"name"`
-	Type *string `boil:"type" json:"type,omitempty" toml:"type" yaml:"type"`
-	Size *int    `boil:"size" json:"size,omitempty" toml:"size" yaml:"size"`
+	Name   *string `boil:"name" json:"name,omitempty" toml:"name" yaml:"name"`
+	Type   *string `boil:"type" json:"type,omitempty" toml:"type" yaml:"type"`
+	Size   *int    `boil:"size" json:"size,omitempty" toml:"size" yaml:"size"`
+	Width  *int    `boil:"width" json:"width,omitempty" toml:"width" yaml:"width"`
+	Height *int    `boil:"height" json:"height,omitempty" toml:"height" yaml:"height"`
 }
 
 // UpdateImageByID godoc
@@ -65,6 +69,14 @@ func (*GeneratedCrudController) UpdateImageByID(c *gin.Context) {
 
 	if updateReq.Size != nil {
 		existingImage.Size = *updateReq.Size
+	}
+
+	if updateReq.Width != nil {
+		existingImage.Width = *updateReq.Width
+	}
+
+	if updateReq.Height != nil {
+		existingImage.Height = *updateReq.Height
 	}
 
 	_, err = existingImage.UpdateG(c.Request.Context(), boil.Infer())

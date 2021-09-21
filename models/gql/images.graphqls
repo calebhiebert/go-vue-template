@@ -4,6 +4,8 @@ type Image {id: ID!
     name: String!
     type: String!
     size: Int!
+    width: Int!
+    height: Int!
     created_at: Time!
     updated_at: Time!
     deleted_at: Time
@@ -13,6 +15,8 @@ input UpdateImage {
     name: String
     type: String
     size: Int
+    width: Int
+    height: Int
     
     
     
@@ -22,6 +26,8 @@ input CreateImage {
     name: String!
     type: String!
     size: Int!
+    width: Int!
+    height: Int!
     
     
     

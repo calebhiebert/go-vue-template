@@ -4,3 +4,4 @@ ui/node_modules
 .DS_Store
 .paw
 ui/dist
+.DS_Store

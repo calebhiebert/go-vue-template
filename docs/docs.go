@@ -1092,6 +1092,10 @@ var doc = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "width": {
+                    "description": "integer",
+                    "type": "integer"
                 }
             }
         },
@@ -1369,6 +1373,9 @@ var doc = `{
                 "updated_at": {
                     "description": "timestamp without time zone",
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },

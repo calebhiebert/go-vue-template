@@ -106,7 +106,11 @@ export default {
           const field = this.schema.fields.find(f => f.id === key);
 
           if (field && field.editable && field.config.editable) {
-            this.$set(this.value, key, this.inputData[key]);
+            if (field.type === 'time') {
+              this.$set(this.value, key, new Date(this.inputData[key]));
+            } else {
+              this.$set(this.value, key, this.inputData[key]);
+            }
           }
         }
       } else {

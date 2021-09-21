@@ -95,12 +95,12 @@ func main() {
 	// *******************************
 	// * Unprotected Routes          *
 	// *******************************
-	router.GET("/healthz", c.HealthCheck)
-	router.GET("/avatar/:id", c.GenerateAvatar)
+	router.GET("/api/healthz", c.HealthCheck)
+	router.GET("/api/avatar/:id", c.GenerateAvatar)
 
 
-	router.GET("/image/:id", s3.GetImage)
-	router.POST("/image", limits.RequestSizeLimiter(s3.MaxImageSize), s3.UploadImage)
+	router.GET("/api/image/:id", s3.GetImage)
+	router.POST("/api/image", limits.RequestSizeLimiter(s3.MaxImageSize), s3.UploadImage)
 
 	// *******************************
 	// * Authenticated Routes        *
@@ -117,12 +117,12 @@ func main() {
 	protected := router.Group("")
 	protected.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware)
 
-	protected.GET("/users/me", c.GetMe)
+	protected.GET("/api/users/me", c.GetMe)
 
 	// *******************************
 	// * Admin Routes                *
 	// *******************************
-	admin := router.Group("/admin")
+	admin := router.Group("/api/admin")
 	admin.Use(accessLogMiddleware, verifyTokenMiddleware, mustBeAuthenticatedMiddleware, userHasRoleMiddleware("admin"))
 
 	admin.GET("/dashStats", GetAdminDashboardStats)
@@ -150,17 +150,23 @@ func main() {
 		plgrnd.ServeHTTP(c.Writer, c.Request)
 	})
 
-	gql.POST("/mutate", verifyTokenMiddleware, func(c *gin.Context) {
+	gql.POST("/gql/mutate", verifyTokenMiddleware, func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
 	})
 
-	http.Handle("/mutate", srv)
+	http.Handle("/gql/mutate", srv)
 
 	// *******************************
 	// * Swagger Setup               *
 	// *******************************
 	swaggerURL := ginSwagger.URL(fmt.Sprintf("%s/swagger/doc.json", os.Getenv("HOSTED_URL")))
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
+	router.GET("/docs/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
+
+
+	// *******************************
+	// * UI Embed Setup              *
+	// *******************************
+	router.Use(serveUI)
 
 	// Default port 8080, but check if an env port should override it
 	port := "8080"

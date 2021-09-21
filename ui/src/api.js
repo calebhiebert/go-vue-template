@@ -101,7 +101,7 @@ export async function loginUsernamePassword(login, password) {
 }
 
 export function usersMe() {
-    return axios.get(`${API_BASE_URL}/users/me`, {
+    return axios.get(`${API_BASE_URL}/api/users/me`, {
         headers: {
             "Authorization": `Bearer ${getToken()}`,
         },
@@ -117,7 +117,7 @@ export function getAdminSchema() {
 }
 
 export function getAdminDashboardStats() {
-    return axios.get(`${API_BASE_URL}/admin/dashStats`, {
+    return axios.get(`${API_BASE_URL}/api/admin/dashStats`, {
         headers: {
             "Authorization": `Bearer ${getToken()}`,
         },

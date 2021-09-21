@@ -44,6 +44,16 @@ func UpdateImageHelper(ctx context.Context, id string, ud *model.UpdateImage, ca
 		existing.Size = *ud.Size
 
 	}
+	if ud.Width != nil {
+
+		existing.Width = *ud.Width
+
+	}
+	if ud.Height != nil {
+
+		existing.Height = *ud.Height
+
+	}
 
 	_, err = existing.UpdateG(ctx, boil.Infer())
 	if err != nil {
@@ -65,6 +75,10 @@ func CreateImage(ctx context.Context, c *model.CreateImage, pre PreImageCreateFu
 	newImage.Type = c.Type
 
 	newImage.Size = c.Size
+
+	newImage.Width = c.Width
+
+	newImage.Height = c.Height
 
 	if err := pre(&newImage, util.ExtractUser(ctx)); err != nil {
 		return nil, err
@@ -88,6 +102,10 @@ func CreateImageTX(ctx context.Context, tx *sql.Tx, c *model.CreateImage, pre Pr
 	newImage.Type = c.Type
 
 	newImage.Size = c.Size
+
+	newImage.Width = c.Width
+
+	newImage.Height = c.Height
 
 	if err := pre(&newImage, util.ExtractUser(ctx)); err != nil {
 		return nil, err

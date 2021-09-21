@@ -1075,6 +1075,10 @@
                 },
                 "password": {
                     "type": "string"
+                },
+                "width": {
+                    "description": "integer",
+                    "type": "integer"
                 }
             }
         },
@@ -1352,6 +1356,9 @@
                 "updated_at": {
                     "description": "timestamp without time zone",
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },

@@ -28,6 +28,12 @@ type APIImage struct {
 	// integer
 	Size int `boil:"size" json:"size" toml:"size" yaml:"size"`
 
+	// integer
+	Width int `boil:"width" json:"width" toml:"width" yaml:"width"`
+
+	// integer
+	Height int `boil:"height" json:"height" toml:"height" yaml:"height"`
+
 	// timestamp without time zone
 	CreatedAt time.Time `boil:"created_at" json:"created_at" toml:"created_at" yaml:"created_at"`
 
@@ -83,6 +89,8 @@ func (*GeneratedCrudController) GetImageByID(c *gin.Context) {
 // @Param sort.name query string false "Sort by name. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.type query string false "Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.size query string false "Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.width query string false "Sort by width. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
+// @Param sort.height query string false "Sort by height. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.created_at query string false "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.updated_at query string false "Sort by updated_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
 // @Param sort.deleted_at query string false "Sort by deleted_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC"
@@ -166,6 +174,46 @@ func (*GeneratedCrudController) GetImages(c *gin.Context) {
 			queryMods = append(queryMods, qm.Where("size >= ?", v[0]))
 		case "size.lte":
 			queryMods = append(queryMods, qm.Where("size <= ?", v[0]))
+
+		case "sort.width":
+			orderBy = append(orderBy, "width "+sortDirection)
+		case "width.eq":
+			queryMods = append(queryMods, qm.Where("width = ?", v[0]))
+		case "width.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("width IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("width IS NOT NULL"))
+			}
+
+		case "width.gt":
+			queryMods = append(queryMods, qm.Where("width > ?", v[0]))
+		case "width.lt":
+			queryMods = append(queryMods, qm.Where("width < ?", v[0]))
+		case "width.gte":
+			queryMods = append(queryMods, qm.Where("width >= ?", v[0]))
+		case "width.lte":
+			queryMods = append(queryMods, qm.Where("width <= ?", v[0]))
+
+		case "sort.height":
+			orderBy = append(orderBy, "height "+sortDirection)
+		case "height.eq":
+			queryMods = append(queryMods, qm.Where("height = ?", v[0]))
+		case "height.null":
+			if v[0] == "true" {
+				queryMods = append(queryMods, qm.Where("height IS NULL"))
+			} else {
+				queryMods = append(queryMods, qm.Where("height IS NOT NULL"))
+			}
+
+		case "height.gt":
+			queryMods = append(queryMods, qm.Where("height > ?", v[0]))
+		case "height.lt":
+			queryMods = append(queryMods, qm.Where("height < ?", v[0]))
+		case "height.gte":
+			queryMods = append(queryMods, qm.Where("height >= ?", v[0]))
+		case "height.lte":
+			queryMods = append(queryMods, qm.Where("height <= ?", v[0]))
 
 		case "sort.created_at":
 			orderBy = append(orderBy, "created_at "+sortDirection)
