@@ -82,7 +82,7 @@ func UploadImage(c *gin.Context) {
 
 	fileReader := io.TeeReader(file, &buf)
 
-	img, t, err := image.Decode(fileReader)
+	img, _, err := image.Decode(fileReader)
 	if err != nil {
 		api.APIErrorFromErr(err).Respond(c)
 		return

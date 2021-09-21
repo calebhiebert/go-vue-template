@@ -26,11 +26,14 @@ This is a little template project to create apps using
 8. Start up the supporting services using the `docker-compose.dev.yml` docker-compose file
 9. Migrate the database
    1. `./migrate.sh up`
-10. Start up the go service
+10. (Optional) Freshen up the database. (This will totally reset the database, and run the seed script in db/seed/seed.go)
+    1. `./fresh_db.sh`
 11. Start up the frontend
-12. ???
-13. Profit
-14. Two users are auto generated when migrating the database
+    1. `cd ui`
+    2. `yarn build --development --watch`
+12. Start up the go service
+    1. `go run .`
+13. Two users are auto generated when migrating the database
     1. ```
        login: admin@admin.admin
        password: admin
