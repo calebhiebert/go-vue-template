@@ -185,6 +185,9 @@ definitions:
         type: string
       deleted_at:
         type: string
+      height:
+        description: integer
+        type: integer
       id:
         description: uuid
         type: string
@@ -200,6 +203,9 @@ definitions:
       updated_at:
         description: timestamp without time zone
         type: string
+      width:
+        description: integer
+        type: integer
     type: object
   modelcrud.APITokenIssuance:
     properties:
@@ -347,6 +353,16 @@ info:
   title: Go Vue Template
   version: "0.1"
 paths:
+  /api/users/me:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIUser'
+      summary: Gets information on the current user
   /auth/loginjwt:
     post:
       produces:
@@ -590,6 +606,14 @@ paths:
       - description: 'Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
         in: query
         name: sort.size
+        type: string
+      - description: 'Sort by width. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.width
+        type: string
+      - description: 'Sort by height. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.height
         type: string
       - description: 'Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
         in: query
@@ -1022,14 +1046,4 @@ paths:
             additionalProperties: true
             type: object
       summary: Health check handler
-  /users/me:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/modelcrud.APIUser'
-      summary: Gets information on the current user
 swagger: "2.0"

@@ -9,6 +9,22 @@
         "version": "0.1"
     },
     "paths": {
+        "/api/users/me": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets information on the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUser"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/loginjwt": {
             "post": {
                 "produces": [
@@ -352,6 +368,18 @@
                         "type": "string",
                         "description": "Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by width. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.width",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by height. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.height",
                         "in": "query"
                     },
                     {
@@ -1044,22 +1072,6 @@
                     }
                 }
             }
-        },
-        "/users/me": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Gets information on the current user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/modelcrud.APIUser"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -1075,10 +1087,6 @@
                 },
                 "password": {
                     "type": "string"
-                },
-                "width": {
-                    "description": "integer",
-                    "type": "integer"
                 }
             }
         },
@@ -1196,6 +1204,9 @@
         "modelcrud.APICreateImageRequest": {
             "type": "object",
             "properties": {
+                "height": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1204,6 +1215,9 @@
                 },
                 "type": {
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },
@@ -1337,6 +1351,10 @@
                 "deleted_at": {
                     "type": "string"
                 },
+                "height": {
+                    "description": "integer",
+                    "type": "integer"
+                },
                 "id": {
                     "description": "uuid",
                     "type": "string"
@@ -1358,6 +1376,7 @@
                     "type": "string"
                 },
                 "width": {
+                    "description": "integer",
                     "type": "integer"
                 }
             }
@@ -1423,6 +1442,9 @@
         "modelcrud.APIUpdateImageRequest": {
             "type": "object",
             "properties": {
+                "height": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1431,6 +1453,9 @@
                 },
                 "type": {
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },

@@ -26,6 +26,22 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/users/me": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets information on the current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUser"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/loginjwt": {
             "post": {
                 "produces": [
@@ -369,6 +385,18 @@ var doc = `{
                         "type": "string",
                         "description": "Sort by size. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
                         "name": "sort.size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by width. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.width",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by height. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.height",
                         "in": "query"
                     },
                     {
@@ -1061,22 +1089,6 @@ var doc = `{
                     }
                 }
             }
-        },
-        "/users/me": {
-            "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Gets information on the current user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/modelcrud.APIUser"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -1092,10 +1104,6 @@ var doc = `{
                 },
                 "password": {
                     "type": "string"
-                },
-                "width": {
-                    "description": "integer",
-                    "type": "integer"
                 }
             }
         },
@@ -1213,6 +1221,9 @@ var doc = `{
         "modelcrud.APICreateImageRequest": {
             "type": "object",
             "properties": {
+                "height": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1221,6 +1232,9 @@ var doc = `{
                 },
                 "type": {
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },
@@ -1354,6 +1368,10 @@ var doc = `{
                 "deleted_at": {
                     "type": "string"
                 },
+                "height": {
+                    "description": "integer",
+                    "type": "integer"
+                },
                 "id": {
                     "description": "uuid",
                     "type": "string"
@@ -1375,6 +1393,7 @@ var doc = `{
                     "type": "string"
                 },
                 "width": {
+                    "description": "integer",
                     "type": "integer"
                 }
             }
@@ -1440,6 +1459,9 @@ var doc = `{
         "modelcrud.APIUpdateImageRequest": {
             "type": "object",
             "properties": {
+                "height": {
+                    "type": "integer"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -1448,6 +1470,9 @@ var doc = `{
                 },
                 "type": {
                     "type": "string"
+                },
+                "width": {
+                    "type": "integer"
                 }
             }
         },

@@ -36,7 +36,7 @@ func main() {
 
 	// Generate some users
 	// All users will have the password "password"
-	SeedUsers(context.Background(), 1000)
+	SeedUsers(context.Background(), 10)
 }
 
 func SeedUsers(ctx context.Context, userCount int) {
