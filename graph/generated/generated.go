@@ -40,6 +40,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	AccessLog() AccessLogResolver
+	Job() JobResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	User() UserResolver
@@ -74,6 +75,21 @@ type ComplexityRoot struct {
 		Type      func(childComplexity int) int
 		UpdatedAt func(childComplexity int) int
 		Width     func(childComplexity int) int
+	}
+
+	Job struct {
+		CreatedAt   func(childComplexity int) int
+		Data        func(childComplexity int) int
+		FailureData func(childComplexity int) int
+		FinishedAt  func(childComplexity int) int
+		ID          func(childComplexity int) int
+		MaxRetries  func(childComplexity int) int
+		Priority    func(childComplexity int) int
+		RetryCount  func(childComplexity int) int
+		RunAt       func(childComplexity int) int
+		Source      func(childComplexity int) int
+		Status      func(childComplexity int) int
+		Type        func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -115,6 +131,11 @@ type AccessLogResolver interface {
 	RequestHeaders(ctx context.Context, obj *models.AccessLog) (interface{}, error)
 	ResponseBody(ctx context.Context, obj *models.AccessLog) (interface{}, error)
 	ResponseHeaders(ctx context.Context, obj *models.AccessLog) (interface{}, error)
+}
+type JobResolver interface {
+	Data(ctx context.Context, obj *models.Job) (interface{}, error)
+
+	FailureData(ctx context.Context, obj *models.Job) (interface{}, error)
 }
 type MutationResolver interface {
 	Dummy(ctx context.Context) (*bool, error)
@@ -288,6 +309,90 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Image.Width(childComplexity), true
+
+	case "Job.created_at":
+		if e.complexity.Job.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.Job.CreatedAt(childComplexity), true
+
+	case "Job.data":
+		if e.complexity.Job.Data == nil {
+			break
+		}
+
+		return e.complexity.Job.Data(childComplexity), true
+
+	case "Job.failure_data":
+		if e.complexity.Job.FailureData == nil {
+			break
+		}
+
+		return e.complexity.Job.FailureData(childComplexity), true
+
+	case "Job.finished_at":
+		if e.complexity.Job.FinishedAt == nil {
+			break
+		}
+
+		return e.complexity.Job.FinishedAt(childComplexity), true
+
+	case "Job.id":
+		if e.complexity.Job.ID == nil {
+			break
+		}
+
+		return e.complexity.Job.ID(childComplexity), true
+
+	case "Job.max_retries":
+		if e.complexity.Job.MaxRetries == nil {
+			break
+		}
+
+		return e.complexity.Job.MaxRetries(childComplexity), true
+
+	case "Job.priority":
+		if e.complexity.Job.Priority == nil {
+			break
+		}
+
+		return e.complexity.Job.Priority(childComplexity), true
+
+	case "Job.retry_count":
+		if e.complexity.Job.RetryCount == nil {
+			break
+		}
+
+		return e.complexity.Job.RetryCount(childComplexity), true
+
+	case "Job.run_at":
+		if e.complexity.Job.RunAt == nil {
+			break
+		}
+
+		return e.complexity.Job.RunAt(childComplexity), true
+
+	case "Job.source":
+		if e.complexity.Job.Source == nil {
+			break
+		}
+
+		return e.complexity.Job.Source(childComplexity), true
+
+	case "Job.status":
+		if e.complexity.Job.Status == nil {
+			break
+		}
+
+		return e.complexity.Job.Status(childComplexity), true
+
+	case "Job.type":
+		if e.complexity.Job.Type == nil {
+			break
+		}
+
+		return e.complexity.Job.Type(childComplexity), true
 
 	case "Mutation.dummy":
 		if e.complexity.Mutation.Dummy == nil {
@@ -587,6 +692,49 @@ input CreateImage {
     height: Int!
     
     
+    
+    }`, BuiltIn: false},
+	{Name: "models/gql/jobs.graphqls", Input: `
+
+type Job {id: ID!
+    type: CString
+    priority: Int!
+    source: CString
+    data: Any
+    run_at: Time
+    failure_data: Any
+    max_retries: Int!
+    retry_count: Int
+    status: String!
+    finished_at: Time
+    created_at: Time
+    }
+
+input UpdateJob {
+    type: CString
+    priority: Int
+    source: CString
+    
+    run_at: Time
+    
+    max_retries: Int
+    retry_count: Int
+    status: String
+    finished_at: Time
+    
+    }
+
+input CreateJob {
+    type: CString
+    priority: Int
+    source: CString
+    data: Any
+    run_at: Time
+    failure_data: Any
+    max_retries: Int
+    retry_count: Int
+    status: String
+    finished_at: Time
     
     }`, BuiltIn: false},
 	{Name: "models/gql/token_issuances.graphqls", Input: `
@@ -1466,6 +1614,402 @@ func (ec *executionContext) _Image_deleted_at(ctx context.Context, field graphql
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.DeletedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_id(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_type(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOCString2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_priority(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Priority, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_source(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Source, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.String)
+	fc.Result = res
+	return ec.marshalOCString2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_data(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Job().Data(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(interface{})
+	fc.Result = res
+	return ec.marshalOAny2interface(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_run_at(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RunAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_failure_data(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Job().FailureData(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(interface{})
+	fc.Result = res
+	return ec.marshalOAny2interface(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_max_retries(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MaxRetries, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_retry_count(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RetryCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Int)
+	fc.Result = res
+	return ec.marshalOInt2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐInt(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_status(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_finished_at(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FinishedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(null.Time)
+	fc.Result = res
+	return ec.marshalOTime2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Job_created_at(ctx context.Context, field graphql.CollectedField, obj *models.Job) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Job",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3522,6 +4066,98 @@ func (ec *executionContext) unmarshalInputCreateImage(ctx context.Context, obj i
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateJob(ctx context.Context, obj interface{}) (model.CreateJob, error) {
+	var it model.CreateJob
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "type":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type"))
+			it.Type, err = ec.unmarshalOCString2ᚖgithubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "priority":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			it.Priority, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "source":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("source"))
+			it.Source, err = ec.unmarshalOCString2ᚖgithubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "data":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("data"))
+			it.Data, err = ec.unmarshalOAny2interface(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "run_at":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("run_at"))
+			it.RunAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "failure_data":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("failure_data"))
+			it.FailureData, err = ec.unmarshalOAny2interface(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "max_retries":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("max_retries"))
+			it.MaxRetries, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "retry_count":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("retry_count"))
+			it.RetryCount, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "finished_at":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("finished_at"))
+			it.FinishedAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateTokenIssuance(ctx context.Context, obj interface{}) (model.CreateTokenIssuance, error) {
 	var it model.CreateTokenIssuance
 	var asMap = obj.(map[string]interface{})
@@ -3761,6 +4397,82 @@ func (ec *executionContext) unmarshalInputUpdateImage(ctx context.Context, obj i
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
 			it.Height, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateJob(ctx context.Context, obj interface{}) (model.UpdateJob, error) {
+	var it model.UpdateJob
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "type":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type"))
+			it.Type, err = ec.unmarshalOCString2ᚖgithubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "priority":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			it.Priority, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "source":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("source"))
+			it.Source, err = ec.unmarshalOCString2ᚖgithubᚗcomᚋvolatiletechᚋnullᚋv8ᚐString(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "run_at":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("run_at"))
+			it.RunAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "max_retries":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("max_retries"))
+			it.MaxRetries, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "retry_count":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("retry_count"))
+			it.RetryCount, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "finished_at":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("finished_at"))
+			it.FinishedAt, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4056,6 +4768,82 @@ func (ec *executionContext) _Image(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "deleted_at":
 			out.Values[i] = ec._Image_deleted_at(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var jobImplementors = []string{"Job"}
+
+func (ec *executionContext) _Job(ctx context.Context, sel ast.SelectionSet, obj *models.Job) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, jobImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Job")
+		case "id":
+			out.Values[i] = ec._Job_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "type":
+			out.Values[i] = ec._Job_type(ctx, field, obj)
+		case "priority":
+			out.Values[i] = ec._Job_priority(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "source":
+			out.Values[i] = ec._Job_source(ctx, field, obj)
+		case "data":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Job_data(ctx, field, obj)
+				return res
+			})
+		case "run_at":
+			out.Values[i] = ec._Job_run_at(ctx, field, obj)
+		case "failure_data":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Job_failure_data(ctx, field, obj)
+				return res
+			})
+		case "max_retries":
+			out.Values[i] = ec._Job_max_retries(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "retry_count":
+			out.Values[i] = ec._Job_retry_count(ctx, field, obj)
+		case "status":
+			out.Values[i] = ec._Job_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "finished_at":
+			out.Values[i] = ec._Job_finished_at(ctx, field, obj)
+		case "created_at":
+			out.Values[i] = ec._Job_created_at(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4963,6 +5751,15 @@ func (ec *executionContext) marshalOCString2ᚖgithubᚗcomᚋvolatiletechᚋnul
 		return graphql.Null
 	}
 	return gqlmarsh.MarshalNullString(*v)
+}
+
+func (ec *executionContext) unmarshalOInt2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐInt(ctx context.Context, v interface{}) (null.Int, error) {
+	res, err := gqlmarsh.UnmarshalNullInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOInt2githubᚗcomᚋvolatiletechᚋnullᚋv8ᚐInt(ctx context.Context, sel ast.SelectionSet, v null.Int) graphql.Marshaler {
+	return gqlmarsh.MarshalNullInt(v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {

@@ -100,6 +100,31 @@ definitions:
       width:
         type: integer
     type: object
+  modelcrud.APICreateJobRequest:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      failure_data:
+        additionalProperties: true
+        type: object
+      finished_at:
+        type: string
+      max_retries:
+        type: integer
+      priority:
+        type: integer
+      retry_count:
+        type: integer
+      run_at:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+    type: object
   modelcrud.APICreateTokenIssuanceRequest:
     properties:
       ip_address:
@@ -150,6 +175,17 @@ definitions:
       images:
         items:
           $ref: '#/definitions/modelcrud.APIImage'
+        type: array
+      next_offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  modelcrud.APIGetJobsResponse:
+    properties:
+      jobs:
+        items:
+          $ref: '#/definitions/modelcrud.APIJob'
         type: array
       next_offset:
         type: integer
@@ -207,6 +243,39 @@ definitions:
         description: integer
         type: integer
     type: object
+  modelcrud.APIJob:
+    properties:
+      created_at:
+        type: string
+      data:
+        additionalProperties: true
+        type: object
+      failure_data:
+        additionalProperties: true
+        type: object
+      finished_at:
+        type: string
+      id:
+        description: uuid
+        type: string
+      max_retries:
+        description: integer
+        type: integer
+      priority:
+        description: integer
+        type: integer
+      retry_count:
+        type: integer
+      run_at:
+        type: string
+      source:
+        type: string
+      status:
+        description: character varying
+        type: string
+      type:
+        type: string
+    type: object
   modelcrud.APITokenIssuance:
     properties:
       created_at:
@@ -259,6 +328,31 @@ definitions:
         type: string
       width:
         type: integer
+    type: object
+  modelcrud.APIUpdateJobRequest:
+    properties:
+      data:
+        additionalProperties: true
+        type: object
+      failure_data:
+        additionalProperties: true
+        type: object
+      finished_at:
+        type: string
+      max_retries:
+        type: integer
+      priority:
+        type: integer
+      retry_count:
+        type: integer
+      run_at:
+        type: string
+      source:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
     type: object
   modelcrud.APIUpdateTokenIssuanceRequest:
     properties:
@@ -727,6 +821,157 @@ paths:
           schema:
             $ref: '#/definitions/modelcrud.APIImage'
       summary: Undeletes a image by id
+  /crud/jobs:
+    delete:
+      parameters:
+      - description: List of ids to delete
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.IDList'
+      - description: Hard delete job
+        in: query
+        name: hardDelete
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.DeletedCount'
+      summary: Soft deletes a range of jobs by their ids
+    get:
+      parameters:
+      - description: 'Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.id
+        type: string
+      - description: 'Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.type
+        type: string
+      - description: 'Sort by priority. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.priority
+        type: string
+      - description: 'Sort by source. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.source
+        type: string
+      - description: 'Sort by data. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.data
+        type: string
+      - description: 'Sort by run_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.run_at
+        type: string
+      - description: 'Sort by failure_data. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.failure_data
+        type: string
+      - description: 'Sort by max_retries. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.max_retries
+        type: string
+      - description: 'Sort by retry_count. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.retry_count
+        type: string
+      - description: 'Sort by status. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.status
+        type: string
+      - description: 'Sort by finished_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.finished_at
+        type: string
+      - description: 'Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC'
+        in: query
+        name: sort.created_at
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIJob'
+      summary: Gets a list for all entities of the Job type
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Creation parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APICreateJobRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIJob'
+      summary: Creates a new Job
+  /crud/jobs/:id:
+    delete:
+      parameters:
+      - description: Job id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIJob'
+      summary: Soft deletes a single Job entity based on their id
+    get:
+      parameters:
+      - description: Job id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIGetJobsResponse'
+      summary: Gets a single Job entity by their id
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Update parameters
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/modelcrud.APIUpdateJobRequest'
+      - description: Job id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/modelcrud.APIJob'
+      summary: Updates a single Job entity based on their id
   /crud/tokenIssuances:
     delete:
       parameters:

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/calebhiebert/go-vue-template/graph/resolve"
+	"github.com/calebhiebert/go-vue-template/jobs"
 	"github.com/calebhiebert/go-vue-template/s3"
 	limits "github.com/gin-contrib/size"
 	"net/http"
@@ -66,6 +67,11 @@ func main() {
 
 	// Setup the connection to s3
 	err = s3.InitS3()
+	if err != nil {
+		panic(err)
+	}
+
+	err = jobs.InitJobs()
 	if err != nil {
 		panic(err)
 	}

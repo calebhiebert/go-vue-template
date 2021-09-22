@@ -20,6 +20,7 @@ func RegisterGeneratedCrud(rg *gin.RouterGroup) {
 
 	gcc.RegisterAccessLogs(rg)
 	gcc.RegisterImages(rg)
+	gcc.RegisterJobs(rg)
 	gcc.RegisterTokenIssuances(rg)
 	gcc.RegisterUsers(rg)
 

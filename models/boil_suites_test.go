@@ -14,6 +14,7 @@ import "testing"
 func TestParent(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogs)
 	t.Run("Images", testImages)
+	t.Run("Jobs", testJobs)
 	t.Run("TokenIssuances", testTokenIssuances)
 	t.Run("Users", testUsers)
 }
@@ -36,6 +37,7 @@ func TestSliceSoftDeleteAll(t *testing.T) {
 func TestDelete(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsDelete)
 	t.Run("Images", testImagesDelete)
+	t.Run("Jobs", testJobsDelete)
 	t.Run("TokenIssuances", testTokenIssuancesDelete)
 	t.Run("Users", testUsersDelete)
 }
@@ -43,6 +45,7 @@ func TestDelete(t *testing.T) {
 func TestQueryDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsQueryDeleteAll)
 	t.Run("Images", testImagesQueryDeleteAll)
+	t.Run("Jobs", testJobsQueryDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesQueryDeleteAll)
 	t.Run("Users", testUsersQueryDeleteAll)
 }
@@ -50,6 +53,7 @@ func TestQueryDeleteAll(t *testing.T) {
 func TestSliceDeleteAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceDeleteAll)
 	t.Run("Images", testImagesSliceDeleteAll)
+	t.Run("Jobs", testJobsSliceDeleteAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceDeleteAll)
 	t.Run("Users", testUsersSliceDeleteAll)
 }
@@ -57,6 +61,7 @@ func TestSliceDeleteAll(t *testing.T) {
 func TestExists(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsExists)
 	t.Run("Images", testImagesExists)
+	t.Run("Jobs", testJobsExists)
 	t.Run("TokenIssuances", testTokenIssuancesExists)
 	t.Run("Users", testUsersExists)
 }
@@ -64,6 +69,7 @@ func TestExists(t *testing.T) {
 func TestFind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsFind)
 	t.Run("Images", testImagesFind)
+	t.Run("Jobs", testJobsFind)
 	t.Run("TokenIssuances", testTokenIssuancesFind)
 	t.Run("Users", testUsersFind)
 }
@@ -71,6 +77,7 @@ func TestFind(t *testing.T) {
 func TestBind(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsBind)
 	t.Run("Images", testImagesBind)
+	t.Run("Jobs", testJobsBind)
 	t.Run("TokenIssuances", testTokenIssuancesBind)
 	t.Run("Users", testUsersBind)
 }
@@ -78,6 +85,7 @@ func TestBind(t *testing.T) {
 func TestOne(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsOne)
 	t.Run("Images", testImagesOne)
+	t.Run("Jobs", testJobsOne)
 	t.Run("TokenIssuances", testTokenIssuancesOne)
 	t.Run("Users", testUsersOne)
 }
@@ -85,6 +93,7 @@ func TestOne(t *testing.T) {
 func TestAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsAll)
 	t.Run("Images", testImagesAll)
+	t.Run("Jobs", testJobsAll)
 	t.Run("TokenIssuances", testTokenIssuancesAll)
 	t.Run("Users", testUsersAll)
 }
@@ -92,6 +101,7 @@ func TestAll(t *testing.T) {
 func TestCount(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsCount)
 	t.Run("Images", testImagesCount)
+	t.Run("Jobs", testJobsCount)
 	t.Run("TokenIssuances", testTokenIssuancesCount)
 	t.Run("Users", testUsersCount)
 }
@@ -99,6 +109,7 @@ func TestCount(t *testing.T) {
 func TestHooks(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsHooks)
 	t.Run("Images", testImagesHooks)
+	t.Run("Jobs", testJobsHooks)
 	t.Run("TokenIssuances", testTokenIssuancesHooks)
 	t.Run("Users", testUsersHooks)
 }
@@ -108,6 +119,8 @@ func TestInsert(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsInsertWhitelist)
 	t.Run("Images", testImagesInsert)
 	t.Run("Images", testImagesInsertWhitelist)
+	t.Run("Jobs", testJobsInsert)
+	t.Run("Jobs", testJobsInsertWhitelist)
 	t.Run("TokenIssuances", testTokenIssuancesInsert)
 	t.Run("TokenIssuances", testTokenIssuancesInsertWhitelist)
 	t.Run("Users", testUsersInsert)
@@ -175,6 +188,7 @@ func TestToManyRemove(t *testing.T) {
 func TestReload(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReload)
 	t.Run("Images", testImagesReload)
+	t.Run("Jobs", testJobsReload)
 	t.Run("TokenIssuances", testTokenIssuancesReload)
 	t.Run("Users", testUsersReload)
 }
@@ -182,6 +196,7 @@ func TestReload(t *testing.T) {
 func TestReloadAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsReloadAll)
 	t.Run("Images", testImagesReloadAll)
+	t.Run("Jobs", testJobsReloadAll)
 	t.Run("TokenIssuances", testTokenIssuancesReloadAll)
 	t.Run("Users", testUsersReloadAll)
 }
@@ -189,6 +204,7 @@ func TestReloadAll(t *testing.T) {
 func TestSelect(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSelect)
 	t.Run("Images", testImagesSelect)
+	t.Run("Jobs", testJobsSelect)
 	t.Run("TokenIssuances", testTokenIssuancesSelect)
 	t.Run("Users", testUsersSelect)
 }
@@ -196,6 +212,7 @@ func TestSelect(t *testing.T) {
 func TestUpdate(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsUpdate)
 	t.Run("Images", testImagesUpdate)
+	t.Run("Jobs", testJobsUpdate)
 	t.Run("TokenIssuances", testTokenIssuancesUpdate)
 	t.Run("Users", testUsersUpdate)
 }
@@ -203,6 +220,7 @@ func TestUpdate(t *testing.T) {
 func TestSliceUpdateAll(t *testing.T) {
 	t.Run("AccessLogs", testAccessLogsSliceUpdateAll)
 	t.Run("Images", testImagesSliceUpdateAll)
+	t.Run("Jobs", testJobsSliceUpdateAll)
 	t.Run("TokenIssuances", testTokenIssuancesSliceUpdateAll)
 	t.Run("Users", testUsersSliceUpdateAll)
 }

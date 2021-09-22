@@ -9,6 +9,7 @@ var AdminInfo api.AdminModelInfo = api.AdminModelInfo{
 	Models: map[string]api.AdminModel{
 		"access_logs":     AccessLogsAdmin,
 		"images":          ImagesAdmin,
+		"jobs":            JobsAdmin,
 		"token_issuances": TokenIssuancesAdmin,
 		"users":           UsersAdmin,
 	},

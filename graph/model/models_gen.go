@@ -29,6 +29,19 @@ type CreateImage struct {
 	Height int    `json:"height"`
 }
 
+type CreateJob struct {
+	Type        *null.String `json:"type"`
+	Priority    *int         `json:"priority"`
+	Source      *null.String `json:"source"`
+	Data        interface{}  `json:"data"`
+	RunAt       *time.Time   `json:"run_at"`
+	FailureData interface{}  `json:"failure_data"`
+	MaxRetries  *int         `json:"max_retries"`
+	RetryCount  *int         `json:"retry_count"`
+	Status      *string      `json:"status"`
+	FinishedAt  *time.Time   `json:"finished_at"`
+}
+
 type CreateTokenIssuance struct {
 	UserID    string `json:"user_id"`
 	IPAddress string `json:"ip_address"`
@@ -64,6 +77,17 @@ type UpdateImage struct {
 	Size   *int    `json:"size"`
 	Width  *int    `json:"width"`
 	Height *int    `json:"height"`
+}
+
+type UpdateJob struct {
+	Type       *null.String `json:"type"`
+	Priority   *int         `json:"priority"`
+	Source     *null.String `json:"source"`
+	RunAt      *time.Time   `json:"run_at"`
+	MaxRetries *int         `json:"max_retries"`
+	RetryCount *int         `json:"retry_count"`
+	Status     *string      `json:"status"`
+	FinishedAt *time.Time   `json:"finished_at"`
 }
 
 type UpdateTokenIssuance struct {

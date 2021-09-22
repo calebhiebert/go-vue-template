@@ -1,0 +1,43 @@
+
+
+type Job {id: ID!
+    type: CString
+    priority: Int!
+    source: CString
+    data: Any
+    run_at: Time
+    failure_data: Any
+    max_retries: Int!
+    retry_count: Int
+    status: String!
+    finished_at: Time
+    created_at: Time
+    }
+
+input UpdateJob {
+    type: CString
+    priority: Int
+    source: CString
+    
+    run_at: Time
+    
+    max_retries: Int
+    retry_count: Int
+    status: String
+    finished_at: Time
+    
+    }
+
+input CreateJob {
+    type: CString
+    priority: Int
+    source: CString
+    data: Any
+    run_at: Time
+    failure_data: Any
+    max_retries: Int
+    retry_count: Int
+    status: String
+    finished_at: Time
+    
+    }

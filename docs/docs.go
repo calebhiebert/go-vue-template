@@ -601,6 +601,238 @@ var doc = `{
                 }
             }
         },
+        "/crud/jobs": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a list for all entities of the Job type",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Sort by id. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by type. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by priority. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.priority",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by source. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.source",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by data. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.data",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by run_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.run_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by failure_data. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.failure_data",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by max_retries. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.max_retries",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by retry_count. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.retry_count",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by status. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by finished_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.finished_at",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort by created_at. Value should be ASC or DESC. eg: ?sort.created_at=DESC",
+                        "name": "sort.created_at",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIJob"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Creates a new Job",
+                "parameters": [
+                    {
+                        "description": "Creation parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APICreateJobRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIJob"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a range of jobs by their ids",
+                "parameters": [
+                    {
+                        "description": "List of ids to delete",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.IDList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Hard delete job",
+                        "name": "hardDelete",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.DeletedCount"
+                        }
+                    }
+                }
+            }
+        },
+        "/crud/jobs/:id": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Gets a single Job entity by their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Job id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIGetJobsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Updates a single Job entity based on their id",
+                "parameters": [
+                    {
+                        "description": "Update parameters",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIUpdateJobRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Job id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIJob"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Soft deletes a single Job entity based on their id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Job id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/modelcrud.APIJob"
+                        }
+                    }
+                }
+            }
+        },
         "/crud/tokenIssuances": {
             "get": {
                 "produces": [
@@ -1238,6 +1470,43 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APICreateJobRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "failure_data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "max_retries": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "retry_count": {
+                    "type": "integer"
+                },
+                "run_at": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "modelcrud.APICreateTokenIssuanceRequest": {
             "type": "object",
             "properties": {
@@ -1324,6 +1593,23 @@ var doc = `{
                 }
             }
         },
+        "modelcrud.APIGetJobsResponse": {
+            "type": "object",
+            "properties": {
+                "jobs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/modelcrud.APIJob"
+                    }
+                },
+                "next_offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
         "modelcrud.APIGetTokenIssuancesResponse": {
             "type": "object",
             "properties": {
@@ -1395,6 +1681,53 @@ var doc = `{
                 "width": {
                     "description": "integer",
                     "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIJob": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "failure_data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "description": "uuid",
+                    "type": "string"
+                },
+                "max_retries": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "priority": {
+                    "description": "integer",
+                    "type": "integer"
+                },
+                "retry_count": {
+                    "type": "integer"
+                },
+                "run_at": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "description": "character varying",
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
@@ -1473,6 +1806,43 @@ var doc = `{
                 },
                 "width": {
                     "type": "integer"
+                }
+            }
+        },
+        "modelcrud.APIUpdateJobRequest": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "failure_data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "max_retries": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "type": "integer"
+                },
+                "retry_count": {
+                    "type": "integer"
+                },
+                "run_at": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
