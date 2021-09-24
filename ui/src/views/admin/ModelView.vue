@@ -4,7 +4,9 @@
       <!--<div class="column"></div>-->
       <div class="column is-narrow">
         <b-button icon-left="sync-alt" :loading="loading" @click="load">Refresh</b-button>
-        <b-button class="ml-2" type="is-primary" icon-left="plus" @click="$router.push({name: 'AdminModelCreate', params: {model: modelId}})">Create New</b-button>
+        <b-button class="ml-2" type="is-primary" icon-left="plus"
+                  @click="$router.push({name: 'AdminModelCreate', params: {model: modelId}})">Create New
+        </b-button>
         <b-button type="is-danger" icon-left="trash" class="ml-2" @click="deleteMultiple"
                   :disabled="selected.length === 0">Delete
           {{ selected.length === 0 ? "" : selected.length }}
@@ -74,7 +76,7 @@
 
 <script>
 import axios from "axios";
-import {API_BASE_URL, extractError, getToken} from "../../api";
+import {API_BASE_URL, extractError, getModelPK, getToken} from "../../api";
 import ColumnViewDefault from "../../components/admin/ColumnViewDefault";
 import ColumnViewHTTPResponseCode from "../../components/admin/ColumnViewHTTPResponseCode";
 import ModelvViewSingle from "../../components/admin/ModelViewSingle";
@@ -224,7 +226,10 @@ export default {
     },
 
     editItem(item) {
-      this.$router.push({name: "AdminModelEdit", params: {model: this.modelId, id: item.id}});
+      this.$router.push({
+        name: "AdminModelEdit",
+        params: {model: this.modelId, id: getModelPK(this.modelSchema, item)}
+      });
     },
 
     deleteMultiple() {
@@ -298,7 +303,7 @@ export default {
       this.tableColumns = null;
       this.sortField = null;
       this.sortOrder = "desc";
-      this.filterQuery = null;
+      this.filterQuery = "";
       this.load();
     },
   },

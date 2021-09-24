@@ -33,6 +33,7 @@ NameSingular: "{{ $alias.UpSingular }}",
 CanSoftDelete: {{ if $soft }}true{{ else }}false{{end}},
 URLName: "{{ $alias.DownPlural }}",
 DataName: "{{ $orig_tbl_name }}",
+PKColumns: []string{{"{"}}{{.Table.PKey.Columns | stringMap .StringFuncs.quoteWrap | join ", "}}{{"}"}},
 Fields: []*api.AdminModelField{
 {{- range $field := .Table.Columns }}
     {{- $colAlias := $alias.Column $field.Name -}}

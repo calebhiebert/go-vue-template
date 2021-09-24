@@ -11,6 +11,9 @@
                      v-model="value[field.id]" :required="field.required"
                      :placeholder="field.name" :is="getCustomFieldComponent(field.id)">
           </component>
+          <div v-else-if="field.foreign_fields.length > 0">
+            <ModelMinisearch :schema="field"></ModelMinisearch>
+          </div>
           <b-input v-else-if="field.type === 'string'" :type="field.config.is_email ? 'email' : undefined"
                    v-model="value[field.id]" :required="field.required"
                    :placeholder="field.name"></b-input>
@@ -28,6 +31,9 @@
               :placeholder="field.name"
               ellipsis>
           </b-taginput>
+          <b-input v-else-if="field.type === 'uuid'"
+                   v-model="value[field.id]" :required="field.required"
+                   :placeholder="field.name"></b-input>
           <v-jsoneditor v-else-if="field.type === 'json'" v-model="value[field.id]" :options="{mode: 'code'}">
 
           </v-jsoneditor>
@@ -48,11 +54,13 @@
 <script>
 import ImageUpload from "../ImageUpload";
 import VJsoneditor from 'v-jsoneditor'
+import ModelMinisearch from "./ModelMinisearch";
 
 export default {
   name: "ModelForm",
 
   components: {
+    ModelMinisearch,
     VJsoneditor
   },
 

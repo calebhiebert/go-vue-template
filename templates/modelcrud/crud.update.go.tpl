@@ -73,6 +73,19 @@ api.NewAPIError("invalid-id", http.StatusBadRequest, "The provided id was invali
 return
 }
 
+pks := strings.Split(id, ";")
+
+if len(pks) != {{ len .Table.PKey.Columns }} {
+api.NewAPIError("invalid-id", http.StatusBadRequest, fmt.Sprintf("Expected {{ len .Table.PKey.Columns }} ids, got %d", len(pks))).Respond(c)
+return
+}
+
+qms := []qm.QueryMod{}
+
+{{ range $i, $pk := .Table.PKey.Columns }}
+    qms = append(qms, qm.Where("{{ $pk }} = ?", pks[{{ $i }}]))
+{{ end }}
+
 var updateReq Update{{ $alias.UpSingular }}Request
 
 err := c.BindJSON(&updateReq)
@@ -81,7 +94,9 @@ api.APIErrorFromErr(err).Respond(c)
 return
 }
 
-existing{{ $alias.UpSingular }}, err := models.{{ $alias.UpPlural }}(qm.Where("id = ?", id), qm.For("UPDATE")).OneG(c.Request.Context())
+qms = append(qms, qm.For("UPDATE"))
+
+existing{{ $alias.UpSingular }}, err := models.{{ $alias.UpPlural }}(qms...).OneG(c.Request.Context())
 if err != nil {
 api.APIErrorFromErr(err).Respond(c)
 return

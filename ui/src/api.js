@@ -11,6 +11,10 @@ function storeToken(token, userData) {
     localStorage.setItem("userData", JSON.stringify(userData));
 }
 
+export function getModelPK(modelSchema, model) {
+    return modelSchema.pk_columns.map(pkColId => model[pkColId]).join(';');
+}
+
 export function getToken() {
     return localStorage.getItem("token");
 }

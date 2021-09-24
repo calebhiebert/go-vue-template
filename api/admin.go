@@ -8,13 +8,14 @@ type AdminModelConfig struct {
 }
 
 type AdminModel struct {
-	Name             string             `json:"name"`
-	NameSingular     string             `json:"name_singular"`
-	Fields           []*AdminModelField `json:"fields"`
-	Config           AdminModelConfig   `json:"config"`
-	CanSoftDelete    bool               `json:"can_soft_delete"`
-	URLName          string             `json:"url_name"`
-	DataName         string             `json:"data_name"`
+	Name          string             `json:"name"`
+	NameSingular  string             `json:"name_singular"`
+	Fields        []*AdminModelField `json:"fields"`
+	Config        AdminModelConfig   `json:"config"`
+	CanSoftDelete bool               `json:"can_soft_delete"`
+	URLName       string             `json:"url_name"`
+	DataName      string             `json:"data_name"`
+	PKColumns     []string           `json:"pk_columns"`
 }
 
 type AdminModelFieldConfig struct {
