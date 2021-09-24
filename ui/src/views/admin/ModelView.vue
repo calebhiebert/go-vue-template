@@ -264,7 +264,7 @@ export default {
         cancelText: "Cancel",
         type: "is-danger",
         onConfirm: async () => {
-          await axios.delete(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${item.id}`, {
+          await axios.delete(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${getModelPK(this.modelSchema, item)}`, {
             headers: {
               "Authorization": `Bearer ${getToken()}`,
             },
@@ -278,7 +278,7 @@ export default {
               position: "is-bottom-right",
               actionText: "Undo",
               onAction: async () => {
-                await axios.post(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${item.id}/unDelete`, null, {
+                await axios.post(`${API_BASE_URL}/crud/${this.modelSchema.url_name}/${getModelPK(this.modelSchema, item)}/unDelete`, null, {
                   headers: {
                     "Authorization": `Bearer ${getToken()}`,
                   },

@@ -103,7 +103,22 @@ c.JSON(http.StatusOK, DeletedCount{DeletedCount: int(deleted)})
     return
     }
 
-    deleted{{ $alias.UpSingular }}, err := models.{{ $alias.UpPlural }}(qm.Where("id = ?", id), qm.WithDeleted()).OneG(c.Request.Context())
+    pks := strings.Split(id, ";")
+
+    if len(pks) != {{ len .Table.PKey.Columns }} {
+    api.NewAPIError("invalid-id", http.StatusBadRequest, fmt.Sprintf("Expected {{ len .Table.PKey.Columns }} ids, got %d", len(pks))).Respond(c)
+    return
+    }
+
+    qms := []qm.QueryMod{}
+
+    {{ range $i, $pk := .Table.PKey.Columns }}
+        qms = append(qms, qm.Where("{{ $pk }} = ?", pks[{{ $i }}]))
+    {{ end }}
+
+    qms = append(qms, qm.WithDeleted())
+
+    deleted{{ $alias.UpSingular }}, err := models.{{ $alias.UpPlural }}(qms...).OneG(c.Request.Context())
     if err != nil {
     api.APIErrorFromErr(err).Respond(c)
     return
