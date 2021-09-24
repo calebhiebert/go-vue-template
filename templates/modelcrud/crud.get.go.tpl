@@ -86,7 +86,7 @@ c.JSON(http.StatusOK, {{ $alias.UpSingular }})
 // Get{{ $alias.UpPlural }} godoc
 // @Summary Gets a list for all entities of the {{ $alias.UpSingular }} type
 // @Produce json
-// @Success 200 {object} API{{$alias.UpSingular}}
+// @Success 200 {object} APIGet{{ $alias.UpPlural }}Response
 {{- if $soft }}
     // @Param withDeleted query string false "Include deleted {{ $alias.DownPlural }} in the results"
 {{- end }}
@@ -194,4 +194,50 @@ c.JSON(http.StatusOK, Get{{ $alias.UpPlural }}Response{
 Total: count,
 NextOffset: int64(offset + limit),
 })
+}
+
+
+type Get{{ $alias.UpPlural }}MinisearchResponse struct {
+Items models.{{ $alias.UpSingular }}Slice `json:"items"`
+Total int64            `json:"total"`
+}
+
+type APIGet{{ $alias.UpPlural }}MinisearchResponse struct {
+Items []API{{ $alias.UpSingular }} `json:"items"`
+Total int64            `json:"total"`
+}
+
+// Minisearch{{ $alias.UpPlural }} godoc
+// @Summary Quick search on predefined fields for {{ $alias.UpPlural }}
+// @Produce json
+// @Success 200 {object} APIGet{{ $alias.UpPlural }}MinisearchResponse
+// @Param q query string true "Query fields eg: ?q=Bobbo"
+// @Router /crud/{{ $alias.DownPlural }}/minisearch [get]
+func (*GeneratedCrudController) Minisearch{{ $alias.UpPlural }}(c *gin.Context) {
+queryMods := []qm.QueryMod{}
+
+ss := fmt.Sprintf("%%%s%%", strings.ReplaceAll(c.Query("q"), "%", "\\%"))
+
+for _, field := range {{ $alias.UpPlural }}Admin.Fields {
+if field.Config.MiniSearchable {
+queryMods = append(queryMods, qm.Or(fmt.Sprintf("%s ILIKE ?", field.ID), ss))
+}
+}
+
+count, err := models.{{ $alias.UpPlural }}(queryMods...).CountG(c.Request.Context())
+if err != nil {
+api.APIErrorFromErr(err).Respond(c)
+return
+}
+
+limit, offset := api.ExtractLimitOffset(c)
+queryMods = append(queryMods, qm.Limit(limit), qm.Offset(offset))
+
+results, err := models.{{ $alias.UpPlural }}(queryMods...).AllG(c)
+if err != nil {
+api.APIErrorFromErr(err).Respond(c)
+return
+}
+
+c.JSON(http.StatusOK, gin.H{"total": count, "items": results})
 }

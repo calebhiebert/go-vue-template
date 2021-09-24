@@ -8,19 +8,20 @@ type AdminModelConfig struct {
 }
 
 type AdminModel struct {
-	Name          string             `json:"name"`
-	NameSingular  string             `json:"name_singular"`
-	Fields        []*AdminModelField `json:"fields"`
-	Config        AdminModelConfig   `json:"config"`
-	CanSoftDelete bool               `json:"can_soft_delete"`
-	URLName       string             `json:"url_name"`
-	DataName      string             `json:"data_name"`
+	Name             string             `json:"name"`
+	NameSingular     string             `json:"name_singular"`
+	Fields           []*AdminModelField `json:"fields"`
+	Config           AdminModelConfig   `json:"config"`
+	CanSoftDelete    bool               `json:"can_soft_delete"`
+	URLName          string             `json:"url_name"`
+	DataName         string             `json:"data_name"`
 }
 
 type AdminModelFieldConfig struct {
-	ShowOnGraph bool `json:"show_on_graph"`
-	Editable    bool `json:"editable"`
-	IsEmail     bool `json:"is_email"`
+	ShowOnGraph    bool `json:"show_on_graph"`
+	Editable       bool `json:"editable"`
+	IsEmail        bool `json:"is_email"`
+	MiniSearchable bool `json:"mini_searchable"`
 }
 
 func NewDefaultAdminModelFieldConfig() AdminModelFieldConfig {

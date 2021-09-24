@@ -81,6 +81,7 @@ Fields: []*api.AdminModelField{
         ShowOnGraph: {{ if or (eq $orig_col_name "deleted_at") (eq $field.DBType "jsonb") }}false{{ else }}true{{ end }},
         Editable: true,
         IsEmail: {{- if eq $orig_col_name "email" -}}true{{- else -}}false{{- end -}},
+        MiniSearchable: {{ if eq $orig_col_name "name" }}true{{ else }}false{{ end }},
         },
         Type:
         {{- if eq $field.DBType "uuid" -}}
