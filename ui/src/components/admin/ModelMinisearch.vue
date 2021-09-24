@@ -7,7 +7,10 @@
         :check-infinite-scroll="true"
         :placeholder="'Find '+ foreignTableSchema.name_singular"
         @typing="fetchData"
-        @select="option => selected = option"
+        :open-on-focus="true"
+        :clearable="true"
+        v-model="val"
+        @select="select"
         @infinite-scroll="fetchMoreData">
 
       <template slot-scope="props">
@@ -32,6 +35,11 @@ export default {
     schema: {
       type: Object,
       required: true,
+    },
+
+    value: {
+      type: String,
+      required: false,
     }
   },
 
@@ -44,7 +52,8 @@ export default {
       page: 1,
       perPage: 10,
       totalPages: 1,
-      q: ""
+      q: "",
+      val: this.value,
     }
   },
 
@@ -74,7 +83,7 @@ export default {
       }
 
       try {
-        const res = await axios.get(`${API_BASE_URL}/crud/${this.foreignTableSchema.url_name}/minisearch?q=${q}&limit=${this.perPage}&offset=${(this.page -1) * this.perPage}`, {
+        const res = await axios.get(`${API_BASE_URL}/crud/${this.foreignTableSchema.url_name}/minisearch?q=${q}&limit=${this.perPage}&offset=${(this.page - 1) * this.perPage}`, {
           headers: {
             "Authorization": `Bearer ${getToken()}`,
           },
@@ -96,6 +105,20 @@ export default {
 
     async fetchMoreData() {
       return this.fetchData(this.q)
+    },
+
+    select(item) {
+      if (item) {
+        this.selected = item;
+        this.val = item.id;
+        this.$emit('input', item.id);
+      }
+    },
+  },
+
+  watch: {
+    value() {
+      this.val = this.value;
     }
   }
 }

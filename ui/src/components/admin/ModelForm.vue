@@ -12,7 +12,7 @@
                      :placeholder="field.name" :is="getCustomFieldComponent(field.id)">
           </component>
           <div v-else-if="field.foreign_fields.length > 0">
-            <ModelMinisearch :schema="field"></ModelMinisearch>
+            <ModelMinisearch v-model="value[field.id]" :schema="field"></ModelMinisearch>
           </div>
           <b-input v-else-if="field.type === 'string'" :type="field.config.is_email ? 'email' : undefined"
                    v-model="value[field.id]" :required="field.required"
