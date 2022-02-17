@@ -5,7 +5,6 @@ This is a little template project to create apps using
 - Golang (With [Gin](https://github.com/gin-gonic/gin) web framework)
 - PostgreSQL database using [SQLBoiler](https://github.com/volatiletech/sqlboiler)
 - Database migrations using [Migrate](https://github.com/golang-migrate/migrate)
-- GraphQL support using [GqlGen](https://github.com/99designs/gqlgen) & [Hasura](https://hasura.io/)
 - Frontend using [Vue 2](https://vuejs.org/)
 
 ## Setup Instructions

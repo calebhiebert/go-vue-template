@@ -6,9 +6,17 @@ import (
 	"github.com/calebhiebert/go-vue-template/graph/resolve"
 	"github.com/calebhiebert/go-vue-template/jobs"
 	"github.com/calebhiebert/go-vue-template/s3"
+	lggr "github.com/datomar-labs-inc/FCT_Helpers_Go/logger"
+	fct_tracing "github.com/datomar-labs-inc/FCT_Helpers_Go/tracing"
 	limits "github.com/gin-contrib/size"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/trace"
+	"go.uber.org/zap"
+	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -19,7 +27,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/opentracing-contrib/go-gin/ginhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -39,6 +46,8 @@ import (
 
 // @license.name Unknown
 
+var ServiceName = "GoVueTemplate"
+
 func main() {
 
 	// Load the .env file (if present)
@@ -47,14 +56,13 @@ func main() {
 		fmt.Println("Failed to load env file. Most of time this error can be ignored")
 	}
 
-	// Create a opentracing tracer setup to send data to jaeger
-	tracer, closer, err := SetupTracing()
+	// Create a tracer
+	traceCloser, err := fct_tracing.SetupTracing(ServiceName, trace.TraceIDRatioBased(getTraceRatio()))
 	if err != nil {
-		panic(err)
+		lggr.Get("setup-tracing").Fatal("failed to set up tracer", zap.Error(err))
 	}
 
-	// Defer closing of the tracer
-	defer closer.Close()
+	defer traceCloser()
 
 	// Create a connection to the postgres database
 	dbConn, err := db.SetupDatabase()
@@ -80,7 +88,7 @@ func main() {
 	router := gin.Default()
 
 	// Use the tracing middleware so all incoming requests get traced
-	router.Use(ginhttp.Middleware(tracer))
+	router.Use(otelgin.Middleware(ServiceName, otelgin.WithTracerProvider(otel.GetTracerProvider())))
 
 	// Setup CORS
 	// TODO update with proper cors config
@@ -103,7 +111,6 @@ func main() {
 	// *******************************
 	router.GET("/api/healthz", c.HealthCheck)
 	router.GET("/api/avatar/:id", c.GenerateAvatar)
-
 
 	router.GET("/api/image/:id", s3.GetImage)
 	router.POST("/api/image", limits.RequestSizeLimiter(s3.MaxImageSize), s3.UploadImage)
@@ -150,8 +157,6 @@ func main() {
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(config))
 	plgrnd := playground.Handler("GraphQL playground", "/gql")
 
-	router.POST("/gql", verifyTokenMiddleware, HasuraProxy)
-
 	gql.GET("/graphql", func(c *gin.Context) {
 		plgrnd.ServeHTTP(c.Writer, c.Request)
 	})
@@ -167,7 +172,6 @@ func main() {
 	// *******************************
 	swaggerURL := ginSwagger.URL(fmt.Sprintf("%s/swagger/doc.json", os.Getenv("HOSTED_URL")))
 	router.GET("/docs/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
-
 
 	// *******************************
 	// * UI Embed Setup              *
@@ -186,4 +190,18 @@ func main() {
 	if err != nil {
 		fmt.Println("ERROR starting server", err.Error())
 	}
+}
+
+func getTraceRatio() float64 {
+	tr := os.Getenv("TRACE_RATIO")
+	if tr == "" {
+		return 1
+	}
+
+	float, err := strconv.ParseFloat(tr, 64)
+	if err != nil {
+		log.Fatal("Invalid TRACE_RATIO env value set")
+	}
+
+	return float
 }

@@ -11,6 +11,4 @@ S3_SECRET=minioadmin
 S3_SSL=false
 S3_IMAGE_BUCKET_NAME=images
 
-HASURA_URL=http://localhost:8888/v1/graphql
-
 JWT_KEY=ohsosecret

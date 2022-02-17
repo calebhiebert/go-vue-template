@@ -252,10 +252,6 @@ func verifyTokenMiddleware(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 
 	if token == "" {
-		token = c.GetHeader("X-Hasura-Authorization")
-	}
-
-	if token == "" {
 		c.Next()
 		return
 	}
